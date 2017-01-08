@@ -190,43 +190,45 @@ bar {
 	tray_output primary
 }
 
+set $exec exec --no-startup-id
+
 # brightness
-bindsym KP_Subtract exec --no-startup-id xbacklight -10
-bindsym KP_Add exec --no-startup-id xbacklight +10
-exec --no-startup-id xbacklight -set 30
+bindsym KP_Subtract $exec xbacklight -10
+bindsym KP_Add $exec xbacklight +10
+$exec xbacklight -set 30
 
 # volume & playback cotrol
-bindsym XF86AudioRaiseVolume exec sh -c "pactl set-sink-mute 1 false && pactl set-sink-volume 1 +10%"
-bindsym XF86AudioLowerVolume exec sh -c "pactl set-sink-mute 1 false && pactl set-sink-volume 1 -10%"
-bindsym XF86AudioMute exec "pactl set-sink-mute 1 toggle && pactl set-sink-mute 2 toggle"
-bindsym XF86AudioMicMute exec --no-startup-id "pactl set-source-mute 2 toggle"
-bindsym $mod+comma exec playerctl previous
-bindsym $mod+period exec playerctl next
-bindsym $mod+slash exec playerctl play-pause
+bindsym XF86AudioRaiseVolume $exec "pactl set-sink-mute 1 false && pactl set-sink-volume 1 +10%"
+bindsym XF86AudioLowerVolume $exec "pactl set-sink-mute 1 false && pactl set-sink-volume 1 -10%"
+bindsym XF86AudioMute $exec "pactl set-sink-mute 1 toggle"
+bindsym XF86AudioMicMute $exec "pactl set-source-mute 2 toggle"
+bindsym $mod+comma $exec playerctl previous
+bindsym $mod+period $exec playerctl next
+bindsym $mod+slash $exec playerctl play-pause
 
 # daemons
-exec --no-startup-id nm-applet
-exec --no-startup-id /usr/lib/kdeconnectd
-exec --no-startup-id indicator-kdeconnect
-exec --no-startup-id albert
-exec --no-startup-id redshift -l 50.094732:19.973673 -t 5500:3100
+$exec nm-applet
+$exec /usr/lib/kdeconnectd
+$exec indicator-kdeconnect
+$exec albert
+$exec redshift -l 50.094732:19.973673 -t 5500:3100
 
 # disable touchpad
-exec --no-startup-id xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
+$exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
 
 # keyboard - pl layout and caps lock as esc
-exec --no-startup-id setxkbmap -layout pl -option caps:escape -option numpad:microsoft
+$exec setxkbmap -layout pl -option caps:escape -option numpad:microsoft
 
 # cursor
-exec --no-startup-id xrdb ~/.Xresources
+$exec xrdb ~/.Xresources
 
 # startup apps
-exec --no-startup-id spotify
-exec --no-startup-id google-chrome-stable --force-device-scale-factor
-#exec --no-startup-id intellij-idea-ultimate-edition
+$exec spotify
+$exec google-chrome-stable --force-device-scale-factor
+#$exec intellij-idea-ultimate-edition
 
 # dropdown terminal
 bindsym $mod+grave scratchpad show
-exec --no-startup-id termite -r "dropdown-termite"
+$exec termite -r "dropdown-termite"
 for_window [window_role="dropdown-termite"] floating enable
-for_window [window_role="dropdown-termite"] move scratchpad; [window_role="dropdown-termite"] scratchpad show; resize set 1920 540; move scratchpad
+for_window [window_role="dropdown-termite"] move scratchpad; [window_role="dropdown-termite"] scratchpad show; move position 1920 1050; resize set 1920 540; move scratchpad
