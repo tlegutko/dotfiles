@@ -90,3 +90,4 @@ export LANG=en_US.UTF-8
 
 bindkey -v
 bindkey '^R' history-incremental-search-backward
+setopt rmstarsilent
