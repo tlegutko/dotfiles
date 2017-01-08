@@ -1,0 +1,20 @@
+#
+# /etc/hosts: static lookup table for host names
+#
+
+#<ip-address>	<hostname.domain.org>	<hostname>
+127.0.0.1 localhost.localdomain	localhost
+::1	  localhost.localdomain	localhost
+127.0.0.1 tomle.localdomain tomle
+:1        tomle.localdomain tomle
+127.0.0.1 www.androidauthority.com 
+127.0.0.1 www.androidpolice.com
+127.0.0.1 www.reddit.com 
+127.0.0.1 www.theverge.com 
+127.0.0.1 news.ycombinator.com 
+127.0.0.1 phoronix.com 
+127.0.0.1 benchmark.pl 
+127.0.0.1 twitter.com 
+127.0.0.1 mangastream.com 
+127.0.0.1 www.webtoons.com
+127.0.0.1 www.youtube.com

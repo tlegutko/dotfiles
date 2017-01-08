@@ -1,0 +1,59 @@
+[push]
+  default = simple
+[merge]
+  tool = p4merge
+  prompt = false
+  keepBackup = false
+  keepTemporaries = false
+[mergetool "p4merge"]
+  cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+  trustExitCode = true
+  keepBackup = false
+[mergetool]
+  keepBackup = false
+[diff]
+  tool = p4merge
+  prompt = false
+[difftool "p4merge"]
+  cmd = p4merge "$LOCAL" "$REMOTE"
+  trustExitCode = true
+  keepBackup = false
+[alias]
+  a = add .
+  b = branch
+  bl = branch --list
+  bd = branch -D
+  bdo = push origin --delete
+  ch = checkout
+  chb = checkout -b
+  c = commit
+  cl = clone
+  cln = clean
+  clnf = clean -f
+  cm = commit -am
+  cma = commit -a --amend
+  d = diff
+  f = fetch
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  m = merge
+  mt = mergetool
+  p = push
+  pf = push -f
+  pl = pull
+  po = push -u origin
+  r = rebase
+  ra = rebase --abort
+  rc = rebase --continue
+  ri = rebase -i
+  rh = reset --hard
+  rs = reset --soft
+  s = status -sb
+  st = status -sb
+  stl = stash list
+  sta = stash apply
+  stp = stash pop
+  ss = submodule status
+  su = submodule update --init
+[include]
+  path = .gitconfig.local # user info
+
