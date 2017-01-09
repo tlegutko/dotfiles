@@ -4,7 +4,7 @@ set number
 set relativenumber
 set mouse=a
 set clipboard=unnamedplus
-set formatoptions-=cro
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 set expandtab
 set shiftwidth=2
 set softtabstop=2
