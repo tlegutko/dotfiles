@@ -24,7 +24,7 @@ new_window pixel
 hide_edge_borders smart
 
 # basics
-bindsym $mod+Return exec termite
+bindsym $mod+Return exec termite -d `xcwd`
 bindsym $mod+q kill
 bindsym $mod+d exec --no-startup-id albert toggle
 
@@ -78,6 +78,9 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
+set $exec exec --no-startup-id
+set $exec_always exec_always --no-startup-id
+
 # monitors names - primary
 set $lower_right "DP-4"
 # HDMI
@@ -88,11 +91,19 @@ set $upper_right "DP-0"
 set $upper_left "DP-6"
 
 # xrandr
-exec_always --no-startup-id xrandr \
+$exec_always xrandr \
 --output $lower_right --auto --pos 1920x1080 --primary \
 --output $lower_left --auto --pos 0x1080 \
 --output $upper_right --auto --pos 1920x0 \
---output $upper_left --auto --pos 270x30
+--output $upper_left --auto --pos 240x30
+
+# presentation mode, mirror primary display to all outputs
+bindsym $mod+p $exec xrandr \
+--output $lower_right --auto --primary \
+--output $lower_left --auto --same-as $lower_right \
+--output $upper_right --auto --same-as $lower_right \
+--output $upper_left --auto --same-as $lower_right
+
 
 # workspace names
 set $ws1 "1"
@@ -149,6 +160,7 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec i3-msg exit
 
+# todo: make shutdown button work
 bindsym XF86PowerOff exec dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend
 
 # resize wirdow (you can also use the mouse for that)
@@ -186,9 +198,6 @@ bar {
 	status_command i3status
 	tray_output primary
 }
-
-set $exec exec --no-startup-id
-set $exec_always exec_always --no-startup-id
 
 # brightness
 bindsym KP_Subtract $exec xbacklight -10
@@ -228,7 +237,7 @@ $exec google-chrome-stable --force-device-scale-factor
 # app to workspace assignment
 for_window [class="Spotify"] move to workspace $ws10
 assign [class="jetbrains-idea"] $ws1
-assign [class="Google-chrome"] $ws3
+# assign [class="Google-chrome"] $ws3
 
 # dropdown terminal
 bindsym $mod+grave scratchpad show
