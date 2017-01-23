@@ -104,7 +104,6 @@ bindsym $mod+p $exec xrandr \
 --output $upper_right --auto --same-as $lower_right \
 --output $upper_left --auto --same-as $lower_right
 
-
 # workspace names
 set $ws1 "1"
 set $ws2 "2"
@@ -222,6 +221,9 @@ $exec redshift -l 50.094732:19.973673 -t 5500:3100
 
 # disable touchpad
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
+
+# toggle touchpad
+bindsym $mod+t $exec ~/.config/toggle_touchpad.sh
 
 # keyboard - pl layout and caps lock as esc
 $exec setxkbmap -layout pl -option caps:escape -option numpad:microsoft
