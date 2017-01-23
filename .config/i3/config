@@ -212,6 +212,9 @@ bindsym $mod+comma $exec playerctl previous
 bindsym $mod+period $exec playerctl next
 bindsym $mod+slash $exec playerctl play-pause
 
+# screenshot of selection
+bindsym --release Print $exec scrot -s -e 'xclip -selection clipboard $f && mv $f ~/Pictures/'
+
 # daemons
 $exec nm-applet
 $exec /usr/lib/kdeconnectd
