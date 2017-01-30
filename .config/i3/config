@@ -113,8 +113,8 @@ set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
-set $ws9 "9"
-set $ws10 "spotify"
+set $ws9 "9:slack"
+set $ws10 "10:spotify"
 
 # workspace to monitor assignment
 workspace $ws1 output $lower_right 
@@ -213,7 +213,7 @@ bindsym $mod+period $exec playerctl next
 bindsym $mod+slash $exec playerctl play-pause
 
 # screenshot of selection
-bindsym --release Print $exec scrot -s -e 'xclip -selection clipboard $f && mv $f ~/Pictures/'
+bindsym --release Print $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/'
 
 # daemons
 $exec nm-applet
@@ -222,11 +222,16 @@ $exec indicator-kdeconnect
 $exec albert
 $exec redshift -l 50.094732:19.973673 -t 5500:3100
 
-# disable touchpad
+# touchpad
+$exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 1
+$exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Natural Scrolling Enabled" 1
+$exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Tapping Enabled" 1
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
-
-# toggle touchpad
 bindsym $mod+t $exec ~/.config/toggle_touchpad.sh
+
+# trackpoint
+$exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 1
+bindsym $mod+m $exec ~/.config/toggle_trackpoint.sh
 
 # keyboard - pl layout and caps lock as esc
 $exec setxkbmap -layout pl -option caps:escape -option numpad:microsoft
@@ -234,15 +239,17 @@ $exec setxkbmap -layout pl -option caps:escape -option numpad:microsoft
 # cursor
 $exec xrdb ~/.Xresources
 
-# startup apps
-$exec spotify
-$exec google-chrome-stable --force-device-scale-factor
-#$exec intellij-idea-ultimate-edition
-
 # app to workspace assignment
 for_window [class="Spotify"] move to workspace $ws10
-assign [class="jetbrains-idea"] $ws1
-# assign [class="Google-chrome"] $ws3
+assign [class="Slack"] $ws9
+#assign [class="jetbrains-idea"] $ws1
+#assign [class="Google-chrome"] $ws3
+
+# startup apps
+$exec spotify
+$exec slack
+$exec google-chrome-stable --force-device-scale-factor
+#$exec intellij-idea-ultimate-edition
 
 # dropdown terminal
 bindsym $mod+grave scratchpad show
