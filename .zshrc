@@ -3,11 +3,12 @@ export VISUAL="vim"
 export ZSH=/home/tlegutko/.oh-my-zsh
 ZSH_THEME="robbyrussell"
 CASE_SENSITIVE="true"
+ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
