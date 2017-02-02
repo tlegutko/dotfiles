@@ -252,7 +252,7 @@ assign [class="Slack"] $ws9
 
 # startup apps
 $exec spotify
-$exec slack
+$exec slack --force-device-scale-factor
 $exec google-chrome-stable --force-device-scale-factor
 #$exec intellij-idea-ultimate-edition
 
