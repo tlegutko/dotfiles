@@ -247,14 +247,14 @@ $exec xrdb ~/.Xresources
 # app to workspace assignment
 for_window [class="Spotify"] move to workspace $ws10
 assign [class="Slack"] $ws9
-#assign [class="jetbrains-idea"] $ws1
+assign [class="jetbrains-idea"] $ws1
 #assign [class="Google-chrome"] $ws3
 
 # startup apps
 $exec spotify
 $exec slack --force-device-scale-factor
 $exec google-chrome-stable --force-device-scale-factor
-#$exec intellij-idea-ultimate-edition
+$exec intellij-idea-ultimate-edition
 
 # dropdown terminal
 bindsym $mod+grave scratchpad show

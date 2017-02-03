@@ -1,3 +1,6 @@
-slack and chrome need "--force-device-scale-factor" to look normally. change /usr/bin/chrome and /usr/local/applications/slack to include this option, so it works with albert launcher and not only on startup
+slack and chrome need "--force-device-scale-factor" to look normally. 
+add it to /usr/bin/chrome and /usr/local/applications/slack
 
 remember about .gitconfig.local, which isn't in .dotfiles repo
+
+copy etc/systemd/system files to /etc/systemd/system (as root), then systemctl enable them

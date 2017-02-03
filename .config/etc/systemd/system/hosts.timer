@@ -1,0 +1,9 @@
+[Unit]
+Description=Reset /etc/hosts file every 5min, so it's always back quickly.
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target
