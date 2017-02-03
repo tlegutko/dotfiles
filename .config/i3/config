@@ -209,10 +209,13 @@ bindsym KP_Add $exec xbacklight +10
 $exec xbacklight -set 30
 
 # volume & playback cotrol
-bindsym XF86AudioRaiseVolume $exec "pactl set-sink-mute 1 false && pactl set-sink-volume 1 +10%"
-bindsym XF86AudioLowerVolume $exec "pactl set-sink-mute 1 false && pactl set-sink-volume 1 -10%"
-bindsym XF86AudioMute $exec "pactl set-sink-mute 1 toggle"
-bindsym XF86AudioMicMute $exec "pactl set-source-mute 2 toggle"
+bindsym XF86AudioRaiseVolume $exec \
+  "pactl set-sink-mute @DEFAULT_SINK@ false \
+  && (($(/home/tlegutko/.config/scripts/sound_status.sh) <= 90)) \
+  && pactl set-sink-volume @DEFAULT_SINK@ +10%"
+bindsym XF86AudioLowerVolume $exec "pactl set-sink-volume @DEFAULT_SINK@ -10%"
+bindsym XF86AudioMute $exec "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+bindsym XF86AudioMicMute $exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
 bindsym $mod+comma $exec playerctl previous
 bindsym $mod+period $exec playerctl next
 bindsym $mod+slash $exec playerctl play-pause
