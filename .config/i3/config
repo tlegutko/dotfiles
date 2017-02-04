@@ -211,7 +211,7 @@ $exec xbacklight -set 30
 # volume & playback cotrol
 bindsym XF86AudioRaiseVolume $exec \
   "pactl set-sink-mute @DEFAULT_SINK@ false \
-  && (($(/home/tlegutko/.config/scripts/sound_status.sh) <= 90)) \
+  && (($(~/.config/scripts/sound_status.sh) <= 90)) \
   && pactl set-sink-volume @DEFAULT_SINK@ +10%"
 bindsym XF86AudioLowerVolume $exec "pactl set-sink-volume @DEFAULT_SINK@ -10%"
 bindsym XF86AudioMute $exec "pactl set-sink-mute @DEFAULT_SINK@ toggle"
@@ -219,6 +219,10 @@ bindsym XF86AudioMicMute $exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
 bindsym $mod+comma $exec playerctl previous
 bindsym $mod+period $exec playerctl next
 bindsym $mod+slash $exec playerctl play-pause
+
+# bluetooth
+bindsym KP_Divide $exec ~/.config/scripts/bluetooth_off.sh
+bindsym KP_Multiply $exec ~/.config/scripts/bluetooth_on.sh
 
 # screenshot of selection
 bindsym --release Print $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/'
