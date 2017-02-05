@@ -1,9 +1,0 @@
-[Unit]
-Description=Set trackpoint speed and sensitivity
-
-[Service]
-Type=oneshot
-ExecStart=/home/tlegutko/.config/scripts/trackpoint_settings.sh
-
-[Install]
-WantedBy=default.target

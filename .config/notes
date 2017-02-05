@@ -4,3 +4,5 @@ add it to /usr/bin/chrome and /usr/local/applications/slack
 remember about .gitconfig.local, which isn't in .dotfiles repo
 
 copy etc/systemd/system files to /etc/systemd/system (as root), then systemctl enable them
+
+copy etc/udev/rules.d/10-trackpoint.rules to /etc/udev/rules.d/10-trackpoint.rules  
