@@ -27,10 +27,15 @@ hide_edge_borders smart
 # class                 border  backgr. text    indicator child_border
 client.focused          #4c7899 #285577 #ffffff #ff6000  #ffa500
 
+# convenient aliases
+set $exec exec --no-startup-id
+set $exec_always exec_always --no-startup-id
+
 # basics
 bindsym $mod+Return exec termite -d `xcwd`
 bindsym $mod+q kill
-bindsym $mod+d exec --no-startup-id albert toggle
+bindsym $mod+d $exec albert toggle
+bindsym $mod+s $exec systemctl suspend
 
 # change focus
 bindsym $mod+h focus left
@@ -66,9 +71,9 @@ bindsym $mod+b split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
+#bindsym $mod+s layout stacking
+#bindsym $mod+w layout tabbed
+#bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -81,9 +86,6 @@ bindsym $mod+a focus parent
 
 # focus the child container
 bindsym $mod+z focus child
-
-set $exec exec --no-startup-id
-set $exec_always exec_always --no-startup-id
 
 # monitors names - primary
 set $lower_right "DP-4"
@@ -163,9 +165,6 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec i3-msg exit
 
-# todo: make shutdown button work
-bindsym XF86PowerOff exec dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend
-
 # resize wirdow (you can also use the mouse for that)
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
@@ -239,11 +238,11 @@ $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 1
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Natural Scrolling Enabled" 1
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Tapping Enabled" 1
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
-bindsym $mod+t $exec ~/.config/toggle_touchpad.sh
+bindsym $mod+t $exec ~/.config/scripts/toggle_touchpad.sh
 
 # trackpoint
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 1
-bindsym $mod+m $exec ~/.config/toggle_trackpoint.sh
+bindsym $mod+m $exec ~/.config/scripts/toggle_trackpoint.sh
 
 # keyboard - pl layout and caps lock as esc
 $exec setxkbmap -layout pl -option caps:escape -option numpad:microsoft
