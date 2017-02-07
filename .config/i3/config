@@ -96,7 +96,7 @@ set $upper_right "DP-0"
 # USB-C
 set $upper_left "DP-6"
 
-# xrandr
+# xrandr default mode
 $exec_always xrandr \
 --output $lower_right --auto --pos 1920x1080 --primary \
 --output $lower_left --auto --pos 0x1080 \
@@ -109,6 +109,13 @@ bindsym $mod+p $exec xrandr \
 --output $lower_left --auto --same-as $lower_right \
 --output $upper_right --auto --same-as $lower_right \
 --output $upper_left --auto --same-as $lower_right
+
+# xrandr only primary monitor mode
+bindsym $mod+o $exec xrandr \
+--output $lower_right --auto --primary \
+--output $lower_left --off \
+--output $upper_right --off \
+--output $upper_left --off \
 
 # workspace names
 set $ws1 "1"
