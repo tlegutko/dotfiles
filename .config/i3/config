@@ -30,6 +30,7 @@ client.focused          #4c7899 #285577 #ffffff #ff6000  #ffa500
 # convenient aliases
 set $exec exec --no-startup-id
 set $exec_always exec_always --no-startup-id
+set $scripts_dir /home/tlegutko/.config/scripts
 
 # basics
 bindsym $mod+Return exec termite -d `xcwd`
@@ -76,10 +77,10 @@ bindsym $mod+f fullscreen toggle
 #bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+#bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+#bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -217,7 +218,7 @@ $exec xbacklight -set 30
 # volume & playback cotrol
 bindsym XF86AudioRaiseVolume $exec \
   "pactl set-sink-mute @DEFAULT_SINK@ false \
-  && (($(~/.config/scripts/sound_status.sh) <= 90)) \
+  && (($($scripts_dir/sound_status.sh) <= 90)) \
   && pactl set-sink-volume @DEFAULT_SINK@ +10%"
 bindsym XF86AudioLowerVolume $exec "pactl set-sink-volume @DEFAULT_SINK@ -10%"
 bindsym XF86AudioMute $exec "pactl set-sink-mute @DEFAULT_SINK@ toggle"
@@ -227,8 +228,8 @@ bindsym $mod+period $exec playerctl next
 bindsym $mod+slash $exec playerctl play-pause
 
 # bluetooth
-bindsym KP_Divide $exec ~/.config/scripts/bluetooth_off.sh
-bindsym KP_Multiply $exec ~/.config/scripts/bluetooth_on.sh
+bindsym KP_Divide $exec $scripts_dir/bluetooth_off.sh
+bindsym KP_Multiply $exec $scripts_dir/bluetooth_on.sh
 
 # screenshot of selection
 bindsym --release Print $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/'
@@ -245,11 +246,11 @@ $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 1
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Natural Scrolling Enabled" 1
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Tapping Enabled" 1
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
-bindsym $mod+t $exec ~/.config/scripts/toggle_touchpad.sh
+bindsym $mod+t $exec $scripts_dir/toggle_touchpad.sh
 
 # trackpoint
-$exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 1
-bindsym $mod+m $exec ~/.config/scripts/toggle_trackpoint.sh
+$exec xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" 1
+bindsym $mod+m $exec $scripts_dir/toggle_trackpoint.sh
 
 # keyboard - pl layout and caps lock as esc
 $exec setxkbmap -layout pl -option caps:escape -option numpad:microsoft
@@ -258,19 +259,19 @@ $exec setxkbmap -layout pl -option caps:escape -option numpad:microsoft
 $exec xrdb ~/.Xresources
 
 # app to workspace assignment
-for_window [class="Spotify"] move to workspace $ws10
-assign [class="Slack"] $ws9
 assign [class="jetbrains-idea"] $ws1
-#assign [class="Google-chrome"] $ws3
+assign [class="Slack"] $ws9
+for_window [class="Spotify"] move to workspace $ws10
 
 # startup apps
 $exec spotify
-$exec slack --force-device-scale-factor
 $exec google-chrome-stable --force-device-scale-factor
 $exec intellij-idea-ultimate-edition
+$exec slack --force-device-scale-factor
 
 # dropdown terminal
-bindsym $mod+grave scratchpad show
 $exec termite -r "dropdown-termite"
-for_window [window_role="dropdown-termite"] floating enable
-for_window [window_role="dropdown-termite"] move scratchpad; [window_role="dropdown-termite"] scratchpad show; move position 1920 1050; resize set 1920 540; move scratchpad
+for_window [window_role="dropdown-termite"] floating enable 
+for_window [window_role="dropdown-termite"] move scratchpad
+bindsym $mod+grave $exec $scripts_dir/toggle_dropdown_terminal.sh
+bindsym $mod+Shift+grave $exec termite -r "dropdown-termite"
