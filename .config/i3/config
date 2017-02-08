@@ -270,8 +270,9 @@ $exec intellij-idea-ultimate-edition
 $exec slack --force-device-scale-factor
 
 # dropdown terminal
-$exec termite -r "dropdown-termite"
+$exec termite -r "dropdown-termite" -e tmux
 for_window [window_role="dropdown-termite"] floating enable 
 for_window [window_role="dropdown-termite"] move scratchpad
 bindsym $mod+grave $exec $scripts_dir/toggle_dropdown_terminal.sh
-bindsym $mod+Shift+grave $exec termite -r "dropdown-termite"
+bindsym $mod+Shift+grave $exec termite -r "dropdown-termite" -e tmux
+
