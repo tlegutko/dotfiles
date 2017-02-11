@@ -239,13 +239,10 @@ mode "normal" {
   # exit i3 (logs you out of your X session)
   bindsym Shift+e exec i3-msg exit
   # toggle trackpad / trackpoint
-  bindsym $mod+t $exec $scripts_dir/toggle_touchpad.sh
+  bindsym t $exec $scripts_dir/toggle_touchpad.sh
   bindsym m $exec $scripts_dir/toggle_trackpoint.sh
   # exit normal mode
   bindsym i mode "default"
-  bindsym a mode "default"
-  bindsym $mod+Escape mode "default"
-  bindsym $mod+Tab mode "default"
   bindsym Escape mode "default"
   bindsym Tab mode "default"
   bindsym --whole-window button1 mode "default"
