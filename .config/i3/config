@@ -36,7 +36,7 @@ set $scripts_dir /home/tlegutko/.config/scripts
 bindsym $mod+Return exec termite -d `xcwd`
 bindsym $mod+q kill
 bindsym $mod+d $exec albert toggle
-bindsym $mod+s $exec systemctl suspend
+bindsym $mod+Shift+s $exec systemctl suspend
 
 # change focus
 bindsym $mod+h focus left
@@ -44,23 +44,11 @@ bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
 
-# alternatively, you can use the cursor keys:
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
-
 # move focused window
 bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
-
-# alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
 bindsym $mod+v split h
@@ -71,24 +59,14 @@ bindsym $mod+b split v
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
 
-# change container layout (stacked, tabbed, toggle split)
-#bindsym $mod+s layout stacking
-#bindsym $mod+w layout tabbed
-#bindsym $mod+e layout toggle split
-
-# toggle tiling / floating
-#bindsym $mod+Shift+space floating toggle
-
-# change focus between tiling / floating windows
-#bindsym $mod+space focus mode_toggle
-
 # focus the parent container
 bindsym $mod+a focus parent
 
 # focus the child container
 bindsym $mod+z focus child
 
-# monitors names - primary
+# monitors names
+# primary
 set $lower_right "DP-4"
 # HDMI
 set $lower_left "DP-1"
@@ -104,7 +82,7 @@ $exec_always xrandr \
 --output $upper_right --auto --pos 1920x0 \
 --output $upper_left --auto --pos 240x30
 
-# presentation mode, mirror primary display to all outputs
+# presentation mode - mirror primary display to all outputs
 bindsym $mod+p $exec xrandr \
 --output $lower_right --auto --primary \
 --output $lower_left --auto --same-as $lower_right \
@@ -166,6 +144,9 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
+# double pressing workspace num goes back to previous one
+workspace_auto_back_and_forth yes
+
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -173,32 +154,106 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec i3-msg exit
 
+# more convenient visual mode in termite shortcut
+bindsym --release Mod1+Escape exec --no-startup-id xdotool key --clearmodifiers ctrl+shift+space
+
 # resize wirdow (you can also use the mouse for that)
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+  bindsym h resize shrink width 10 px or 10 ppt
+  bindsym j resize grow height 10 px or 10 ppt
+  bindsym k resize shrink height 10 px or 10 ppt
+  bindsym l resize grow width 10 px or 10 ppt
+  # exit resize mode
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+  bindsym $mod+r mode "default"
+}
+bindsym $mod+r mode "resize"
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym h resize shrink width 10 px or 10 ppt
-        bindsym j resize grow height 10 px or 10 ppt
-        bindsym k resize shrink height 10 px or 10 ppt
-        bindsym l resize grow width 10 px or 10 ppt
-
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
-
-        # back to normal: Enter or Escape
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+# disable normal mode keybindings when typing in albert
+mode "albert" {
+  bindsym --release Return $exec xdotool key --clearmodifiers KP_Enter; mode "normal"
+  bindsym $mod+d $exec albert toggle; mode "normal"
+  bindsym Escape $exec albert toggle; mode "normal"
 }
 
-bindsym $mod+r mode "resize"
+# navigation mode a'la vim normal mode, no $mod key required
+mode "normal" {
+  # basics
+  bindsym Return exec termite -d `xcwd`; mode "normal"
+  bindsym q kill
+  # todo exit normal mode when toggling albert
+  bindsym d $exec albert toggle; mode "albert"
+  bindsym Shift+s $exec systemctl suspend
+  # change focus
+  bindsym h focus left
+  bindsym j focus down
+  bindsym k focus up
+  bindsym l focus right
+  # move focused window
+  bindsym Shift+h move left
+  bindsym Shift+j move down
+  bindsym Shift+k move up
+  bindsym Shift+l move right
+  # split in horizontal orientation
+  bindsym v split h
+  # split in vertical orientation
+  bindsym b split v
+  # enter fullscreen mode for the focused container
+  bindsym f fullscreen toggle
+  # focus the parent container
+  bindsym a focus parent
+  # focus the child container
+  bindsym z focus child
+  # switch to workspace
+  bindsym 1 workspace $ws1
+  bindsym 2 workspace $ws2
+  bindsym 3 workspace $ws3
+  bindsym 4 workspace $ws4
+  bindsym 5 workspace $ws5
+  bindsym 6 workspace $ws6
+  bindsym 7 workspace $ws7
+  bindsym 8 workspace $ws8
+  bindsym 9 workspace $ws9
+  bindsym 0 workspace $ws10
+  # move focused container to workspace
+  bindsym Shift+1 move container to workspace $ws1
+  bindsym Shift+2 move container to workspace $ws2
+  bindsym Shift+3 move container to workspace $ws3
+  bindsym Shift+4 move container to workspace $ws4
+  bindsym Shift+5 move container to workspace $ws5
+  bindsym Shift+6 move container to workspace $ws6
+  bindsym Shift+7 move container to workspace $ws7
+  bindsym Shift+8 move container to workspace $ws8
+  bindsym Shift+9 move container to workspace $ws9
+  bindsym Shift+0 move container to workspace $ws10
+  # dropdown terminal
+  bindsym grave $exec $scripts_dir/toggle_dropdown_terminal.sh
+  bindsym Shift+grave $exec termite -r "dropdown-termite"
+  #resize mode
+  bindsym r mode "resize"
+  # reload the configuration file
+  bindsym Shift+c reload
+  # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+  bindsym Shift+r restart
+  # exit i3 (logs you out of your X session)
+  bindsym Shift+e exec i3-msg exit
+  # toggle trackpad / trackpoint
+  bindsym $mod+t $exec $scripts_dir/toggle_touchpad.sh
+  bindsym m $exec $scripts_dir/toggle_trackpoint.sh
+  # exit normal mode
+  bindsym i mode "default"
+  bindsym a mode "default"
+  bindsym $mod+Escape mode "default"
+  bindsym $mod+Tab mode "default"
+  bindsym Escape mode "default"
+  bindsym Tab mode "default"
+  bindsym --whole-window button1 mode "default"
+  bindsym Super_L mode "default"
+}
+#bindsym Super_L mode "normal"
+bindsym $mod+Escape mode "normal"
+bindsym $mod+Tab mode "normal"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -208,6 +263,9 @@ bar {
         modifier Mod2
 	status_command i3status
 	tray_output primary
+  colors {
+    binding_mode #ffa500 #285577 #ffffff 
+  }
 }
 
 # brightness
@@ -255,8 +313,10 @@ bindsym $mod+m $exec $scripts_dir/toggle_trackpoint.sh
 # keyboard - pl layout and caps lock as esc
 $exec setxkbmap -layout pl -option caps:escape -option numpad:microsoft
 
-# cursor
+# cursor size & hiding
 $exec xrdb ~/.Xresources
+$exec unclutter --timeout 1
+mouse_warping none
 
 # app to workspace assignment
 assign [class="jetbrains-idea"] $ws1
@@ -270,8 +330,8 @@ $exec intellij-idea-ultimate-edition
 $exec slack --force-device-scale-factor
 
 # dropdown terminal
-$exec termite -r "dropdown-termite" -e tmux
+$exec termite -r "dropdown-termite"
 for_window [window_role="dropdown-termite"] floating enable 
 for_window [window_role="dropdown-termite"] move scratchpad
 bindsym $mod+grave $exec $scripts_dir/toggle_dropdown_terminal.sh
-bindsym $mod+Shift+grave $exec termite -r "dropdown-termite" -e tmux
+bindsym $mod+Shift+grave $exec termite -r "dropdown-termite"
