@@ -172,7 +172,7 @@ bindsym $mod+r mode "resize"
 
 # disable normal mode keybindings when typing in albert
 mode "albert" {
-  bindsym --release Return $exec xdotool key --clearmodifiers KP_Enter; mode "normal"
+  bindsym --release Return $exec xdotool key --clearmodifiers KP_Enter; mode "default"
   bindsym $mod+d $exec albert toggle; mode "normal"
   bindsym Escape $exec albert toggle; mode "normal"
 }
