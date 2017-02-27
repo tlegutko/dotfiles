@@ -34,6 +34,7 @@ set $scripts_dir /home/tlegutko/.config/scripts
 
 # basics
 bindsym $mod+Return exec termite -d `xcwd`
+bindsym $mod+e exec emacsclient -c -n
 bindsym $mod+q kill
 bindsym $mod+d $exec albert toggle
 bindsym $mod+Shift+s $exec systemctl suspend
@@ -145,7 +146,7 @@ bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
 # double pressing workspace num goes back to previous one
-workspace_auto_back_and_forth yes
+workspace_auto_back_and_forth no
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -170,20 +171,13 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-# disable normal mode keybindings when typing in albert
-mode "albert" {
-  bindsym --release Return $exec xdotool key --clearmodifiers KP_Enter; mode "default"
-  bindsym $mod+d $exec albert toggle; mode "normal"
-  bindsym Escape $exec albert toggle; mode "normal"
-}
-
 # navigation mode a'la vim normal mode, no $mod key required
 mode "normal" {
   # basics
-  bindsym Return exec termite -d `xcwd`; mode "normal"
+  bindsym Return mode "default"; exec termite -d `xcwd`
   bindsym q kill
   # todo exit normal mode when toggling albert
-  bindsym d $exec albert toggle; mode "albert"
+  bindsym d mode "default"; $exec albert toggle
   bindsym Shift+s $exec systemctl suspend
   # change focus
   bindsym h focus left
@@ -241,6 +235,10 @@ mode "normal" {
   # toggle trackpad / trackpoint
   bindsym t $exec $scripts_dir/toggle_touchpad.sh
   bindsym m $exec $scripts_dir/toggle_trackpoint.sh
+  # playback controls
+  bindsym comma $exec playerctl previous
+  bindsym period $exec playerctl next
+  bindsym slash $exec playerctl play-pause
   # exit normal mode
   bindsym i mode "default"
   bindsym Escape mode "default"
@@ -297,14 +295,14 @@ $exec albert
 $exec redshift -l 50.094732:19.973673 -t 5500:3100
 
 # touchpad
-$exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 1
-$exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Natural Scrolling Enabled" 1
-$exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Tapping Enabled" 1
+$exec_always xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 1
+$exec_always xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Natural Scrolling Enabled" 1
+$exec_always xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Tapping Enabled" 1
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
 bindsym $mod+t $exec $scripts_dir/toggle_touchpad.sh
 
 # trackpoint
-$exec xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" 1
+$exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" 1
 bindsym $mod+m $exec $scripts_dir/toggle_trackpoint.sh
 
 # keyboard - pl layout and caps lock as esc
@@ -316,15 +314,13 @@ $exec unclutter --timeout 1
 mouse_warping none
 
 # app to workspace assignment
-assign [class="jetbrains-idea"] $ws1
 assign [class="Slack"] $ws9
 for_window [class="Spotify"] move to workspace $ws10
 
 # startup apps
 $exec spotify
 $exec google-chrome-stable --force-device-scale-factor
-$exec intellij-idea-ultimate-edition
-$exec slack --force-device-scale-factor
+#$exec slack --force-device-scale-factor
 
 # dropdown terminal
 $exec termite -r "dropdown-termite"

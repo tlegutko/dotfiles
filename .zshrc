@@ -17,9 +17,9 @@ export LANG=en_US.UTF-8
 
 bindkey -v
 bindkey '^R' history-incremental-search-backward
-bindkey '^S' history-incremental-search-forward
+bindkey '^S' history-incremental-search-backward
+bindkey '^F' history-incremental-search-forward
 setopt rmstarsilent
 alias em='emacsclient -t'
-alias vim='emacsclient -t'
 
 eval $(keychain --eval --quiet --nogui id_rsa)
