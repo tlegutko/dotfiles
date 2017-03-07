@@ -74,14 +74,14 @@ set $lower_left "DP-1"
 # miniDP
 set $upper_right "DP-0"
 # USB-C
-set $upper_left "DP-6"
+set $upper_left "DP-5"
 
 # xrandr default mode
 $exec_always xrandr \
 --output $lower_right --auto --pos 1920x1080 --primary \
 --output $lower_left --auto --pos 0x1080 \
 --output $upper_right --auto --pos 1920x0 \
---output $upper_left --auto --pos 240x30
+--output $upper_left --pos 240x30 --mode 1680x1050
 
 # presentation mode - mirror primary display to all outputs
 bindsym $mod+p $exec xrandr \
