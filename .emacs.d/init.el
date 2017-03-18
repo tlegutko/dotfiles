@@ -8,7 +8,7 @@
  package-archive-priorities '(("melpa-stable" . 1)))
 
 ;; my list of packages to auto install
-(setq package-list '(zenburn-theme evil pdf-tools org linum-relative use-package))
+(setq package-list '(zenburn-theme evil evil-surround pdf-tools org linum-relative use-package))
 (package-initialize)
 
 ; fetch the list of packages available 
@@ -46,8 +46,14 @@
 						(interactive)
 						(evil-scroll-down nil)))
 
+;; separate sentences by one space
+(setq sentence-end-double-space nil)
+
+;; evil-surround
+(global-evil-surround-mode 1)
+
 ;;; eval shortcut
-(global-set-key (kbd "C-x E") 'eval-buffer)
+(global-set-key (kbd "C-x e") 'eval-buffer)
 
 ;;; i3-like mouse hover effect
 (setq mouse-autoselect-window t)
@@ -61,18 +67,6 @@
 ;; Update PDF buffers after successful LaTeX runs
 (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
 (pdf-tools-install)
-
-;;; transpose windows func
-(defun transpose-windows ()
-  (interactive)
-  (let ((this-buffer (window-buffer (selected-window)))
-	(other-buffer (prog2
-			  (other-window +1)
-			  (window-buffer (selected-window))
-			(other-window -1))))
-    (switch-to-buffer other-buffer)
-    (switch-to-buffer-other-window this-buffer)
-    (other-window -1)))
 
 ;;; line numbers
 (require 'linum-relative)
@@ -90,6 +84,7 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-iswitchb)
+(setq calendar-week-start-day 1)
 ; line wrapping
 (setq org-startup-truncated 'nil)
 (global-visual-line-mode t)

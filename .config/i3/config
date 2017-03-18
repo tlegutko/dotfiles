@@ -35,6 +35,7 @@ set $scripts_dir /home/tlegutko/.config/scripts
 # basics
 bindsym $mod+Return exec termite -d `xcwd`
 bindsym $mod+e exec emacsclient -c -n
+bindsym $mod+c $exec google-chrome-stable
 bindsym $mod+q kill
 bindsym $mod+d $exec albert toggle
 bindsym $mod+Shift+s $exec systemctl suspend
@@ -106,7 +107,7 @@ set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
-set $ws9 "9:slack"
+set $ws9 "9"
 set $ws10 "10:spotify"
 
 # workspace to monitor assignment
@@ -161,8 +162,8 @@ bindsym --release Mod1+Escape exec --no-startup-id xdotool key --clearmodifiers 
 # resize wirdow (you can also use the mouse for that)
 mode "resize" {
   bindsym h resize shrink width 10 px or 10 ppt
-  bindsym j resize grow height 10 px or 10 ppt
-  bindsym k resize shrink height 10 px or 10 ppt
+  bindsym j resize shrink height 10 px or 10 ppt
+  bindsym k resize grow height 10 px or 10 ppt
   bindsym l resize grow width 10 px or 10 ppt
   # exit resize mode
   bindsym Return mode "default"
@@ -253,7 +254,7 @@ bindsym $mod+Tab mode "normal"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        position bottom
+        position top
         mode hide
         modifier Mod2
 	status_command i3status
@@ -311,7 +312,7 @@ $exec setxkbmap -layout pl -option caps:escape -option numpad:microsoft
 # cursor size & hiding
 $exec xrdb ~/.Xresources
 $exec unclutter --timeout 1
-mouse_warping none
+mouse_warping output
 
 # app to workspace assignment
 assign [class="Slack"] $ws9
@@ -319,7 +320,7 @@ for_window [class="Spotify"] move to workspace $ws10
 
 # startup apps
 $exec spotify
-$exec google-chrome-stable --force-device-scale-factor
+$exec google-chrome-stable
 #$exec slack --force-device-scale-factor
 
 # dropdown terminal
