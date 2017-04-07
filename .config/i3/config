@@ -34,7 +34,7 @@ set $scripts_dir /home/tlegutko/.config/scripts
 
 # basics
 bindsym $mod+Return exec termite -d `xcwd`
-bindsym $mod+e exec emacsclient -c -n
+bindsym $mod+e $exec emacsclient -c -n
 bindsym $mod+c $exec google-chrome-stable
 bindsym $mod+q kill
 bindsym $mod+d $exec albert toggle
@@ -75,14 +75,14 @@ set $lower_left "DP-1"
 # miniDP
 set $upper_right "DP-0"
 # USB-C
-set $upper_left "DP-5"
+set $upper_left "DP-6"
 
 # xrandr default mode
 $exec_always xrandr \
 --output $lower_right --auto --pos 1920x1080 --primary \
 --output $lower_left --auto --pos 0x1080 \
 --output $upper_right --auto --pos 1920x0 \
---output $upper_left --pos 240x30 --mode 1680x1050
+--output $upper_left --auto --pos 240x30 
 
 # presentation mode - mirror primary display to all outputs
 bindsym $mod+p $exec xrandr \
@@ -134,6 +134,15 @@ bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
 bindsym $mod+0 workspace $ws10
 
+bindsym KP_Next workspace $ws1
+bindsym KP_End workspace $ws2
+bindsym KP_Home workspace $ws3
+bindsym KP_Prior workspace $ws4
+bindsym $mod+KP_Next workspace $ws5
+bindsym $mod+KP_End workspace $ws6
+bindsym $mod+KP_Home workspace $ws7
+bindsym $mod+KP_Prior workspace $ws8
+
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $ws1
 bindsym $mod+Shift+2 move container to workspace $ws2
@@ -146,15 +155,21 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
-# double pressing workspace num goes back to previous one
-workspace_auto_back_and_forth no
+bindsym Shift+KP_Next move container to workspace $ws1
+bindsym Shift+KP_End move container to workspace $ws2
+bindsym Shift+KP_Home move container to workspace $ws3
+bindsym Shift+KP_Prior move container to workspace $ws4
+bindsym $mod+Shift+KP_Next move container to workspace $ws5
+bindsym $mod+Shift+KP_End move container to workspace $ws6
+bindsym $mod+Shift+KP_Home move container to workspace $ws7
+bindsym $mod+Shift+KP_Prior move container to workspace $ws8
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec i3-msg exit
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # more convenient visual mode in termite shortcut
 bindsym --release Mod1+Escape exec --no-startup-id xdotool key --clearmodifiers ctrl+shift+space
@@ -171,85 +186,6 @@ mode "resize" {
   bindsym $mod+r mode "default"
 }
 bindsym $mod+r mode "resize"
-
-# navigation mode a'la vim normal mode, no $mod key required
-mode "normal" {
-  # basics
-  bindsym Return mode "default"; exec termite -d `xcwd`
-  bindsym q kill
-  # todo exit normal mode when toggling albert
-  bindsym d mode "default"; $exec albert toggle
-  bindsym Shift+s $exec systemctl suspend
-  # change focus
-  bindsym h focus left
-  bindsym j focus down
-  bindsym k focus up
-  bindsym l focus right
-  # move focused window
-  bindsym Shift+h move left
-  bindsym Shift+j move down
-  bindsym Shift+k move up
-  bindsym Shift+l move right
-  # split in horizontal orientation
-  bindsym v split h
-  # split in vertical orientation
-  bindsym b split v
-  # enter fullscreen mode for the focused container
-  bindsym f fullscreen toggle
-  # focus the parent container
-  bindsym a focus parent
-  # focus the child container
-  bindsym z focus child
-  # switch to workspace
-  bindsym 1 workspace $ws1
-  bindsym 2 workspace $ws2
-  bindsym 3 workspace $ws3
-  bindsym 4 workspace $ws4
-  bindsym 5 workspace $ws5
-  bindsym 6 workspace $ws6
-  bindsym 7 workspace $ws7
-  bindsym 8 workspace $ws8
-  bindsym 9 workspace $ws9
-  bindsym 0 workspace $ws10
-  # move focused container to workspace
-  bindsym Shift+1 move container to workspace $ws1
-  bindsym Shift+2 move container to workspace $ws2
-  bindsym Shift+3 move container to workspace $ws3
-  bindsym Shift+4 move container to workspace $ws4
-  bindsym Shift+5 move container to workspace $ws5
-  bindsym Shift+6 move container to workspace $ws6
-  bindsym Shift+7 move container to workspace $ws7
-  bindsym Shift+8 move container to workspace $ws8
-  bindsym Shift+9 move container to workspace $ws9
-  bindsym Shift+0 move container to workspace $ws10
-  # dropdown terminal
-  bindsym grave $exec $scripts_dir/toggle_dropdown_terminal.sh
-  bindsym Shift+grave $exec termite -r "dropdown-termite"
-  #resize mode
-  bindsym r mode "resize"
-  # reload the configuration file
-  bindsym Shift+c reload
-  # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-  bindsym Shift+r restart
-  # exit i3 (logs you out of your X session)
-  bindsym Shift+e exec i3-msg exit
-  # toggle trackpad / trackpoint
-  bindsym t $exec $scripts_dir/toggle_touchpad.sh
-  bindsym m $exec $scripts_dir/toggle_trackpoint.sh
-  # playback controls
-  bindsym comma $exec playerctl previous
-  bindsym period $exec playerctl next
-  bindsym slash $exec playerctl play-pause
-  # exit normal mode
-  bindsym i mode "default"
-  bindsym Escape mode "default"
-  bindsym Tab mode "default"
-  bindsym --whole-window button1 mode "default"
-  bindsym Super_L mode "default"
-}
-#bindsym Super_L mode "normal"
-bindsym $mod+Escape mode "normal"
-bindsym $mod+Tab mode "normal"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -277,9 +213,9 @@ bindsym XF86AudioRaiseVolume $exec \
 bindsym XF86AudioLowerVolume $exec "pactl set-sink-volume @DEFAULT_SINK@ -10%"
 bindsym XF86AudioMute $exec "pactl set-sink-mute @DEFAULT_SINK@ toggle"
 bindsym XF86AudioMicMute $exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
-bindsym $mod+comma $exec playerctl previous
-bindsym $mod+period $exec playerctl next
-bindsym $mod+slash $exec playerctl play-pause
+bindsym KP_Insert $exec playerctl previous
+bindsym KP_Delete $exec playerctl next
+bindsym KP_Enter $exec playerctl play-pause
 
 # bluetooth
 bindsym KP_Divide $exec $scripts_dir/bluetooth_off.sh
@@ -294,6 +230,13 @@ $exec /usr/lib/kdeconnectd
 $exec indicator-kdeconnect
 $exec albert
 $exec redshift -l 50.094732:19.973673 -t 5500:3100
+$exec $scripts_dir/focus-last.py
+
+# focus last window
+bindsym $mod+Tab $exec $scripts_dir/focus-last.py --switch
+
+# double prssing workspace num goes back to previous one
+workspace_auto_back_and_forth no
 
 # touchpad
 $exec_always xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 1
@@ -320,7 +263,7 @@ for_window [class="Spotify"] move to workspace $ws10
 
 # startup apps
 $exec spotify
-$exec google-chrome-stable
+#$exec google-chrome-stable
 #$exec slack --force-device-scale-factor
 
 # dropdown terminal

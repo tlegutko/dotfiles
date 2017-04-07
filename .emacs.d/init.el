@@ -45,6 +45,7 @@
 (define-key evil-normal-state-map (kbd "C-j") (lambda ()
 						(interactive)
 						(evil-scroll-down nil)))
+(define-key evil-insert-state-ma‌​p (kbd "C-t") 'transpose-chars)
 
 ;; separate sentences by one space
 (setq sentence-end-double-space nil)
