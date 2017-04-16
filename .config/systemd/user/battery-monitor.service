@@ -1,0 +1,6 @@
+[Unit]
+Description=Alarm when battery is low
+
+[Service]
+Type=oneshot
+ExecStart=/home/tlegutko/.config/scripts/battery-monitor.sh

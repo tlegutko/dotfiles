@@ -45,7 +45,10 @@
 (define-key evil-normal-state-map (kbd "C-j") (lambda ()
 						(interactive)
 						(evil-scroll-down nil)))
-(define-key evil-insert-state-ma‌​p (kbd "C-t") 'transpose-chars)
+;; transpose chars
+(define-key evil-insert-state-map "\C-t" 'transpose-chars)
+;; split line
+(define-key evil-normal-state-map (kbd "K") (kbd "r RET"))
 
 ;; separate sentences by one space
 (setq sentence-end-double-space nil)
@@ -66,8 +69,19 @@
 (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
       TeX-source-correlate-start-server t)
 ;; Update PDF buffers after successful LaTeX runs
-(add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
 (pdf-tools-install)
+
+(require 'reftex)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(add-hook 'latex-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+
+(defun recompile-pdf-on-save ()
+  "Recompile latex on save with external script."
+  (when (eq major-mode 'latex-mode)
+    (call-process "~/.config/scripts/recompile-masters-thesis.sh")))
+
+(add-hook 'after-save-hook #'recompile-pdf-on-save)
 
 ;;; line numbers
 (require 'linum-relative)

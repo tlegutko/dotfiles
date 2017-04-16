@@ -20,6 +20,5 @@ bindkey '^R' history-incremental-search-backward
 bindkey '^S' history-incremental-search-backward
 bindkey '^F' history-incremental-search-forward
 setopt rmstarsilent
-alias em='emacsclient -t'
 
 eval $(keychain --eval --quiet --nogui id_rsa)
