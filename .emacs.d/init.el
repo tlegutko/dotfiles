@@ -73,7 +73,7 @@
 
 (require 'reftex)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-(add-hook 'latex-mode-hook 'turn-on-reftex)
+(add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
 (setq reftex-plug-into-AUCTeX t)
 
 (defun recompile-pdf-on-save ()
@@ -173,3 +173,4 @@
 ;; keychain-environment, so magit sees ssh-agent
 ;; run M-x keychain-refresh-environment if it doesn't see it
 (use-package keychain-environment)
+(keychain-refresh-environment)

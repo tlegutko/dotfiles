@@ -108,7 +108,7 @@ bindsym $mod+o $exec xrandr \
 --output $upper_right --off \
 --output $upper_left --off \
 
-# workspace names
+# default workspace names
 set $ws1 "1"
 set $ws2 "2"
 set $ws3 "3"
@@ -121,27 +121,41 @@ set $ws9 "9"
 set $ws10 "10:spotify"
 
 # workspace to monitor assignment for 4 monitors in grid
-#workspace $ws1 output $lower_right 
-#workspace $ws2 output $lower_left
-#workspace $ws3 output $upper_left
-#workspace $ws4 output $upper_right
-#workspace $ws5 output $lower_right 
-#workspace $ws6 output $lower_left
-#workspace $ws7 output $upper_left
-#workspace $ws8 output $upper_right
-#workspace $ws9 output $lower_right 
-#workspace $ws10 output $lower_right 
-
-# workspace to monitor assignment for 2 monitors, left & right
+# todo those two block should have script to distribute monitors based on configuration
 workspace $ws1 output $lower_right 
 workspace $ws2 output $lower_left
-workspace $ws3 output $lower_left
-workspace $ws4 output $lower_right
+workspace $ws3 output $upper_left
+workspace $ws4 output $upper_right
 workspace $ws5 output $lower_right 
 workspace $ws6 output $lower_left
-workspace $ws7 output $lower_left
-workspace $ws8 output $lower_right
+workspace $ws7 output $upper_left
+workspace $ws8 output $upper_right
 workspace $ws9 output $lower_right 
+workspace $ws10 output $lower_right
+
+# ensure workspaces are on appropriate output when plugging in additional displays
+for_window [workspace=1] move workspace to output $upper_right
+for_window [workspace=1] move workspace to output $lower_right 
+for_window [workspace=2] move workspace to output $lower_left
+for_window [workspace=3] move workspace to output $upper_left
+for_window [workspace=4] move workspace to output $upper_right
+for_window [workspace=5] move workspace to output $lower_right 
+for_window [workspace=6] move workspace to output $lower_left
+for_window [workspace=7] move workspace to output $upper_left
+for_window [workspace=8] move workspace to output $upper_right
+for_window [workspace=9] move workspace to output $lower_right 
+for_window [workspace=10] move workspace to output $lower_right
+
+# workspace to monitor assignment for 2 monitors, left & right
+# workspace $ws1 output $lower_right 
+# workspace $ws2 output $lower_left
+# workspace $ws3 output $lower_left
+# workspace $ws4 output $lower_right
+# workspace $ws5 output $lower_right 
+# workspace $ws6 output $lower_left
+# workspace $ws7 output $lower_left
+# workspace $ws8 output $lower_right
+# workspace $ws9 output $lower_right 
 
 # switch to workspace
 bindsym $mod+1 workspace number 1
@@ -188,6 +202,12 @@ bindsym $mod+Shift+KP_Home move container to workspace number 7
 bindsym $mod+Shift+KP_Prior move container to workspace number 8
 bindsym Shift+KP_Begin move container to workspace number 9
 bindsym $mod+Shift+KP_Begin move container to workspace number 10
+
+# move focused workspace to monitor
+bindsym Mod1+Shift+KP_Next move workspace to output $lower_right
+bindsym Mod1+Shift+KP_End move workspace to output $lower_left
+bindsym Mod1+Shift+KP_Home move workspace to output $upper_left
+bindsym Mod1+Shift+KP_Prior move workspace to output $upper_right
 
 # rename workspace with dmenu
 bindsym $mod+w $exec $scripts_dir/rename-workspace.sh
