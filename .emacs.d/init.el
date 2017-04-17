@@ -165,3 +165,11 @@
             (smartparens-mode t)
 	    (ensime-mode t)
 	    (scala-mode:goto-start-of-code)))
+;; magit
+(use-package magit)
+(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+
+;; keychain-environment, so magit sees ssh-agent
+;; run M-x keychain-refresh-environment if it doesn't see it
+(use-package keychain-environment)
