@@ -10,7 +10,7 @@
     ("~/org/scala.org" "~/org/masters-thesis.org" "~/org/dance-notes.org")))
  '(package-selected-packages
    (quote
-    (keychain-environment magit evil-surround smartparens ensime use-package linum-relative pdf-tools evil zenburn-theme))))
+    (smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package linum-relative pdf-tools evil zenburn-theme))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
