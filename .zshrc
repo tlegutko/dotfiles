@@ -9,17 +9,26 @@ COMPLETION_WAITING_DOTS="true"
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
-plugins=(git)
+if [ $EMACS ]; then
+    plugins=(git)
+else
+    plugins=(git vi-mode)
+fi
 source $ZSH/oh-my-zsh.sh
+if [ $EMACS ]; then
+    PROMPT=$PROMPT$'\n'
+fi
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-bindkey -v
 bindkey '^R' history-incremental-search-backward
 bindkey '^S' history-incremental-search-backward
 bindkey '^F' history-incremental-search-forward
+
 setopt rmstarsilent
+unsetopt prompt_cr prompt_sp
+KEYTIMEOUT=1
 alias em='emacsclient -t'
 
 eval $(keychain --eval --quiet --nogui id_rsa)

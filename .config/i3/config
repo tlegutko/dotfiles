@@ -36,6 +36,7 @@ set $scripts_dir /home/tlegutko/.config/scripts
 bindsym $mod+Return exec termite -d `xcwd`
 bindsym $mod+e $exec emacsclient -c -n
 bindsym $mod+c $exec google-chrome-stable
+bindsym $mod+o $exec okular
 bindsym $mod+q kill
 bindsym $mod+d $exec albert toggle
 bindsym $mod+Shift+s $exec systemctl suspend
@@ -102,11 +103,11 @@ bindsym $mod+p $exec xrandr \
 --output $upper_left --auto --same-as $lower_right
 
 # xrandr only primary monitor mode
-bindsym $mod+o $exec xrandr \
---output $lower_right --auto --primary \
---output $lower_left --off \
---output $upper_right --off \
---output $upper_left --off \
+# bindsym $mod+o $exec xrandr \
+# --output $lower_right --auto --primary \
+# --output $lower_left --off \
+# --output $upper_right --off \
+# --output $upper_left --off \
 
 # default workspace names
 set $ws1 "1"
@@ -208,10 +209,13 @@ bindsym Mod1+Shift+KP_Next move workspace to output $lower_right
 bindsym Mod1+Shift+KP_End move workspace to output $lower_left
 bindsym Mod1+Shift+KP_Home move workspace to output $upper_left
 bindsym Mod1+Shift+KP_Prior move workspace to output $upper_right
+bindsym Mod1+Shift+KP_Left move workspace to output left
+bindsym Mod1+Shift+KP_Down move workspace to output down
+bindsym Mod1+Shift+KP_Up move workspace to output up
+bindsym Mod1+Shift+KP_Right move workspace to output right
 
 # rename workspace with dmenu
 bindsym $mod+w $exec $scripts_dir/rename-workspace.sh
-
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -229,9 +233,7 @@ mode "resize" {
   bindsym k resize grow height 10 px or 10 ppt
   bindsym l resize grow width 10 px or 10 ppt
   # exit resize mode
-  bindsym Return mode "default"
   bindsym Escape mode "default"
-  bindsym $mod+r mode "default"
 }
 bindsym $mod+r mode "resize"
 
@@ -239,8 +241,6 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
         position top
-        #mode hide
-        modifier Mod2
 	status_command i3status
 	tray_output primary
   colors {
@@ -281,8 +281,8 @@ $exec redshift -l 50.094732:19.973673 -t 5500:3100
 $exec $scripts_dir/focus-last.py
 $exec dunst -config ~/.config/dunst/dunstrc
 
-# focus last window
-bindsym $mod+Tab $exec $scripts_dir/focus-last.py --switch
+# focus last window or restart daemon if crashed
+bindsym $mod+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"
 
 # double prssing workspace num goes back to previous one
 workspace_auto_back_and_forth no
@@ -317,6 +317,7 @@ $exec spotify
 
 # dropdown terminals
 $exec termite -r "1-dropdown-termite"
+$exec termite -r "2-dropdown-termite"
 for_window [window_role="1-dropdown-termite"] floating enable 
 for_window [window_role="1-dropdown-termite"] move scratchpad
 for_window [window_role="2-dropdown-termite"] floating enable 

@@ -1,0 +1,9 @@
+[Unit]
+Description=Backup periodically
+
+[Timer]
+OnBootSec=12h
+OnUnitActiveSec=12h
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,6 @@
+[Unit]
+Description=Backup periodically
+
+[Service]
+Type=oneshot
+ExecStart=/home/tlegutko/.config/scripts/battery-monitor.sh

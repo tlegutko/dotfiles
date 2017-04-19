@@ -56,24 +56,42 @@
 ;; evil-surround
 (global-evil-surround-mode 1)
 
+;; term improvements
+(evil-define-key 'normal term-raw-map "p" 'term-paste)
+(evil-define-key 'normal term-raw-map "j" 'term-send-down)
+(evil-define-key 'normal term-raw-map "k" 'term-send-up)
+(evil-define-key 'normal term-raw-map (kbd "RET") 'term-send-raw)
+(evil-define-key 'normal term-raw-map (kbd "C-r") 'term-send-raw)
+(evil-define-key 'normal term-raw-map (kbd "C-c") 'term-send-raw)
+(evil-define-key 'insert term-raw-map (kbd "C-c") 'term-send-raw)
+
 ;;; eval shortcut
 (global-set-key (kbd "C-x e") 'eval-buffer)
 
 ;;; i3-like mouse hover effect
 (setq mouse-autoselect-window t)
 
-;;; Auctex nad pdf-tools
+;;; Auctex and pdf-tools
+(use-package tex
+  :ensure auctex)
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
-;; Use pdf-tools to open PDF files
-(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-      TeX-source-correlate-start-server t)
-;; Update PDF buffers after successful LaTeX runs
-(pdf-tools-install)
 
-(require 'reftex)
+(setq TeX-source-correlate-method (quote synctex))
+(setq TeX-source-correlate-mode t)
+(setq TeX-source-correlate-start-server t)
+(setq TeX-view-program-selection (quote ((output-pdf "Okular"))))
+(setq delete-selection-mode nil)
+(setq mark-even-if-inactive t)
+(setq transient-mark-mode 1)
+
+(use-package openwith)
+(openwith-mode t)
+(setq openwith-associations '(("\\.pdf\\'" "okular" (file))))
+
+(use-package reftex)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-(add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
 (setq reftex-plug-into-AUCTeX t)
 
 (defun recompile-pdf-on-save ()
@@ -200,8 +218,28 @@
 (setq ivy-height 15)
 
 (use-package avy)
-(global-set-key (kbd "C-:") 'avy-goto-char)
+(global-set-key (kbd "C-;") 'avy-goto-char)
 (global-set-key (kbd "C-'") 'avy-goto-char-2)
 (global-set-key (kbd "M-g f") 'avy-goto-line)
 (global-set-key (kbd "M-g w") 'avy-goto-word-1)
 (global-set-key (kbd "M-g e") 'avy-goto-word-0)
+
+(defun counsel-yank-zsh-history ()
+  "Yank the zsh history"
+  (interactive)
+  (let (hist-cmd collection val)
+    (shell-command "history -r") ; reload history
+    (setq collection
+          (nreverse
+           (split-string (with-temp-buffer (insert-file-contents (file-truename "~/.zsh_history"))
+                                           (buffer-string))
+                         "\n"
+                         t)))
+
+    (setq collection (mapcar (lambda (it) (replace-regexp-in-string ".*;" "" it)) collection)) ;; for zsh
+                      
+    (when (and collection (> (length collection) 0)
+               (setq val (if (= 1 (length collection)) (car collection)
+                           (ivy-read (format "Zsh history:") collection))))
+      (kill-new val)
+      (message "%s => kill-ring" val))))
