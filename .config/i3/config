@@ -123,29 +123,29 @@ set $ws10 "10:spotify"
 
 # workspace to monitor assignment for 4 monitors in grid
 # todo those two block should have script to distribute monitors based on configuration
-workspace $ws1 output $lower_right 
-workspace $ws2 output $lower_left
-workspace $ws3 output $upper_left
-workspace $ws4 output $upper_right
-workspace $ws5 output $lower_right 
-workspace $ws6 output $lower_left
-workspace $ws7 output $upper_left
-workspace $ws8 output $upper_right
+workspace $ws1 output $upper_left
+workspace $ws2 output $upper_right
+workspace $ws3 output $lower_left
+workspace $ws4 output $lower_right
+workspace $ws5 output $upper_left
+workspace $ws6 output $upper_right
+workspace $ws7 output $lower_left
+workspace $ws8 output $lower_right
 workspace $ws9 output $lower_right 
 workspace $ws10 output $lower_right
 
 # ensure workspaces are on appropriate output when plugging in additional displays
-for_window [workspace=1] move workspace to output $upper_right
-for_window [workspace=1] move workspace to output $lower_right 
-for_window [workspace=2] move workspace to output $lower_left
-for_window [workspace=3] move workspace to output $upper_left
-for_window [workspace=4] move workspace to output $upper_right
-for_window [workspace=5] move workspace to output $lower_right 
-for_window [workspace=6] move workspace to output $lower_left
-for_window [workspace=7] move workspace to output $upper_left
-for_window [workspace=8] move workspace to output $upper_right
-for_window [workspace=9] move workspace to output $lower_right 
-for_window [workspace=10] move workspace to output $lower_right
+# for_window [workspace=1] move workspace to output $upper_right
+# for_window [workspace=1] move workspace to output $lower_right 
+# for_window [workspace=2] move workspace to output $lower_left
+# for_window [workspace=3] move workspace to output $upper_left
+# for_window [workspace=4] move workspace to output $upper_right
+# for_window [workspace=5] move workspace to output $lower_right 
+# for_window [workspace=6] move workspace to output $lower_left
+# for_window [workspace=7] move workspace to output $upper_left
+# for_window [workspace=8] move workspace to output $upper_right
+# for_window [workspace=9] move workspace to output $lower_right 
+# for_window [workspace=10] move workspace to output $lower_right
 
 # workspace to monitor assignment for 2 monitors, left & right
 # workspace $ws1 output $lower_right 
@@ -170,14 +170,14 @@ bindsym $mod+8 workspace number 8
 bindsym $mod+9 workspace number 9
 bindsym $mod+0 workspace number 10
 
-bindsym KP_Next workspace number 1
-bindsym KP_End workspace number 2
-bindsym KP_Home workspace number 3
-bindsym KP_Prior workspace number 4
-bindsym $mod+KP_Next workspace number 5
-bindsym $mod+KP_End workspace number 6
-bindsym $mod+KP_Home workspace number 7
-bindsym $mod+KP_Prior workspace number 8
+bindsym KP_Home workspace number 1
+bindsym KP_Prior workspace number 2
+bindsym KP_End workspace number 3
+bindsym KP_Next workspace number 4
+bindsym $mod+KP_Home workspace number 5
+bindsym $mod+KP_Prior workspace number 6
+bindsym $mod+KP_End workspace number 7
+bindsym $mod+KP_Next workspace number 8
 bindsym KP_Begin workspace number 9
 bindsym $mod+KP_Begin workspace number 10
 
@@ -193,14 +193,14 @@ bindsym $mod+Shift+8 move container to workspace number 8
 bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
 
-bindsym Shift+KP_Next move container to workspace number 1
-bindsym Shift+KP_End move container to workspace number 2
-bindsym Shift+KP_Home move container to workspace number 3
-bindsym Shift+KP_Prior move container to workspace number 4
-bindsym $mod+Shift+KP_Next move container to workspace number 5
-bindsym $mod+Shift+KP_End move container to workspace number 6
-bindsym $mod+Shift+KP_Home move container to workspace number 7
-bindsym $mod+Shift+KP_Prior move container to workspace number 8
+bindsym Shift+KP_Home move container to workspace number 1
+bindsym Shift+KP_Prior move container to workspace number 2
+bindsym Shift+KP_End move container to workspace number 3
+bindsym Shift+KP_Next move container to workspace number 4
+bindsym $mod+Shift+KP_Home move container to workspace number 5
+bindsym $mod+Shift+KP_Prior move container to workspace number 6
+bindsym $mod+Shift+KP_End move container to workspace number 7
+bindsym $mod+Shift+KP_Next move container to workspace number 8
 bindsym Shift+KP_Begin move container to workspace number 9
 bindsym $mod+Shift+KP_Begin move container to workspace number 10
 
