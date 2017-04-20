@@ -316,16 +316,16 @@ $exec spotify
 #$exec slack --force-device-scale-factor
 
 # dropdown terminals
-$exec termite -r "1-dropdown-termite"
-$exec termite -r "2-dropdown-termite"
-for_window [window_role="1-dropdown-termite"] floating enable 
-for_window [window_role="1-dropdown-termite"] move scratchpad
-for_window [window_role="2-dropdown-termite"] floating enable 
-for_window [window_role="2-dropdown-termite"] move scratchpad
+$exec termite -t "1-dropdown"
+$exec emacsclient -c -n -F "((title . \"2-dropdown\"))"
+for_window [title="1-dropdown"] floating enable 
+for_window [title="1-dropdown"] move scratchpad
+for_window [title="2-dropdown"] floating enable 
+for_window [title="2-dropdown"] move scratchpad
 bindsym $mod+grave $exec $scripts_dir/toggle_dropdown_terminal.sh 1
-bindsym $mod+Shift+grave $exec termite -r "1-dropdown-termite"
+bindsym $mod+Shift+grave $exec termite -t "1-dropdown"
 bindsym Mod1+grave $exec $scripts_dir/toggle_dropdown_terminal.sh 2
-bindsym Mod1+Shift+grave $exec termite -r "2-dropdown-termite"
+bindsym Mod1+Shift+grave $exec emacsclient -c -n -F '((title . \"2-dropdown\"))'
 
 # masters thesis add citation from clipboard and recompile latex
 bindsym $mod+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
