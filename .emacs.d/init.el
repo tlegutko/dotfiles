@@ -50,6 +50,9 @@
 ;; split line
 (define-key evil-normal-state-map (kbd "K") (kbd "r RET"))
 
+;; paste from x clipboard in visual mode
+(fset 'evil-visual-update-x-selection 'ignore)
+
 ;; separate sentences by one space
 (setq sentence-end-double-space nil)
 
@@ -243,3 +246,18 @@
                            (ivy-read (format "Zsh history:") collection))))
       (kill-new val)
       (message "%s => kill-ring" val))))
+
+;; yasnippet
+(use-package yasnippet)
+(yas-global-mode 1)
+
+(defun yas-org-get-time-stamp (&rest args)
+  "Return the string that `org-insert-time-stamp' would insert."
+  (with-temp-buffer
+    (apply #'org-insert-time-stamp args)
+    (buffer-string)))
+
+;; fix yas-prev mapping on my keyboard 
+(define-key yas-keymap [(shift tab)] nil)
+(define-key yas-keymap [backtab]     nil)
+(define-key yas-keymap (kbd "<S-iso-lefttab>") 'yas-prev-field)

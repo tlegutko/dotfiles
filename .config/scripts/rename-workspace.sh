@@ -2,8 +2,8 @@
 # interactively rename workspace with dmenu
 
 full_name=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name')
-name=$(echo $full_name | ag -o '(?<=:).*(?=")')
-number=$(echo $full_name | ag -o '(?<=^")[0-9]+')
+name=$(echo $full_name | grep -Po '(?<=:).*(?=")')
+number=$(echo $full_name | grep -Po '(?<=^")[0-9]+')
 new_name=$(printf "\n${name}" | dmenu -b -p "rename-workspace-${number}")
 if [[ $new_name =~ [0-9].* ]]; then
     new_workspace_name="${new_name}"
