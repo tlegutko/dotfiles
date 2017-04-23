@@ -200,32 +200,39 @@
 (use-package keychain-environment)
 (keychain-refresh-environment)
 
-(use-package counsel)
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
-(setq ivy-count-format "(%d/%d) ")
-(global-set-key (kbd "C-s") 'swiper)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-find-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-(global-set-key (kbd "C-c g") 'counsel-git)
-(global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c k") 'counsel-ag)
-(global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-(setq ivy-height 15)
+(use-package counsel
+  :init
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-height 15)
+  :bind
+  (("M-y" . counsel-yank-pop)
+  ("C-s" . swiper)
+  ("M-x" . counsel-M-x)
+  ("C-x C-f" . counsel-find-file)
+  ("<f1> f" . counsel-describe-function)
+  ("<f1> v" . counsel-describe-variable)
+  ("<f1> l" . counsel-find-library)
+  ("<f2> i" . counsel-info-lookup-symbol)
+  ("<f2> u" . counsel-unicode-char)
+  ("C-c g" . counsel-git)
+  ("C-c j" . counsel-git-grep)
+  ("C-c k" . counsel-ag)
+  ("C-x l" . counsel-locate)
+  ("C-S-o" . counsel-rhythmbox)
+  ("C-c C-r" . ivy-resume)
+   :map ivy-minibuffer-map
+   ("M-y" . ivy-next-line))
+  :config
+  (ivy-mode 1))
 
-(use-package avy)
-(global-set-key (kbd "C-;") 'avy-goto-char)
-(global-set-key (kbd "C-'") 'avy-goto-char-2)
-(global-set-key (kbd "M-g f") 'avy-goto-line)
-(global-set-key (kbd "M-g w") 'avy-goto-word-1)
-(global-set-key (kbd "M-g e") 'avy-goto-word-0)
+(use-package avy
+  :bind
+  (("C-;" . avy-goto-char)
+  ("C-'" . avy-goto-char-2)
+  ("M-g f" . avy-goto-line)
+  ("M-g w" . avy-goto-word-1)
+  ("M-g e" . avy-goto-word-0)))
 
 (defun counsel-yank-zsh-history ()
   "Yank the zsh history"
@@ -261,3 +268,8 @@
 (define-key yas-keymap [(shift tab)] nil)
 (define-key yas-keymap [backtab]     nil)
 (define-key yas-keymap (kbd "<S-iso-lefttab>") 'yas-prev-field)
+
+;; evil indent for elisp
+(add-hook 'emacs-lisp-mode-hook
+  (function (lambda ()
+          (setq evil-shift-width 2))))
