@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: New Heading with Date
+# --
+* `(yas-org-get-time-stamp (current-time))` $0

@@ -7,3 +7,4 @@
 
 rclone sync ~/org gdrive:org
 rclone sync ~/masters-thesis gdrive:masters-thesis
+rclone sync ~/.emacs.d/snippets/org-mode gdrive:snippets/org-mode

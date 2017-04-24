@@ -234,6 +234,8 @@ mode "resize" {
   bindsym l resize grow width 10 px or 10 ppt
   # exit resize mode
   bindsym Escape mode "default"
+  bindsym $mod+Escape mode "default"
+  bindsym $mod+r mode "default"
 }
 bindsym $mod+r mode "resize"
 

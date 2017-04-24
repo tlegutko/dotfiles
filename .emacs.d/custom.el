@@ -25,7 +25,7 @@
     ("~/org/fap-journal.org" "~/org/miracle-morning.org" "~/org/personal-journal.org" "~/org/scala.org" "~/org/masters-thesis.org" "~/org/dance-notes.org")))
  '(package-selected-packages
    (quote
-    (openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package linum-relative pdf-tools evil zenburn-theme)))
+    (expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package linum-relative evil zenburn-theme)))
  '(transient-mark-mode 1))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

@@ -1,4 +1,4 @@
-;; the package manager
+;; the package manager and use-package
 (require 'package)
 (setq
  package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -7,129 +7,40 @@
 		    ("melpa-stable" . "http://stable.melpa.org/packages/"))
  package-archive-priorities '(("melpa-stable" . 1)))
 
-;; my list of packages to auto install
-(setq package-list '(zenburn-theme evil evil-surround pdf-tools org linum-relative use-package))
 (package-initialize)
 
-; fetch the list of packages available 
-(unless package-archive-contents
-  (package-refresh-contents))
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
-; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
+(eval-when-compile
+  (require 'use-package))
+(require 'bind-key)
 
-;; use-package always download listed packages
+;; use-package always auto install packages
 (setq use-package-always-ensure t)
 
 ;;; look & feel
-(load-theme 'zenburn t)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-;; font is 1/10 of height
-(set-face-attribute 'default nil :height 80)
-;; auto-save loaded buffers
-(desktop-save-mode 1)
-
-;;; evil
-(require 'evil)
-(evil-mode 1)
-;; remove binding for ensime's go to definition
-(define-key evil-normal-state-map (kbd "M-.") nil)
-;; C-k C-j for scroll up/down
-(define-key evil-normal-state-map (kbd "C-k") (lambda ()
-						(interactive)
-						(evil-scroll-up nil)))
-(define-key evil-normal-state-map (kbd "C-j") (lambda ()
-						(interactive)
-						(evil-scroll-down nil)))
-;; transpose chars
-(define-key evil-insert-state-map "\C-t" 'transpose-chars)
-;; split line
-(define-key evil-normal-state-map (kbd "K") (kbd "r RET"))
-
-;; paste from x clipboard in visual mode
-(fset 'evil-visual-update-x-selection 'ignore)
-
-;; separate sentences by one space
-(setq sentence-end-double-space nil)
-
-;; evil-surround
-(global-evil-surround-mode 1)
-
-;; term improvements
-(evil-define-key 'normal term-raw-map "p" 'term-paste)
-(evil-define-key 'normal term-raw-map "j" 'term-send-down)
-(evil-define-key 'normal term-raw-map "k" 'term-send-up)
-(evil-define-key 'normal term-raw-map (kbd "RET") 'term-send-raw)
-(evil-define-key 'normal term-raw-map (kbd "C-r") 'term-send-raw)
-(evil-define-key 'normal term-raw-map (kbd "C-c") 'term-send-raw)
-(evil-define-key 'insert term-raw-map (kbd "C-c") 'term-send-raw)
-
-;;; eval shortcut
-(global-set-key (kbd "C-x e") 'eval-buffer)
-
-;;; i3-like mouse hover effect
-(setq mouse-autoselect-window t)
-
-;;; Auctex and pdf-tools
-(use-package tex
-  :ensure auctex)
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-
-(setq TeX-source-correlate-method (quote synctex))
-(setq TeX-source-correlate-mode t)
-(setq TeX-source-correlate-start-server t)
-(setq TeX-view-program-selection (quote ((output-pdf "Okular"))))
-(setq delete-selection-mode nil)
-(setq mark-even-if-inactive t)
-(setq transient-mark-mode 1)
-
-(use-package openwith)
-(openwith-mode t)
-(setq openwith-associations '(("\\.pdf\\'" "okular" (file))))
-
-(use-package reftex)
-(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-(setq reftex-plug-into-AUCTeX t)
-
-(defun recompile-pdf-on-save ()
-  "Recompile latex on save with external script."
-  (when (eq major-mode 'latex-mode)
-    (call-process "~/.config/scripts/recompile-masters-thesis.sh")))
-
-(add-hook 'after-save-hook #'recompile-pdf-on-save)
-
-;;; line numbers
-(require 'linum-relative)
-(global-linum-mode t)
-(linum-relative-on)
-(setq linum-relative-current-symbol "")
+(use-package zenburn-theme
+  :config
+  (load-theme 'zenburn t)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  ;; font is 1/10 of height
+  (set-face-attribute 'default nil :height 80)
+  ;;; i3-like mouse hover effect
+  (setq mouse-autoselect-window t))
 
 ;;; automatic custom variables
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
-;;; org mode
-(require 'org)
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cb" 'org-iswitchb)
-(setq calendar-week-start-day 1)
-; line wrapping
-(setq org-startup-truncated 'nil)
+;; global visual line mode
 (global-visual-line-mode t)
-(define-key org-mode-map "\M-q" 'toggle-truncate-lines)
 
-;; unmap C-' for avy
-(add-hook 'org-mode-hook
-          (lambda()
-            (local-unset-key (kbd "C-'"))))
+;; auto-save loaded buffers
+(desktop-save-mode 1)
 
 ;; store all backup and autosave files in the tmp dir
 (setq backup-directory-alist
@@ -137,9 +48,98 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
+;;; eval shortcut
+(global-set-key (kbd "C-x e") 'eval-buffer)
+(global-set-key (kbd "C-x C-e") 'eval-region)
+
+(use-package evil
+  :init
+  ;; separate sentences by one space
+  (setq sentence-end-double-space nil)
+  ;; paste from x clipboard in visual mode
+  (fset 'evil-visual-update-x-selection 'ignore)
+  :bind
+  (:map evil-normal-state-map
+	("M-." . nil)
+	("C-k" . my-evil-scroll-up)
+	("C-j" . my-evil-scroll-down)
+	("C-t" . transpose-chars)
+	("K" . my-evil-split-line)
+   :map evil-insert-state-map
+	("C-t" . transpose-chars))
+  :config
+  (defun my-evil-scroll-up ()
+    (interactive)
+    (evil-scroll-up nil))
+  (defun my-evil-scroll-down ()
+    (interactive)
+    (evil-scroll-down nil))
+  (defun my-evil-split-line ()
+    (interactive)
+    (kbd "r RET"))
+  (evil-define-key 'normal term-raw-map "p" 'term-paste)
+  (evil-define-key 'normal term-raw-map "j" 'term-send-down)
+  (evil-define-key 'normal term-raw-map "k" 'term-send-up)
+  (evil-define-key 'normal term-raw-map (kbd "RET") 'term-send-raw)
+  (evil-define-key 'normal term-raw-map (kbd "C-r") 'term-send-raw)
+  (evil-define-key 'normal term-raw-map (kbd "C-c") 'term-send-raw)
+  (add-hook 'emacs-lisp-mode-hook
+    (function (lambda ()
+	    (setq evil-shift-width 2))))
+  (evil-mode 1))
+
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1))
+
+;;; Auctex and pdf-tools
+(use-package tex
+  :ensure auctex
+  :config
+  (defun recompile-pdf-on-save ()
+    "Recompile latex on save with external script."
+    (when (eq major-mode 'latex-mode)
+      (call-process "~/.config/scripts/recompile-masters-thesis.sh")))
+  (add-hook 'after-save-hook #'recompile-pdf-on-save)
+  (add-hook 'LaTeX-mode-hook 'flyspell-mode))
+
+(use-package openwith
+  :init
+  (setq openwith-associations '(("\\.pdf\\'" "okular" (file))))
+  :config
+  (openwith-mode t))
+
+(use-package reftex
+  :init
+  (setq reftex-plug-into-AUCTeX t)
+  :init
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex))
+
+;;; line numbers
+(use-package linum-relative
+  :init
+  (setq linum-relative-current-symbol "")
+  :config
+  (global-linum-mode t)
+  (linum-relative-on))
+
+;;; org mode
+(use-package org
+  :init
+  (setq calendar-week-start-day 1)
+  (setq org-startup-truncated 'nil)
+  :bind
+  (("\C-cl" . org-store-link)
+  ("\C-ca" . org-agenda)
+  ("\C-cc" . org-capture)
+  ("\C-cb" . org-iswitchb)
+  :map org-mode-map
+    ("\M-q" . toggle-truncate-lines))
+  :config
+  (unbind-key "C-," org-mode-map)) ;; for avy to use
+
 ;; smart partentheses
 (use-package smartparens
-  :diminish smartparens-mode
   :commands
   smartparens-strict-mode
   smartparens-mode
@@ -150,17 +150,16 @@
   :config
   (require 'smartparens-config)
   (sp-use-smartparens-bindings)
-
   (sp-pair "(" ")" :wrap "C-(") ;; how do people live without this?
   (sp-pair "[" "]" :wrap "s-[") ;; C-[ sends ESC
   (sp-pair "{" "}" :wrap "C-{")
-
   ;; WORKAROUND https://github.com/Fuco1/smartparens/issues/543
   (bind-key "C-<left>" nil smartparens-mode-map)
   (bind-key "C-<right>" nil smartparens-mode-map)
-
   (bind-key "s-<delete>" 'sp-kill-sexp smartparens-mode-map)
-  (bind-key "s-<backspace>" 'sp-backward-kill-sexp smartparens-mode-map))
+  (bind-key "s-<backspace>" 'sp-backward-kill-sexp smartparens-mode-map)
+  (smartparens-global-mode)
+  (show-smartparens-global-mode))
 
 ;; scala
 (use-package scala-mode
@@ -180,9 +179,13 @@
   (sp-local-pair 'scala-mode "{" nil
                :post-handlers '(("||\n[i]" "RET")
                                 ("| " "SPC"))))
-;; ensime
+
+(use-package expand-region)
+
 (use-package ensime
-  :pin melpa-stable)
+  :pin melpa-stable
+  :config
+  (require 'ensime-expand-region))
 
 ;; scala-mode hooks
 (add-hook 'scala-mode-hook
@@ -191,14 +194,15 @@
             (smartparens-mode t)
 	    (ensime-mode t)
 	    (scala-mode:goto-start-of-code)))
-;; magit
-(use-package magit)
-(global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
 
-;; keychain-environment, so magit sees ssh-agent
-(use-package keychain-environment)
-(keychain-refresh-environment)
+(use-package magit
+  :bind
+  ("C-x g" . magit-status)
+  ("C-x M-g" . magit-dispatch-popup))
+
+(use-package keychain-environment ;; so magit sees ssh-agent
+  :config
+  (keychain-refresh-environment))
 
 (use-package counsel
   :init
@@ -219,11 +223,36 @@
   ("C-c j" . counsel-git-grep)
   ("C-c k" . counsel-ag)
   ("C-x l" . counsel-locate)
-  ("C-S-o" . counsel-rhythmbox)
   ("C-c C-r" . ivy-resume)
    :map ivy-minibuffer-map
    ("M-y" . ivy-next-line))
   :config
+  (defun ivy-yank-action (x)
+    (kill-new x))
+  (defun ivy-copy-to-buffer-action (x)
+    (with-ivy-window
+      (insert x)))
+  (ivy-set-actions
+  t
+  '(("i" ivy-copy-to-buffer-action "insert")
+    ("y" ivy-yank-action "yank")))
+  (defun counsel-yank-zsh-history ()
+    "Yank the zsh history"
+    (interactive)
+    (let (hist-cmd collection val)
+      (shell-command "history -r") ; reload history
+      (setq collection
+	    (nreverse
+	    (split-string (with-temp-buffer (insert-file-contents (file-truename "~/.zsh_history"))
+					    (buffer-string))
+			  "\n"
+			  t)))
+      (setq collection (mapcar (lambda (it) (replace-regexp-in-string ".*;" "" it)) collection)) ;; for zsh
+      (when (and collection (> (length collection) 0)
+		(setq val (if (= 1 (length collection)) (car collection)
+			    (ivy-read (format "Zsh history:") collection))))
+	(kill-new val)
+	(message "%s => kill-ring" val))))
   (ivy-mode 1))
 
 (use-package avy
@@ -234,42 +263,53 @@
   ("M-g w" . avy-goto-word-1)
   ("M-g e" . avy-goto-word-0)))
 
-(defun counsel-yank-zsh-history ()
-  "Yank the zsh history"
-  (interactive)
-  (let (hist-cmd collection val)
-    (shell-command "history -r") ; reload history
-    (setq collection
-          (nreverse
-           (split-string (with-temp-buffer (insert-file-contents (file-truename "~/.zsh_history"))
-                                           (buffer-string))
-                         "\n"
-                         t)))
+(use-package yasnippet
+  :bind
+  (("C-c n" . yas-insert-new-heading-hm)
+  ("C-c N" . yas-insert-new-heading)
+  :map yas-keymap
+  ("[(shift tab)]" . nil)
+  ("[backtab]" . nil)
+  ("<S-iso-lefttab>" . yas-prev-field))
+  :config
+  (defun current-line-empty-p ()
+    (save-excursion
+      (beginning-of-line)
+      (looking-at "[[:space:]]*$")))
+  (defun yas-insert-snip-in-newline(snip-name)
+    "inserts newline line below and inserts snippet with given name"
+    (interactive)
+    (evil-insert-state)
+    (if (current-line-empty-p)
+	(beginning-of-line)
+	(progn
+	  (end-of-line)
+	  (newline)))
+    (yas-expand-snippet
+      (yas-lookup-snippet snip-name)))
+  (defun yas-org-get-time-stamp (&rest args)
+    "Return the string that `org-insert-time-stamp' would insert."
+    (with-temp-buffer
+      (apply #'org-insert-time-stamp args)
+      (buffer-string)))
+  (defun yas-insert-new-heading-hm ()
+    (interactive)
+    (yas-insert-snip-in-newline "New Heading with Date with HM"))
+  (defun yas-insert-new-heading ()
+    (interactive)
+    (yas-insert-snip-in-newline "New Heading with Date"))
+  (yas-global-mode 1))
 
-    (setq collection (mapcar (lambda (it) (replace-regexp-in-string ".*;" "" it)) collection)) ;; for zsh
-                      
-    (when (and collection (> (length collection) 0)
-               (setq val (if (= 1 (length collection)) (car collection)
-                           (ivy-read (format "Zsh history:") collection))))
-      (kill-new val)
-      (message "%s => kill-ring" val))))
+(use-package notifications
+  :config
+  (defun desktop-notification (time message &optional title)
+    "System notification at some event or timer."
+    (run-at-time time nil 'notifications-notify
+		:title (or title "alarm")
+		:body message
+		:urgency 'critical ;; low, normal, critical
+		:app-name "Emacs: Org")))
 
-;; yasnippet
-(use-package yasnippet)
-(yas-global-mode 1)
+;; helpful in looking for empty bindings
+(use-package free-keys)
 
-(defun yas-org-get-time-stamp (&rest args)
-  "Return the string that `org-insert-time-stamp' would insert."
-  (with-temp-buffer
-    (apply #'org-insert-time-stamp args)
-    (buffer-string)))
-
-;; fix yas-prev mapping on my keyboard 
-(define-key yas-keymap [(shift tab)] nil)
-(define-key yas-keymap [backtab]     nil)
-(define-key yas-keymap (kbd "<S-iso-lefttab>") 'yas-prev-field)
-
-;; evil indent for elisp
-(add-hook 'emacs-lisp-mode-hook
-  (function (lambda ()
-          (setq evil-shift-width 2))))

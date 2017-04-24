@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: New Heading with Date with HM
+# --
+* `(yas-org-get-time-stamp (current-time) 'WITH_HM)` $1
+  $0
