@@ -48,7 +48,7 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-;;; eval shortcut
+;; eval shortcut
 (global-set-key (kbd "C-x e") 'eval-buffer)
 (global-set-key (kbd "C-x C-e") 'eval-region)
 
@@ -128,6 +128,9 @@
   :init
   (setq calendar-week-start-day 1)
   (setq org-startup-truncated 'nil)
+  (setq org-capture-templates
+      '(("a" "Appointment" entry (file  "~/org/calendar.org" )
+  	 "* %?\n%^T")))
   :bind
   (("\C-cl" . org-store-link)
   ("\C-ca" . org-agenda)
@@ -136,7 +139,15 @@
   :map org-mode-map
     ("\M-q" . toggle-truncate-lines))
   :config
-  (unbind-key "C-," org-mode-map)) ;; for avy to use
+  (unbind-key "C-'" org-mode-map) ;; for avy to use
+  (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) )))
+
+(use-package org-gcal
+  :pin melpa
+  :init
+  (load "~/.emacs.d/org-gcal-credentials.el")
+  (setq org-gcal-up-days 7) ; before today
+  (setq org-gcal-down-days 7)) ; after today
 
 ;; smart partentheses
 (use-package smartparens
@@ -158,7 +169,6 @@
   (bind-key "C-<right>" nil smartparens-mode-map)
   (bind-key "s-<delete>" 'sp-kill-sexp smartparens-mode-map)
   (bind-key "s-<backspace>" 'sp-backward-kill-sexp smartparens-mode-map)
-  (smartparens-global-mode)
   (show-smartparens-global-mode))
 
 ;; scala
@@ -196,6 +206,8 @@
 	    (scala-mode:goto-start-of-code)))
 
 (use-package magit
+  :config
+  (setq magit-completing-read-function 'ivy-completing-read)
   :bind
   ("C-x g" . magit-status)
   ("C-x M-g" . magit-dispatch-popup))
@@ -204,11 +216,16 @@
   :config
   (keychain-refresh-environment))
 
+(use-package flx)
+
 (use-package counsel
   :init
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
-  (setq ivy-height 15)
+  (setq ivy-height 12)
+  (setq ivy-re-builders-alist
+      '((t . ivy--regex-fuzzy)))
+  (setq ivy-initial-inputs-alist nil)
   :bind
   (("M-y" . counsel-yank-pop)
   ("C-s" . swiper)
@@ -255,6 +272,18 @@
 	(message "%s => kill-ring" val))))
   (ivy-mode 1))
 
+(use-package projectile
+  :init
+  (setq projectile-completion-system 'ivy)
+  :config
+  (projectile-global-mode))
+
+(use-package counsel-projectile
+  :config
+  (counsel-projectile-on))
+
+(use-package ivy-hydra)
+
 (use-package avy
   :bind
   (("C-;" . avy-goto-char)
@@ -262,6 +291,12 @@
   ("M-g f" . avy-goto-line)
   ("M-g w" . avy-goto-word-1)
   ("M-g e" . avy-goto-word-0)))
+
+(use-package ace-window
+  :config
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  :bind
+  (("M-p" . ace-window)))
 
 (use-package yasnippet
   :bind
@@ -312,4 +347,12 @@
 
 ;; helpful in looking for empty bindings
 (use-package free-keys)
+
+(use-package which-key
+  :config
+  (which-key-mode))
+
+(use-package expand-region
+  :bind
+  (("C-=" . er/expand-region)))
 
