@@ -52,6 +52,6 @@ echo "${percent}%"
 echo "${percent}%"
 echo ""
 
-if [[ "${percent}" -le "${URGENT_VALUE}" ]]; then
-  exit 33
-fi
+# if [[ "${percent}" -le "${URGENT_VALUE}" ]]; then # red color
+#   exit 33
+# fi

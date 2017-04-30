@@ -164,7 +164,8 @@
   ("\C-cc" . org-capture)
   ("\C-cb" . org-iswitchb)
   :map org-mode-map
-    ("\M-q" . toggle-truncate-lines))
+  ("M-TAB" . org-global-cycle)
+  ("\M-q" . toggle-truncate-lines))
   :config
   (unbind-key "C-'" org-mode-map) ;; for avy to use
   (org-clock-persistence-insinuate)

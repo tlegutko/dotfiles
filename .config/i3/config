@@ -216,9 +216,9 @@ bindsym Mod1+Shift+KP_Right move workspace to output right
 # rename workspace with dmenu
 bindsym $mod+w $exec $scripts_dir/rename-workspace.sh
 # reload the configuration file
-bindsym $mod+Shift+c reload
+bindsym $mod+Shift+c $exec ~/.sync.sh && i3-msg reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
+bindsym $mod+Shift+r $exec ~/.sync.sh && i3-msg restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
@@ -332,3 +332,12 @@ bindsym Mod1+Shift+grave $exec emacsclient -c -n -F '((title . \"2-dropdown\"))'
 
 # masters thesis add citation from clipboard and recompile latex
 bindsym $mod+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
+
+# screen locking and suspending
+$exec xautolock -detectsleep \
+-notify 30 \
+-notifier "notify-send 'Sleeping time' 'Turning screen off in 30s.' -t 30000" \
+-time 10 -locker "xset dpms force off" \
+-killtime 15 -killer "systemctl suspend" \
+-corners "----" -cornersize 150
+
