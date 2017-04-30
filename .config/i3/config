@@ -89,11 +89,15 @@ set $upper_right "DP-0"
 set $upper_left "DP-6"
 
 # xrandr default mode
-$exec_always xrandr \
---output $lower_right --auto --pos 1920x1080 --primary \
---output $lower_left --auto --pos 0x1080 \
---output $upper_right --auto --pos 1920x0 \
---output $upper_left --auto --pos 240x30 
+# $exec_always xrandr \
+# --output $lower_right --auto --pos 1920x1080 --primary \
+# --output $lower_left --auto --pos 0x1080 \
+# --output $upper_right --auto --pos 1920x0 \
+# --output $upper_left --auto --pos 240x30 
+
+# nvidia same as xrandr, but ForceFullCompositionPipeline fixes screen tearing
+$exec_always nvidia-settings --assign CurrentMetaMode="DP-4: 1920x1080 +1920+1080 { ForceFullCompositionPipeline = On }, DP-1: 1920x1080 +0+1080 { ForceFullCompositionPipeline = On }, DP-0: 1920x1080 +1920+0 { ForceFullCompositionPipeline = On }, DP-6: 1680x1050 +240+30 { ForceFullCompositionPipeline = On }"
+
 
 # presentation mode - mirror primary display to all outputs
 bindsym $mod+p $exec xrandr \

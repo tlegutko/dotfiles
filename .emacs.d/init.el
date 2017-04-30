@@ -159,6 +159,9 @@
 	 "* TODO %?" :prepend t)))
   :bind
   (("C-c C-x C-j" . org-clock-goto)
+   ("C-c C-x C-i" . org-clock-in)
+   ("C-c C-x C-o" . org-clock-out)
+   ("C-C C-x C-e" . org-clock-modify-effort-estimate)
   ("\C-cl" . org-store-link)
   ("\C-ca" . org-agenda)
   ("\C-cc" . org-capture)
