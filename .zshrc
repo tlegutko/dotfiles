@@ -30,5 +30,6 @@ setopt rmstarsilent
 unsetopt prompt_cr prompt_sp
 KEYTIMEOUT=1
 alias em='emacsclient -t'
+alias sd='~/.dotfiles/.sync.sh'
 
 eval $(keychain --eval --quiet --nogui id_rsa)

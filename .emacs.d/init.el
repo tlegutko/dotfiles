@@ -107,6 +107,12 @@
   :config
   (global-evil-surround-mode 1))
 
+(defun sync-init-el-on-save ()
+  "Sync .dotfiles/.emacs.d/init.el after save."
+  (when (eq major-mode 'emacs-lisp-mode)
+    (call-process "~/.dotfiles/.sync.sh")))
+(add-hook 'after-save-hook #'sync-init-el-on-save)
+
 ;;; Auctex and pdf-tools
 (use-package tex
   :ensure auctex
@@ -241,6 +247,11 @@
   :bind
   ("C-x g" . magit-status)
   ("C-x M-g" . magit-dispatch-popup))
+
+(defun hook-diminish-auto-revert ()
+  (interactive)
+  (diminish 'auto-revert-mode))
+(add-hook 'auto-revert-mode-hook 'hook-diminish-auto-revert)
 
 (use-package keychain-environment ;; so magit sees ssh-agent
   :config

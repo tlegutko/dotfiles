@@ -1,6 +1,0 @@
-[Unit]
-Description=Reset /etc/hosts file every 5min, so it's always back quickly.
-
-[Service]
-Type=oneshot
-ExecStart=/home/tlegutko/.config/scripts/hosts.sh

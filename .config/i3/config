@@ -249,11 +249,12 @@ bar {
     binding_mode #ffa500 #285577 #ffffff 
   }
 }
-set $refresh_bar pkill -RTMIN+10 i3blocks
+set $bar_refresh pkill -RTMIN+10 i3blocks
+set $delayed_bar_refresh sleep 0.05 && pkill -RTMIN+10 i3blocks
 
 # brightness
-bindsym KP_Subtract $exec "xbacklight -10 && $refresh_bar"
-bindsym KP_Add $exec "xbacklight +10 && $refresh_bar"
+bindsym KP_Subtract $exec "xbacklight -10 && $bar_refresh"
+bindsym KP_Add $exec "xbacklight +10 && $bar_refresh"
 $exec xbacklight -set 30
 
 # volume & playback cotrol
@@ -261,17 +262,17 @@ bindsym XF86AudioRaiseVolume $exec \
   "pactl set-sink-mute @DEFAULT_SINK@ false \
   && (($($scripts_dir/sound_status.sh) <= 90)) \
   && pactl set-sink-volume @DEFAULT_SINK@ +10% \
-  && $refresh_bar"
-bindsym XF86AudioLowerVolume $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_bar"
-bindsym XF86AudioMute $exec "pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_bar"
+  && $bar_refresh"
+bindsym XF86AudioLowerVolume $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $bar_refresh"
+bindsym XF86AudioMute $exec "pactl set-sink-mute @DEFAULT_SINK@ toggle && $bar_refresh"
 bindsym XF86AudioMicMute $exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
-bindsym KP_Insert $exec "playerctl previous && sleep 0.1 && $refresh_bar"
-bindsym KP_Delete $exec "playerctl next && sleep 0.1 && $refresh_bar"
-bindsym KP_Enter $exec "playerctl play-pause && $refresh_bar"
+bindsym KP_Insert $exec "playerctl previous && $delayed_bar_refresh"
+bindsym KP_Delete $exec "playerctl next && $delayed_bar_refresh"
+bindsym KP_Enter $exec "playerctl play-pause && $delayed_bar_refresh"
 
 # bluetooth
-bindsym KP_Divide $exec "$scripts_dir/bluetooth_off.sh && sleep 0.1 && $refresh_bar"
-bindsym KP_Multiply $exec "$scripts_dir/bluetooth_on.sh && sleep 0.1 && $refresh_bar"
+bindsym KP_Divide $exec "$scripts_dir/bluetooth_off.sh && $delayed_bar_refresh"
+bindsym KP_Multiply $exec "$scripts_dir/bluetooth_on.sh && $delayed_bar_refresh"
 # screenshot of selection
 bindsym --release Print $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/'
 
