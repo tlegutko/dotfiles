@@ -15,18 +15,29 @@
 
 (eval-when-compile
   (require 'use-package))
+(require 'diminish)
 (require 'bind-key)
 
 ;; use-package always auto install packages
 (setq use-package-always-ensure t)
 
 ;;; look & feel
+(setq-default mode-line-mule-info nil)
+(setq-default mode-line-modified nil)
+(setq-default mode-line-position nil)
+(setq-default mode-line-remote nil)
+(setq-default mode-line-client nil)
+(setq-default mode-line-frame-identification nil)
+
 (use-package zenburn-theme
+  :init
   :config
   (load-theme 'zenburn t)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
+  (line-number-mode -1)
+  (size-indication-mode -1)
   ;; font is 1/10 of height
   (set-face-attribute 'default nil :height 80)
   ;;; i3-like mouse hover effect
@@ -36,24 +47,28 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
-;; global visual line mode
-(global-visual-line-mode t)
-
-;; auto-save loaded buffers
+;; backup and auto-save
+(setq backup-directory-alist `((".*" . "~/.emacs.d/backup/")))
+(setq auto-save-file-name-transforms `((".*" ,"~/.emacs.d/auto-save/" t)))
+(setq auto-save-interval 20)
+(setq auto-save-timeout 10)
+(setq desktop-auto-save-timeout 10)
 (desktop-save-mode 1)
-
-;; store all backup and autosave files in the tmp dir
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
+(setq delete-old-versions t
+  kept-new-versions 6
+  kept-old-versions 2
+  version-control t)
 
 ;; eval shortcut
 (global-set-key (kbd "C-x e") 'eval-buffer)
 (global-set-key (kbd "C-x C-e") 'eval-region)
 
+(global-visual-line-mode 1)
+(diminish 'visual-line-mode)
+
 (use-package evil
   :init
+  (setq evil-normal-state-tag "")
   ;; separate sentences by one space
   (setq sentence-end-double-space nil)
   ;; paste from x clipboard in visual mode
@@ -110,6 +125,7 @@
   (openwith-mode t))
 
 (use-package reftex
+  :diminish reftex-mode
   :init
   (setq reftex-plug-into-AUCTeX t)
   :init
@@ -126,13 +142,18 @@
 ;;; org mode
 (use-package org
   :init
+  (setq org-clock-persist 'history)
   (setq calendar-week-start-day 1)
   (setq org-startup-truncated 'nil)
   (setq org-capture-templates
       '(("a" "Appointment" entry (file  "~/org/calendar.org" )
-  	 "* %?\n%^T")))
+  	 "* %?\n%^T")
+	("p" "Personal journal" entry (file "~/org/personal-journal.org") "* %T %?")
+	("t" "To do" entry (file "~/org/todo.org")
+	 "* TODO %?" :prepend t)))
   :bind
-  (("\C-cl" . org-store-link)
+  (("C-c C-x C-j" . org-clock-goto)
+  ("\C-cl" . org-store-link)
   ("\C-ca" . org-agenda)
   ("\C-cc" . org-capture)
   ("\C-cb" . org-iswitchb)
@@ -140,6 +161,7 @@
     ("\M-q" . toggle-truncate-lines))
   :config
   (unbind-key "C-'" org-mode-map) ;; for avy to use
+  (org-clock-persistence-insinuate)
   (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) )))
 
 (use-package org-gcal
@@ -151,6 +173,7 @@
 
 ;; smart partentheses
 (use-package smartparens
+  :diminish smartparens-mode
   :commands
   smartparens-strict-mode
   smartparens-mode
@@ -184,7 +207,6 @@
   ;; prefer smartparens for parens handling
   (remove-hook 'post-self-insert-hook
                'scala-indent:indent-on-parentheses)
-
   (sp-local-pair 'scala-mode "(" nil :post-handlers '(("||\n[i]" "RET")))
   (sp-local-pair 'scala-mode "{" nil
                :post-handlers '(("||\n[i]" "RET")
@@ -192,8 +214,13 @@
 
 (use-package expand-region)
 
+(use-package company
+  :diminish company-mode)
+
 (use-package ensime
   :pin melpa-stable
+  :diminish ensime-mode
+  :init
   :config
   (require 'ensime-expand-region))
 
@@ -206,6 +233,9 @@
 	    (scala-mode:goto-start-of-code)))
 
 (use-package magit
+  :init
+  (setq-default vc-handled-backends nil)
+  (setq-default vc-mode nil)
   :config
   (setq magit-completing-read-function 'ivy-completing-read)
   :bind
@@ -217,6 +247,9 @@
   (keychain-refresh-environment))
 
 (use-package flx)
+
+(use-package ivy
+  :diminish ivy-mode)
 
 (use-package counsel
   :init
@@ -275,6 +308,7 @@
 (use-package projectile
   :init
   (setq projectile-completion-system 'ivy)
+  (setq projectile-mode-line '(:eval (format " Proj[%s]" (projectile-project-name))))
   :config
   (projectile-global-mode))
 
@@ -302,7 +336,9 @@
   :bind
   (("C-c n" . yas-insert-new-heading-hm)
   ("C-c N" . yas-insert-new-heading)
-  :map yas-keymap
+  :map yas-minor-mode-map
+  ("<tab>" . yas-expand)
+  ("TAB" . yas-expand)
   ("[(shift tab)]" . nil)
   ("[backtab]" . nil)
   ("<S-iso-lefttab>" . yas-prev-field))
@@ -333,7 +369,8 @@
   (defun yas-insert-new-heading ()
     (interactive)
     (yas-insert-snip-in-newline "New Heading with Date"))
-  (yas-global-mode 1))
+  (yas-global-mode 1)
+  :diminish yas-minor-mode)
 
 (use-package notifications
   :config
@@ -350,9 +387,13 @@
 
 (use-package which-key
   :config
-  (which-key-mode))
+  (which-key-mode)
+  :diminish which-key-mode)
 
 (use-package expand-region
   :bind
   (("C-=" . er/expand-region)))
 
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :config (global-undo-tree-mode))

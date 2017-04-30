@@ -38,7 +38,7 @@ bindsym $mod+e $exec emacsclient -c -n
 bindsym $mod+c $exec google-chrome-stable
 bindsym $mod+o $exec okular
 bindsym $mod+q kill
-bindsym $mod+d $exec albert toggle
+bindsym $mod+d $exec i3-dmenu-desktop --dmenu="dmenu -b -i"
 bindsym $mod+Shift+s $exec systemctl suspend
 
 # change focus
@@ -135,17 +135,16 @@ workspace $ws9 output $lower_right
 workspace $ws10 output $lower_right
 
 # ensure workspaces are on appropriate output when plugging in additional displays
-# for_window [workspace=1] move workspace to output $upper_right
-# for_window [workspace=1] move workspace to output $lower_right 
-# for_window [workspace=2] move workspace to output $lower_left
-# for_window [workspace=3] move workspace to output $upper_left
-# for_window [workspace=4] move workspace to output $upper_right
-# for_window [workspace=5] move workspace to output $lower_right 
-# for_window [workspace=6] move workspace to output $lower_left
-# for_window [workspace=7] move workspace to output $upper_left
-# for_window [workspace=8] move workspace to output $upper_right
-# for_window [workspace=9] move workspace to output $lower_right 
-# for_window [workspace=10] move workspace to output $lower_right
+for_window [workspace=1] move workspace to output $upper_left
+for_window [workspace=2] move workspace to output $upper_right
+for_window [workspace=3] move workspace to output $lower_left
+for_window [workspace=4] move workspace to output $lower_right
+for_window [workspace=5] move workspace to output $upper_left
+for_window [workspace=6] move workspace to output $upper_right
+for_window [workspace=7] move workspace to output $lower_left
+for_window [workspace=8] move workspace to output $lower_right
+for_window [workspace=9] move workspace to output $lower_right 
+for_window [workspace=10] move workspace to output $lower_right
 
 # workspace to monitor assignment for 2 monitors, left & right
 # workspace $ws1 output $lower_right 
@@ -243,34 +242,36 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
         position top
-	status_command i3status
+	font pango:DejaVu Sans Mono, FontAwesome 8
 	tray_output primary
+	status_command i3blocks
   colors {
     binding_mode #ffa500 #285577 #ffffff 
   }
 }
+set $refresh_bar pkill -RTMIN+10 i3blocks
 
 # brightness
-bindsym KP_Subtract $exec xbacklight -10
-bindsym KP_Add $exec xbacklight +10
+bindsym KP_Subtract $exec "xbacklight -10 && $refresh_bar"
+bindsym KP_Add $exec "xbacklight +10 && $refresh_bar"
 $exec xbacklight -set 30
 
 # volume & playback cotrol
 bindsym XF86AudioRaiseVolume $exec \
   "pactl set-sink-mute @DEFAULT_SINK@ false \
   && (($($scripts_dir/sound_status.sh) <= 90)) \
-  && pactl set-sink-volume @DEFAULT_SINK@ +10%"
-bindsym XF86AudioLowerVolume $exec "pactl set-sink-volume @DEFAULT_SINK@ -10%"
-bindsym XF86AudioMute $exec "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+  && pactl set-sink-volume @DEFAULT_SINK@ +10% \
+  && $refresh_bar"
+bindsym XF86AudioLowerVolume $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_bar"
+bindsym XF86AudioMute $exec "pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_bar"
 bindsym XF86AudioMicMute $exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
-bindsym KP_Insert $exec playerctl previous
-bindsym KP_Delete $exec playerctl next
-bindsym KP_Enter $exec playerctl play-pause
+bindsym KP_Insert $exec "playerctl previous && sleep 0.1 && $refresh_bar"
+bindsym KP_Delete $exec "playerctl next && sleep 0.1 && $refresh_bar"
+bindsym KP_Enter $exec "playerctl play-pause && $refresh_bar"
 
 # bluetooth
-bindsym KP_Divide $exec $scripts_dir/bluetooth_off.sh
-bindsym KP_Multiply $exec $scripts_dir/bluetooth_on.sh
-
+bindsym KP_Divide $exec "$scripts_dir/bluetooth_off.sh && sleep 0.1 && $refresh_bar"
+bindsym KP_Multiply $exec "$scripts_dir/bluetooth_on.sh && sleep 0.1 && $refresh_bar"
 # screenshot of selection
 bindsym --release Print $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/'
 
@@ -278,7 +279,6 @@ bindsym --release Print $exec scrot -s -e 'xclip -selection clipboard -t image/p
 $exec nm-applet
 $exec /usr/lib/kdeconnectd
 $exec indicator-kdeconnect
-$exec albert
 $exec redshift -l 50.094732:19.973673 -t 5500:3100
 $exec $scripts_dir/focus-last.py
 $exec dunst -config ~/.config/dunst/dunstrc

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+STATUS=$(echo -e show | bluetoothctl | grep -c "Powered: yes")
+
+if [[ "${STATUS}" = 1 ]]; then
+  echo "on"
+  echo "on"
+  echo ""
+fi
