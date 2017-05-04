@@ -82,6 +82,9 @@
 	("C-j" . my-evil-scroll-down)
 	("C-t" . transpose-chars)
 	("K" . my-evil-split-line)
+	("C-v" . scroll-up-command)
+	("C-n" . evil-next-line)
+	("C-p" . evil-previous-line)
    :map evil-insert-state-map
 	("C-t" . transpose-chars))
   :config
@@ -427,3 +430,12 @@
         (comment-or-uncomment-region beg end)))
 (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
 (global-set-key (kbd "M-[") (kbd "["))
+
+(use-package smooth-scroll
+  :diminish smooth-scroll-mode
+  :init
+  (setq scroll-step            1
+	scroll-conservatively  10000)
+  (setq smooth-scroll/vscroll-step-size 3))
+  :config
+  (smooth-scroll-mode 1)

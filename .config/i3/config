@@ -89,8 +89,16 @@ set $upper_right "DP-0"
 set $upper_left "DP-6"
 
 # nvidia same as xrandr, but ForceFullCompositionPipeline fixes screen tearing
+$exec xrandr --output $lower_right --primary
 $exec_always nvidia-settings --assign CurrentMetaMode="DP-4: 1920x1080 +1920+1080 { ForceFullCompositionPipeline = On }, DP-1: 1920x1080 +0+1080 { ForceFullCompositionPipeline = On }, DP-0: 1920x1080 +1920+0 { ForceFullCompositionPipeline = On }, DP-6: 1680x1050 +240+30 { ForceFullCompositionPipeline = On }"
 
+#compton compositor to eliminate stutters when scrolling
+$exec compton -cCzGb -t-3 -l-5 -r4 \
+ --config /dev/null --backend xrender \
+ --unredir-if-possible
+
+# nice black wallpaper, needed because compton makes the default grey
+$exec hsetroot -solid "#000000"
 
 # presentation mode - mirror primary display to all outputs
 bindsym $mod+p $exec xrandr \
@@ -294,6 +302,7 @@ $exec xautolock -detectsleep \
 -corners "----" -cornersize 150
 
 # ace-jump between windows
+popup_during_fullscreen leave_fullscreen
 for_window [class="Yad"] floating enable
 set $i3-jump-cmd mode "default"; exec --no-startup-id xdotool key --delay 0 --clearmodifiers
 mode "i3-jump-window" {
@@ -319,7 +328,7 @@ mode "i3-jump-window" {
      bindsym --release i $i3-jump-cmd "i" Control_L+Return
      bindsym --release o $i3-jump-cmd "o" Control_L+Return
      bindsym --release p $i3-jump-cmd "p" Control_L+Return
-     bindsym Escape mode "default"
+     bindsym --release Escape $i3-jump-cmd Escape
      bindsym $mod+apostrophe mode "default"
 }
 bindsym $mod+apostrophe mode "i3-jump-window"; $exec $scripts_dir/i3-ace-jump.sh
