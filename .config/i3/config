@@ -78,7 +78,7 @@ bindsym $mod+a focus parent
 # focus the child container
 bindsym $mod+z focus child
 
-# monitors names
+# monitor names
 # primary
 set $lower_right "DP-4"
 # HDMI
@@ -87,13 +87,6 @@ set $lower_left "DP-1"
 set $upper_right "DP-0"
 # USB-C
 set $upper_left "DP-6"
-
-# xrandr default mode
-# $exec_always xrandr \
-# --output $lower_right --auto --pos 1920x1080 --primary \
-# --output $lower_left --auto --pos 0x1080 \
-# --output $upper_right --auto --pos 1920x0 \
-# --output $upper_left --auto --pos 240x30 
 
 # nvidia same as xrandr, but ForceFullCompositionPipeline fixes screen tearing
 $exec_always nvidia-settings --assign CurrentMetaMode="DP-4: 1920x1080 +1920+1080 { ForceFullCompositionPipeline = On }, DP-1: 1920x1080 +0+1080 { ForceFullCompositionPipeline = On }, DP-0: 1920x1080 +1920+0 { ForceFullCompositionPipeline = On }, DP-6: 1680x1050 +240+30 { ForceFullCompositionPipeline = On }"
@@ -106,38 +99,7 @@ bindsym $mod+p $exec xrandr \
 --output $upper_right --auto --same-as $lower_right \
 --output $upper_left --auto --same-as $lower_right
 
-# xrandr only primary monitor mode
-# bindsym $mod+o $exec xrandr \
-# --output $lower_right --auto --primary \
-# --output $lower_left --off \
-# --output $upper_right --off \
-# --output $upper_left --off \
-
-# default workspace names
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
-set $ws4 "4"
-set $ws5 "5"
-set $ws6 "6"
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10:spotify"
-
 # workspace to monitor assignment for 4 monitors in grid
-# todo those two block should have script to distribute monitors based on configuration
-workspace $ws1 output $upper_left
-workspace $ws2 output $upper_right
-workspace $ws3 output $lower_left
-workspace $ws4 output $lower_right
-workspace $ws5 output $upper_left
-workspace $ws6 output $upper_right
-workspace $ws7 output $lower_left
-workspace $ws8 output $lower_right
-workspace $ws9 output $lower_right 
-workspace $ws10 output $lower_right
-
 # ensure workspaces are on appropriate output when plugging in additional displays
 for_window [workspace=1] move workspace to output $upper_left
 for_window [workspace=2] move workspace to output $upper_right
@@ -149,17 +111,6 @@ for_window [workspace=7] move workspace to output $lower_left
 for_window [workspace=8] move workspace to output $lower_right
 for_window [workspace=9] move workspace to output $lower_right 
 for_window [workspace=10] move workspace to output $lower_right
-
-# workspace to monitor assignment for 2 monitors, left & right
-# workspace $ws1 output $lower_right 
-# workspace $ws2 output $lower_left
-# workspace $ws3 output $lower_left
-# workspace $ws4 output $lower_right
-# workspace $ws5 output $lower_right 
-# workspace $ws6 output $lower_left
-# workspace $ws7 output $lower_left
-# workspace $ws8 output $lower_right
-# workspace $ws9 output $lower_right 
 
 # switch to workspace
 bindsym $mod+1 workspace number 1
@@ -314,13 +265,10 @@ $exec unclutter --timeout 1
 mouse_warping output
 
 # app to workspace assignment
-assign [class="Slack"] $ws9
-for_window [class="Spotify"] move to workspace $ws10
+for_window [class="Spotify"] move to workspace "10:spotify"
 
 # startup apps
 $exec spotify
-#$exec google-chrome-stable
-#$exec slack --force-device-scale-factor
 
 # dropdown terminals
 $exec termite -t "1-dropdown"
@@ -345,3 +293,33 @@ $exec xautolock -detectsleep \
 -killtime 15 -killer "systemctl suspend" \
 -corners "----" -cornersize 150
 
+# ace-jump between windows
+for_window [class="Yad"] floating enable
+set $i3-jump-cmd mode "default"; exec --no-startup-id xdotool key --delay 0 --clearmodifiers
+mode "i3-jump-window" {
+     bindsym --release a $i3-jump-cmd "a" Control_L+Return
+     bindsym --release 2 $i3-jump-cmd "2" Control_L+Return
+     bindsym --release s $i3-jump-cmd "s" Control_L+Return
+     bindsym --release d $i3-jump-cmd "d" Control_L+Return
+     bindsym --release f $i3-jump-cmd "f" Control_L+Return
+     bindsym --release g $i3-jump-cmd "g" Control_L+Return
+     bindsym --release q $i3-jump-cmd "q" Control_L+Return
+     bindsym --release w $i3-jump-cmd "w" Control_L+Return
+     bindsym --release e $i3-jump-cmd "e" Control_L+Return
+     bindsym --release r $i3-jump-cmd "r" Control_L+Return
+     bindsym --release t $i3-jump-cmd "t" Control_L+Return
+     bindsym --release z $i3-jump-cmd "z" Control_L+Return
+     bindsym --release x $i3-jump-cmd "x" Control_L+Return
+     bindsym --release c $i3-jump-cmd "c" Control_L+Return
+     bindsym --release v $i3-jump-cmd "v" Control_L+Return
+     bindsym --release j $i3-jump-cmd "j" Control_L+Return
+     bindsym --release k $i3-jump-cmd "k" Control_L+Return
+     bindsym --release l $i3-jump-cmd "l" Control_L+Return
+     bindsym --release m $i3-jump-cmd "m" Control_L+Return
+     bindsym --release i $i3-jump-cmd "i" Control_L+Return
+     bindsym --release o $i3-jump-cmd "o" Control_L+Return
+     bindsym --release p $i3-jump-cmd "p" Control_L+Return
+     bindsym Escape mode "default"
+     bindsym $mod+apostrophe mode "default"
+}
+bindsym $mod+apostrophe mode "i3-jump-window"; $exec $scripts_dir/i3-ace-jump.sh

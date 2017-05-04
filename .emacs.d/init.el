@@ -48,9 +48,11 @@
 (load custom-file)
 
 ;; backup and auto-save
-(setq backup-directory-alist `((".*" . "~/.emacs.d/backup/")))
-(setq auto-save-file-name-transforms `((".*" ,"~/.emacs.d/auto-save/" t)))
-(setq auto-save-interval 20)
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name
+                 (concat user-emacs-directory "backup")))))
+(setq auto-save-file-name-transforms
+          `((".*" ,(concat user-emacs-directory "auto-save/") t))) (setq auto-save-interval 20)
 (setq auto-save-timeout 10)
 (setq desktop-auto-save-timeout 10)
 (desktop-save-mode 1)
@@ -124,6 +126,13 @@
   (add-hook 'after-save-hook #'recompile-pdf-on-save)
   (add-hook 'LaTeX-mode-hook 'flyspell-mode))
 
+(defun flyspell-save-word ()
+  (interactive)
+  (let ((current-location (point))
+         (word (flyspell-get-word)))
+    (when (consp word)    
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+
 (use-package openwith
   :init
   (setq openwith-associations '(("\\.pdf\\'" "okular" (file))))
@@ -159,9 +168,10 @@
 	 "* TODO %?" :prepend t)))
   :bind
   (("C-c C-x C-j" . org-clock-goto)
-   ("C-c C-x C-i" . org-clock-in)
-   ("C-c C-x C-o" . org-clock-out)
-   ("C-C C-x C-e" . org-clock-modify-effort-estimate)
+  ("C-c C-x C-i" . org-clock-in)
+  ("C-c C-x C-o" . org-clock-out)
+  ("C-C C-x C-e" . org-clock-modify-effort-estimate)
+  ("C-c C-x C-q" . org-clock-cancel)
   ("\C-cl" . org-store-link)
   ("\C-ca" . org-agenda)
   ("\C-cc" . org-capture)
@@ -341,12 +351,6 @@
   ("M-g w" . avy-goto-word-1)
   ("M-g e" . avy-goto-word-0)))
 
-(use-package ace-window
-  :config
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-  :bind
-  (("M-p" . ace-window)))
-
 (use-package yasnippet
   :bind
   (("C-c n" . yas-insert-new-heading-hm)
@@ -412,3 +416,14 @@
 (use-package undo-tree
   :diminish undo-tree-mode
   :config (global-undo-tree-mode))
+
+(defun comment-or-uncomment-region-or-line ()
+    "Comments or uncomments the region or the current line if there's no active region."
+    (interactive)
+    (let (beg end)
+        (if (region-active-p)
+            (setq beg (region-beginning) end (region-end))
+            (setq beg (line-beginning-position) end (line-end-position)))
+        (comment-or-uncomment-region beg end)))
+(global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
+(global-set-key (kbd "M-[") (kbd "["))

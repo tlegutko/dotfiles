@@ -1,9 +1,11 @@
 #!/bin/bash
 
-IS_CONNECTED=$(kdeconnect-cli -a --id-only 2>&1)
-if [[ "$IS_CONNECTED" != "No devices found" ]]; then
-    STATUS=$(qdbus org.kde.kdeconnect /modules/kdeconnect/devices/4c522739f00612bd org.kde.kdeconnect.device.battery.charge)
-    echo "${STATUS}%"
-    echo "${STATUS}%"
-    echo ""
+CONNECTED_ID=$(pgrep kdeconnectd >/dev/null && kdeconnect-cli -a --id-only 2>&1)
+if [[ -n "$CONNECTED_ID" && "$CONNECTED_ID" != "No devices found" ]]; then
+    STATUS=$(qdbus org.kde.kdeconnect /modules/kdeconnect/devices/"${CONNECTED_ID}" org.kde.kdeconnect.device.battery.charge)
+    if [[ -n "$STATUS" ]]; then
+	echo "${STATUS}%"
+	echo "${STATUS}%"
+	echo ""
+    fi
 fi
