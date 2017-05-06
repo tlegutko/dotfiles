@@ -61,10 +61,6 @@
   kept-old-versions 2
   version-control t)
 
-;; eval shortcut
-(global-set-key (kbd "C-x e") 'eval-buffer)
-(global-set-key (kbd "C-x C-e") 'eval-region)
-
 (global-visual-line-mode 1)
 (diminish 'visual-line-mode)
 
@@ -83,6 +79,7 @@
 	("C-t" . transpose-chars)
 	("K" . my-evil-split-line)
 	("C-v" . scroll-up-command)
+	("C-S-v" . evil-visual-block)
 	("C-n" . evil-next-line)
 	("C-p" . evil-previous-line)
    :map evil-insert-state-map
@@ -129,12 +126,18 @@
   (add-hook 'after-save-hook #'recompile-pdf-on-save)
   (add-hook 'LaTeX-mode-hook 'flyspell-mode))
 
-(defun flyspell-save-word ()
-  (interactive)
-  (let ((current-location (point))
-         (word (flyspell-get-word)))
-    (when (consp word)    
-      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+(use-package flyspell
+  :bind
+  (:map flyspell-mode-map
+   ("C-:" . flyspell-save-word))
+  :config
+  (defun flyspell-save-word ()
+    "Save word to personal dictionary."
+    (interactive)
+    (let ((current-location (point))
+	  (word (flyspell-get-word)))
+      (when (consp word)    
+	(flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location)))))
 
 (use-package openwith
   :init
@@ -184,6 +187,7 @@
   ("\M-q" . toggle-truncate-lines))
   :config
   (unbind-key "C-'" org-mode-map) ;; for avy to use
+  (unbind-key "C-c C-r" org-mode-map) ;; ivy-resume
   (org-clock-persistence-insinuate)
   (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) )))
 
@@ -292,6 +296,7 @@
   ("C-s" . swiper)
   ("M-x" . counsel-M-x)
   ("C-x C-f" . counsel-find-file)
+  ("C-x f" . counsel-find-file)
   ("<f1> f" . counsel-describe-function)
   ("<f1> v" . counsel-describe-variable)
   ("<f1> l" . counsel-find-library)
@@ -431,11 +436,41 @@
 (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
 (global-set-key (kbd "M-[") (kbd "["))
 
-(use-package smooth-scroll
-  :diminish smooth-scroll-mode
+(use-package sublimity
   :init
-  (setq scroll-step            1
-	scroll-conservatively  10000)
-  (setq smooth-scroll/vscroll-step-size 3))
+  (setq sublimity-scroll-weight 5
+      sublimity-scroll-drift-length 10)
+  (setq next-screen-context-lines 10)
   :config
-  (smooth-scroll-mode 1)
+  (sublimity-mode 1))
+
+(use-package sh-script
+  :init
+  (setq display-buffer-alist nil)
+  :bind
+  (("C-x e" . eval-buffer)
+   ("C-x C-e" . eval-last-sexp)
+  :map sh-mode-map
+   ("C-c e" . eval-shell-buffer)
+   ("C-x C-e" . eval-shell-current-line-or-region))
+  :config
+  (defun insert-shell-output-at-position (command position)
+    (save-excursion
+      (goto-char position)
+      (insert (with-temp-buffer
+	(shell-command command t)
+	(buffer-string)))))
+  (defun eval-shell-buffer (arg)
+    (interactive "p")
+    (if (/= arg 1) ;; arg not nil
+	(insert-shell-output-at-position (buffer-string) (point-max))
+	(shell-command (buffer-string))))
+  (defun eval-shell-current-line-or-region (start end arg)
+    (interactive "r\np")
+    (let ((command-position
+	  (if (use-region-p)
+	    (list (buffer-substring start end) end)
+	    (list (thing-at-point 'line t) (+(point-at-eol) 1)))))
+      (if (/= arg 1)
+	(apply 'insert-shell-output-at-position command-position)
+	(shell-command (car command-position))))))

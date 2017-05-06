@@ -167,6 +167,17 @@ bindsym Shift+KP_Begin move container to workspace number 9
 bindsym $mod+Shift+KP_Begin move container to workspace number 10
 
 # move focused workspace to monitor
+workspace 1 output $upper_left
+workspace 2 output $upper_right
+workspace 3 output $lower_left
+workspace 4 output $lower_right
+workspace 5 output $upper_left
+workspace 6 output $upper_right
+workspace 7 output $lower_left
+workspace 8 output $lower_right
+workspace 9 output $lower_right 
+workspace 10 output $lower_right 
+
 bindsym Mod1+Shift+KP_Next move workspace to output $lower_right
 bindsym Mod1+Shift+KP_End move workspace to output $lower_left
 bindsym Mod1+Shift+KP_Home move workspace to output $upper_left

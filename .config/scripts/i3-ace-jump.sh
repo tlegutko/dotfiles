@@ -51,9 +51,7 @@ win_y=$( xwininfo -id ${win_id} | grep -oP "(?<=Height: )[0-9]+" )
 
 #hide if it's a dropdown, window might be below it
 is_dropdown=$(xprop -id ${initially_active_window} | grep -cP "^WM_NAME\(STRING\) = \"[0-9]-dropdown.*")
-echo $is_dropdown
 if ((is_dropdown == 1)); then
-  echo "dropdown"
   i3-msg "[title="1-dropdown"] move scratchpad"
   i3-msg "[title="2-dropdown"] move scratchpad"
 fi
