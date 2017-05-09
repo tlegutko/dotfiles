@@ -516,3 +516,5 @@
   :config
   (key-chord-mode 1)
   (key-chord-define evil-insert-state-map  "jk" 'evil-normal-state))
+
+(global-set-key (kbd "M-[") (kbd "C-x 8 RET L S B R RET"))
