@@ -29,10 +29,20 @@
 (setq-default mode-line-client nil)
 (setq-default mode-line-frame-identification nil)
 
-(use-package zenburn-theme
+(use-package all-the-icons)
+(use-package neotree
+  :bind
+  (("C-c d" . neotree-toggle))
+  :config
+  (add-hook 'neotree-mode-hook 'evil-insert-state))
+(use-package nlinum)
+
+(use-package doom-themes
+  :pin melpa
+  :diminish doom-buffer-mode
   :init
   :config
-  (load-theme 'zenburn t)
+  (load-theme 'doom-molokai t)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
@@ -41,7 +51,30 @@
   ;; font is 1/10 of height
   (set-face-attribute 'default nil :height 80)
   ;;; i3-like mouse hover effect
-  (setq mouse-autoselect-window t))
+  (setq mouse-autoselect-window t)
+  ;;; Settings (defaults)
+  (setq doom-enable-bold nil    ; if nil, bolding are universally disabled
+	doom-enable-italic t  ; if nil, italics are universally disabled
+	;; doom-one specific settings
+	doom-one-brighter-modeline nil
+	doom-one-brighter-comments nil)
+  ;;; OPTIONAL
+  ;; brighter source buffers (that represent files)
+  (add-hook 'find-file-hook 'doom-buffer-mode-maybe)
+  ;; ...if you use auto-revert-mode
+  (add-hook 'after-revert-hook 'doom-buffer-mode-maybe)
+  ;; And you can brighten other buffers (unconditionally) with:
+  (add-hook 'ediff-prepare-buffer-hook 'doom-buffer-mode)
+  ;; brighter minibuffer when active
+  (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
+  ;; Enable custom neotree theme
+  (doom-themes-neotree-config)  ; all-the-icons fonts must be installed!
+  ;; Enable nlinum line highlighting
+  (doom-themes-nlinum-config)   ; requires nlinum and hl-line-mode
+  ;; Necessary for org-mode
+  (setq org-fontify-whole-heading-line t
+	org-fontify-done-headline t
+	org-fontify-quote-and-verse-blocks t))
 
 ;;; automatic custom variables
 (setq custom-file "~/.emacs.d/custom.el")
@@ -61,8 +94,10 @@
   kept-old-versions 2
   version-control t)
 
-(global-visual-line-mode 1)
-(diminish 'visual-line-mode)
+(use-package simple
+  :ensure nil
+  :bind
+  (("C-c v" . visual-line-mode)))
 
 (use-package evil
   :init
@@ -83,7 +118,12 @@
 	("C-n" . evil-next-line)
 	("C-p" . evil-previous-line)
    :map evil-insert-state-map
-	("C-t" . transpose-chars))
+   ("C-t" . transpose-chars)
+   :map evil-motion-state-map
+   ("$" . evil-last-non-blank)
+   ("g_" . evil-end-of-line)
+   ("C-]" . nil) ;; for avy to use
+   ("C-v" . scroll-up-command))
   :config
   (defun my-evil-scroll-up ()
     (interactive)
@@ -152,8 +192,9 @@
   :init
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex))
 
-;;; line numbers
+;; line numbers
 (use-package linum-relative
+  :diminish linum-relative-mode
   :init
   (setq linum-relative-current-symbol "")
   :config
@@ -166,12 +207,29 @@
   (setq org-clock-persist 'history)
   (setq calendar-week-start-day 1)
   (setq org-startup-truncated 'nil)
+  (setq org-agenda-start-with-log-mode t)
   (setq org-capture-templates
       '(("a" "Appointment" entry (file  "~/org/calendar.org" )
   	 "* %?\n%^T")
 	("p" "Personal journal" entry (file "~/org/personal-journal.org") "* %T %?")
 	("t" "To do" entry (file "~/org/todo.org")
-	 "* TODO %?" :prepend t)))
+	 "* TODO %?" :prepend t)
+	("l" "Laptop config" entry (file "~/org/laptop-config.org")
+	 "* TODO %?" :prepend t)
+	("m" "Miracle morning" entry (file "~/org/miracle-morning.org")
+	 "* miracle morning\nmm%?" :unnarrowed t :clock-in t :clock-resume t)
+	("e" "Miracle evening" entry (file "~/org/miracle-evening.org")
+	 "* miracle evening\n  %?" :unnarrowed t :clock-in t :clock-resume t)
+	("w" "Weekly summary" entry (file "~/org/weekly-summary.org")
+	 "* weekly summary\nws%?" :unnarrowed t :clock-in t :clock-resume t)
+	("D" "Dance notes" entry (file "~/org/dance-notes.org")
+	 "* %?" :unnarrowed t :clock-in t :clock-resume t)
+	("d" "Diet")
+	("dw" "Weight" entry (file "~/org/diet-scores.org")
+	 "* %t waga %?" :unnarrowed t)
+	("ds" "Score" plain (file "~/org/diet-scores.org")
+	 "* %t ocena %?" :unnarrowed t)
+	))
   :bind
   (("C-c C-x C-j" . org-clock-goto)
   ("C-c C-x C-i" . org-clock-in)
@@ -187,9 +245,19 @@
   ("\M-q" . toggle-truncate-lines))
   :config
   (unbind-key "C-'" org-mode-map) ;; for avy to use
-  (unbind-key "C-c C-r" org-mode-map) ;; ivy-resume
+  (unbind-key "C-]" org-mode-map) ;; for avy to use
+  (defun org-summary-todo (n-done n-not-done)
+    "Switch entry to DONE when all subentries are done, to TODO otherwise."
+    (let (org-log-done org-log-states)   ; turn off logging
+      (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
   (org-clock-persistence-insinuate)
+  (add-hook 'org-capture-mode-hook 'evil-insert-state)
   (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) )))
+
+(use-package org-bullets
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (use-package org-gcal
   :pin melpa
@@ -293,7 +361,7 @@
   (setq ivy-initial-inputs-alist nil)
   :bind
   (("M-y" . counsel-yank-pop)
-  ("C-s" . swiper)
+  ("C-s" . counsel-grep-or-swiper)
   ("M-x" . counsel-M-x)
   ("C-x C-f" . counsel-find-file)
   ("C-x f" . counsel-find-file)
@@ -306,7 +374,7 @@
   ("C-c j" . counsel-git-grep)
   ("C-c k" . counsel-ag)
   ("C-x l" . counsel-locate)
-  ("C-c C-r" . ivy-resume)
+  ("C-c r" . ivy-resume)
    :map ivy-minibuffer-map
    ("M-y" . ivy-next-line))
   :config
@@ -349,55 +417,25 @@
   :config
   (counsel-projectile-on))
 
-(use-package ivy-hydra)
-
 (use-package avy
   :bind
-  (("C-;" . avy-goto-char)
-  ("C-'" . avy-goto-char-2)
-  ("M-g f" . avy-goto-line)
-  ("M-g w" . avy-goto-word-1)
-  ("M-g e" . avy-goto-word-0)))
+  (("C-'" . avy-goto-char-2)
+   ("C-\"" . avy-goto-char)
+  ("M-'" . avy-goto-word-1)
+  ("M-\"" . avy-goto-word-0)
+  ("C-]" . avy-goto-line)))
 
 (use-package yasnippet
+  :diminish yas-minor-mode
   :bind
-  (("C-c n" . yas-insert-new-heading-hm)
-  ("C-c N" . yas-insert-new-heading)
-  :map yas-minor-mode-map
+  (:map yas-minor-mode-map
   ("<tab>" . yas-expand)
   ("TAB" . yas-expand)
   ("[(shift tab)]" . nil)
   ("[backtab]" . nil)
   ("<S-iso-lefttab>" . yas-prev-field))
   :config
-  (defun current-line-empty-p ()
-    (save-excursion
-      (beginning-of-line)
-      (looking-at "[[:space:]]*$")))
-  (defun yas-insert-snip-in-newline(snip-name)
-    "inserts newline line below and inserts snippet with given name"
-    (interactive)
-    (evil-insert-state)
-    (if (current-line-empty-p)
-	(beginning-of-line)
-	(progn
-	  (end-of-line)
-	  (newline)))
-    (yas-expand-snippet
-      (yas-lookup-snippet snip-name)))
-  (defun yas-org-get-time-stamp (&rest args)
-    "Return the string that `org-insert-time-stamp' would insert."
-    (with-temp-buffer
-      (apply #'org-insert-time-stamp args)
-      (buffer-string)))
-  (defun yas-insert-new-heading-hm ()
-    (interactive)
-    (yas-insert-snip-in-newline "New Heading with Date with HM"))
-  (defun yas-insert-new-heading ()
-    (interactive)
-    (yas-insert-snip-in-newline "New Heading with Date"))
-  (yas-global-mode 1)
-  :diminish yas-minor-mode)
+  (yas-global-mode 1))
 
 (use-package notifications
   :config
@@ -436,14 +474,6 @@
 (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
 (global-set-key (kbd "M-[") (kbd "["))
 
-(use-package sublimity
-  :init
-  (setq sublimity-scroll-weight 5
-      sublimity-scroll-drift-length 10)
-  (setq next-screen-context-lines 10)
-  :config
-  (sublimity-mode 1))
-
 (use-package sh-script
   :init
   (setq display-buffer-alist nil)
@@ -474,3 +504,15 @@
       (if (/= arg 1)
 	(apply 'insert-shell-output-at-position command-position)
 	(shell-command (car command-position))))))
+
+(use-package dired-x
+  :ensure nil
+  :config
+  (setq-default dired-omit-files-p t)
+  (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+  (setq dired-omit-mode t))
+
+(use-package key-chord
+  :config
+  (key-chord-mode 1)
+  (key-chord-define evil-insert-state-map  "jk" 'evil-normal-state))

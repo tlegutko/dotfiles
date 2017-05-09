@@ -275,8 +275,9 @@ bindsym $mod+t $exec $scripts_dir/toggle_touchpad.sh
 $exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" 1
 bindsym $mod+m $exec $scripts_dir/toggle_trackpoint.sh
 
-# keyboard - pl layout and caps lock as esc
-$exec setxkbmap -layout pl -option caps:escape -option numpad:microsoft
+# keyboard - caps lock alone is escape, when pressed with another button it's control
+$exec setxkbmap -layout pl -option ctrl:nocaps -option numpad:microsoft
+$exec xcape -e 'Control_L=Escape'
 
 # cursor size & hiding
 $exec xrdb ~/.Xresources
@@ -307,7 +308,7 @@ bindsym $mod+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
 # screen locking and suspending
 $exec xautolock -detectsleep \
 -notify 30 \
--notifier "notify-send 'Sleeping time' 'Turning screen off in 30s.' -t 30000" \
+-notifier "notify-send 'Sleeping time' 'Turning screen off in 30s.' -t 20000" \
 -time 10 -locker "xset dpms force off" \
 -killtime 15 -killer "systemctl suspend" \
 -corners "----" -cornersize 150
