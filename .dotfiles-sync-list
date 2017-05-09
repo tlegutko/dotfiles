@@ -25,6 +25,3 @@
 .emacs.d/init.el
 .emacs.d/custom.el
 .emacs.d/org-gcal-credentials.el
-.emacs.d/snippets/org-mode/new-heading-hm
-.emacs.d/snippets/org-mode/new-heading
-

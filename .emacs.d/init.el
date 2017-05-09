@@ -85,14 +85,14 @@
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backup")))))
 (setq auto-save-file-name-transforms
-          `((".*" ,(concat user-emacs-directory "auto-save/") t))) (setq auto-save-interval 20)
+      `((".*" ,(concat user-emacs-directory "auto-save/") t))) (setq auto-save-interval 20)
 (setq auto-save-timeout 10)
 (setq desktop-auto-save-timeout 10)
 (desktop-save-mode 1)
 (setq delete-old-versions t
-  kept-new-versions 6
-  kept-old-versions 2
-  version-control t)
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
 
 (use-package simple
   :ensure nil
@@ -117,13 +117,13 @@
 	("C-S-v" . evil-visual-block)
 	("C-n" . evil-next-line)
 	("C-p" . evil-previous-line)
-   :map evil-insert-state-map
-   ("C-t" . transpose-chars)
-   :map evil-motion-state-map
-   ("$" . evil-last-non-blank)
-   ("g_" . evil-end-of-line)
-   ("C-]" . nil) ;; for avy to use
-   ("C-v" . scroll-up-command))
+	:map evil-insert-state-map
+	("C-t" . transpose-chars)
+	:map evil-motion-state-map
+	("$" . evil-last-non-blank)
+	("g_" . evil-end-of-line)
+	("C-]" . nil) ;; for avy to use
+	("C-v" . scroll-up-command))
   :config
   (defun my-evil-scroll-up ()
     (interactive)
@@ -141,8 +141,8 @@
   (evil-define-key 'normal term-raw-map (kbd "C-r") 'term-send-raw)
   (evil-define-key 'normal term-raw-map (kbd "C-c") 'term-send-raw)
   (add-hook 'emacs-lisp-mode-hook
-    (function (lambda ()
-	    (setq evil-shift-width 2))))
+	    (function (lambda ()
+			(setq evil-shift-width 2))))
   (evil-mode 1))
 
 (use-package evil-surround
@@ -169,7 +169,7 @@
 (use-package flyspell
   :bind
   (:map flyspell-mode-map
-   ("C-:" . flyspell-save-word))
+	("C-:" . flyspell-save-word))
   :config
   (defun flyspell-save-word ()
     "Save word to personal dictionary."
@@ -209,40 +209,40 @@
   (setq org-startup-truncated 'nil)
   (setq org-agenda-start-with-log-mode t)
   (setq org-capture-templates
-      '(("a" "Appointment" entry (file  "~/org/calendar.org" )
-  	 "* %?\n%^T")
-	("p" "Personal journal" entry (file "~/org/personal-journal.org") "* %T %?")
-	("t" "To do" entry (file "~/org/todo.org")
-	 "* TODO %?" :prepend t)
-	("l" "Laptop config" entry (file "~/org/laptop-config.org")
-	 "* TODO %?" :prepend t)
-	("m" "Miracle morning" entry (file "~/org/miracle-morning.org")
-	 "* miracle morning\nmm%?" :unnarrowed t :clock-in t :clock-resume t)
-	("e" "Miracle evening" entry (file "~/org/miracle-evening.org")
-	 "* miracle evening\n  %?" :unnarrowed t :clock-in t :clock-resume t)
-	("w" "Weekly summary" entry (file "~/org/weekly-summary.org")
-	 "* weekly summary\nws%?" :unnarrowed t :clock-in t :clock-resume t)
-	("D" "Dance notes" entry (file "~/org/dance-notes.org")
-	 "* %?" :unnarrowed t :clock-in t :clock-resume t)
-	("d" "Diet")
-	("dw" "Weight" entry (file "~/org/diet-scores.org")
-	 "* %t waga %?" :unnarrowed t)
-	("ds" "Score" plain (file "~/org/diet-scores.org")
-	 "* %t ocena %?" :unnarrowed t)
-	))
+	'(("a" "Appointment" entry (file  "~/org/calendar.org" )
+	   "* %?\n%^T")
+	  ("p" "Personal journal" entry (file "~/org/personal-journal.org") "* %T %?")
+	  ("t" "To do" entry (file "~/org/todo.org")
+	   "* TODO %?" :prepend t)
+	  ("l" "Laptop config" entry (file "~/org/laptop-config.org")
+	   "* TODO %?" :prepend t)
+	  ("m" "Miracle morning" entry (file "~/org/miracle-morning.org")
+	   "* miracle morning\nmm%?" :unnarrowed t :clock-in t :clock-resume t)
+	  ("e" "Miracle evening" entry (file "~/org/miracle-evening.org")
+	   "* miracle evening\n  %?" :unnarrowed t :clock-in t :clock-resume t)
+	  ("w" "Weekly summary" entry (file "~/org/weekly-summary.org")
+	   "* weekly summary\nws%?" :unnarrowed t :clock-in t :clock-resume t)
+	  ("D" "Dance notes" entry (file "~/org/dance-notes.org")
+	   "* %?" :unnarrowed t :clock-in t :clock-resume t)
+	  ("d" "Diet")
+	  ("dw" "Weight" entry (file "~/org/diet-scores.org")
+	   "* %t waga %?" :unnarrowed t)
+	  ("ds" "Score" plain (file "~/org/diet-scores.org")
+	   "* %t ocena %?" :unnarrowed t)
+	  ))
   :bind
   (("C-c C-x C-j" . org-clock-goto)
-  ("C-c C-x C-i" . org-clock-in)
-  ("C-c C-x C-o" . org-clock-out)
-  ("C-C C-x C-e" . org-clock-modify-effort-estimate)
-  ("C-c C-x C-q" . org-clock-cancel)
-  ("\C-cl" . org-store-link)
-  ("\C-ca" . org-agenda)
-  ("\C-cc" . org-capture)
-  ("\C-cb" . org-iswitchb)
-  :map org-mode-map
-  ("M-TAB" . org-global-cycle)
-  ("\M-q" . toggle-truncate-lines))
+   ("C-c C-x C-i" . org-clock-in)
+   ("C-c C-x C-o" . org-clock-out)
+   ("C-C C-x C-e" . org-clock-modify-effort-estimate)
+   ("C-c C-x C-q" . org-clock-cancel)
+   ("\C-cl" . org-store-link)
+   ("\C-ca" . org-agenda)
+   ("\C-cc" . org-capture)
+   ("\C-cb" . org-iswitchb)
+   :map org-mode-map
+   ("M-TAB" . org-global-cycle)
+   ("\M-q" . toggle-truncate-lines))
   :config
   (unbind-key "C-'" org-mode-map) ;; for avy to use
   (unbind-key "C-]" org-mode-map) ;; for avy to use
@@ -304,8 +304,8 @@
                'scala-indent:indent-on-parentheses)
   (sp-local-pair 'scala-mode "(" nil :post-handlers '(("||\n[i]" "RET")))
   (sp-local-pair 'scala-mode "{" nil
-               :post-handlers '(("||\n[i]" "RET")
-                                ("| " "SPC"))))
+		 :post-handlers '(("||\n[i]" "RET")
+				  ("| " "SPC"))))
 
 (use-package expand-region)
 
@@ -335,12 +335,14 @@
   (setq magit-completing-read-function 'ivy-completing-read)
   :bind
   ("C-x g" . magit-status)
-  ("C-x M-g" . magit-dispatch-popup))
+  ("C-x M-g" . magit-dispatch-popup)
+  :config
+  (defun hook-diminish-auto-revert ()
+    (interactive)
+    (diminish 'auto-revert-mode))
+  (add-hook 'auto-revert-mode-hook 'hook-diminish-auto-revert)
+  (add-hook 'with-editor-mode-hook 'evil-insert-state))
 
-(defun hook-diminish-auto-revert ()
-  (interactive)
-  (diminish 'auto-revert-mode))
-(add-hook 'auto-revert-mode-hook 'hook-diminish-auto-revert)
 
 (use-package keychain-environment ;; so magit sees ssh-agent
   :config
@@ -357,24 +359,24 @@
   (setq ivy-count-format "(%d/%d) ")
   (setq ivy-height 12)
   (setq ivy-re-builders-alist
-      '((t . ivy--regex-fuzzy)))
+	'((t . ivy--regex-fuzzy)))
   (setq ivy-initial-inputs-alist nil)
   :bind
   (("M-y" . counsel-yank-pop)
-  ("C-s" . counsel-grep-or-swiper)
-  ("M-x" . counsel-M-x)
-  ("C-x C-f" . counsel-find-file)
-  ("C-x f" . counsel-find-file)
-  ("<f1> f" . counsel-describe-function)
-  ("<f1> v" . counsel-describe-variable)
-  ("<f1> l" . counsel-find-library)
-  ("<f2> i" . counsel-info-lookup-symbol)
-  ("<f2> u" . counsel-unicode-char)
-  ("C-c g" . counsel-git)
-  ("C-c j" . counsel-git-grep)
-  ("C-c k" . counsel-ag)
-  ("C-x l" . counsel-locate)
-  ("C-c r" . ivy-resume)
+   ("C-s" . counsel-grep-or-swiper)
+   ("M-x" . counsel-M-x)
+   ("C-x C-f" . counsel-find-file)
+   ("C-x f" . counsel-find-file)
+   ("<f1> f" . counsel-describe-function)
+   ("<f1> v" . counsel-describe-variable)
+   ("<f1> l" . counsel-find-library)
+   ("<f2> i" . counsel-info-lookup-symbol)
+   ("<f2> u" . counsel-unicode-char)
+   ("C-c g" . counsel-git)
+   ("C-c j" . counsel-git-grep)
+   ("C-c k" . counsel-ag)
+   ("C-x l" . counsel-locate)
+   ("C-c r" . ivy-resume)
    :map ivy-minibuffer-map
    ("M-y" . ivy-next-line))
   :config
@@ -384,9 +386,9 @@
     (with-ivy-window
       (insert x)))
   (ivy-set-actions
-  t
-  '(("i" ivy-copy-to-buffer-action "insert")
-    ("y" ivy-yank-action "yank")))
+   t
+   '(("i" ivy-copy-to-buffer-action "insert")
+     ("y" ivy-yank-action "yank")))
   (defun counsel-yank-zsh-history ()
     "Yank the zsh history"
     (interactive)
@@ -394,14 +396,14 @@
       (shell-command "history -r") ; reload history
       (setq collection
 	    (nreverse
-	    (split-string (with-temp-buffer (insert-file-contents (file-truename "~/.zsh_history"))
-					    (buffer-string))
-			  "\n"
-			  t)))
+	     (split-string (with-temp-buffer (insert-file-contents (file-truename "~/.zsh_history"))
+					     (buffer-string))
+			   "\n"
+			   t)))
       (setq collection (mapcar (lambda (it) (replace-regexp-in-string ".*;" "" it)) collection)) ;; for zsh
       (when (and collection (> (length collection) 0)
-		(setq val (if (= 1 (length collection)) (car collection)
-			    (ivy-read (format "Zsh history:") collection))))
+		 (setq val (if (= 1 (length collection)) (car collection)
+			     (ivy-read (format "Zsh history:") collection))))
 	(kill-new val)
 	(message "%s => kill-ring" val))))
   (ivy-mode 1))
@@ -421,19 +423,12 @@
   :bind
   (("C-'" . avy-goto-char-2)
    ("C-\"" . avy-goto-char)
-  ("M-'" . avy-goto-word-1)
-  ("M-\"" . avy-goto-word-0)
-  ("C-]" . avy-goto-line)))
+   ("M-'" . avy-goto-word-1)
+   ("M-\"" . avy-goto-word-0)
+   ("C-]" . avy-goto-line)))
 
 (use-package yasnippet
   :diminish yas-minor-mode
-  :bind
-  (:map yas-minor-mode-map
-  ("<tab>" . yas-expand)
-  ("TAB" . yas-expand)
-  ("[(shift tab)]" . nil)
-  ("[backtab]" . nil)
-  ("<S-iso-lefttab>" . yas-prev-field))
   :config
   (yas-global-mode 1))
 
@@ -442,10 +437,10 @@
   (defun desktop-notification (time message &optional title)
     "System notification at some event or timer."
     (run-at-time time nil 'notifications-notify
-		:title (or title "alarm")
-		:body message
-		:urgency 'critical ;; low, normal, critical
-		:app-name "Emacs: Org")))
+		 :title (or title "alarm")
+		 :body message
+		 :urgency 'critical ;; low, normal, critical
+		 :app-name "Emacs: Org")))
 
 ;; helpful in looking for empty bindings
 (use-package free-keys)
@@ -464,13 +459,13 @@
   :config (global-undo-tree-mode))
 
 (defun comment-or-uncomment-region-or-line ()
-    "Comments or uncomments the region or the current line if there's no active region."
-    (interactive)
-    (let (beg end)
-        (if (region-active-p)
-            (setq beg (region-beginning) end (region-end))
-            (setq beg (line-beginning-position) end (line-end-position)))
-        (comment-or-uncomment-region beg end)))
+  "Comments or uncomments the region or the current line if there's no active region."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+	(setq beg (region-beginning) end (region-end))
+      (setq beg (line-beginning-position) end (line-end-position)))
+    (comment-or-uncomment-region beg end)))
 (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
 (global-set-key (kbd "M-[") (kbd "["))
 
@@ -480,7 +475,7 @@
   :bind
   (("C-x e" . eval-buffer)
    ("C-x C-e" . eval-last-sexp)
-  :map sh-mode-map
+   :map sh-mode-map
    ("C-c e" . eval-shell-buffer)
    ("C-x C-e" . eval-shell-current-line-or-region))
   :config
@@ -488,21 +483,21 @@
     (save-excursion
       (goto-char position)
       (insert (with-temp-buffer
-	(shell-command command t)
-	(buffer-string)))))
+		(shell-command command t)
+		(buffer-string)))))
   (defun eval-shell-buffer (arg)
     (interactive "p")
     (if (/= arg 1) ;; arg not nil
 	(insert-shell-output-at-position (buffer-string) (point-max))
-	(shell-command (buffer-string))))
+      (shell-command (buffer-string))))
   (defun eval-shell-current-line-or-region (start end arg)
     (interactive "r\np")
     (let ((command-position
-	  (if (use-region-p)
-	    (list (buffer-substring start end) end)
-	    (list (thing-at-point 'line t) (+(point-at-eol) 1)))))
+	   (if (use-region-p)
+	       (list (buffer-substring start end) end)
+	     (list (thing-at-point 'line t) (+(point-at-eol) 1)))))
       (if (/= arg 1)
-	(apply 'insert-shell-output-at-position command-position)
+	  (apply 'insert-shell-output-at-position command-position)
 	(shell-command (car command-position))))))
 
 (use-package dired-x
@@ -516,5 +511,3 @@
   :config
   (key-chord-mode 1)
   (key-chord-define evil-insert-state-map  "jk" 'evil-normal-state))
-
-(global-set-key (kbd "M-[") (kbd "C-x 8 RET L S B R RET"))
