@@ -119,6 +119,7 @@
 	("C-p" . evil-previous-line)
 	:map evil-insert-state-map
 	("C-t" . transpose-chars)
+	("C-y" . yank)
 	:map evil-motion-state-map
 	("$" . evil-last-non-blank)
 	("g_" . evil-end-of-line)
@@ -224,6 +225,9 @@
 	   "* weekly summary\nws%?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("D" "Dance notes" entry (file "~/org/dance-notes.org")
 	   "* %?" :unnarrowed t :clock-in t :clock-resume t)
+	  ("b" "Books and articles")
+	  ("bt" "To-read list" entry (file "~/org/books-to-read.org") "* %?")
+	  ("bn" "Notes from books" entry (file "~/org/books-notes.org") "* %?")
 	  ("d" "Diet")
 	  ("dw" "Weight" entry (file "~/org/diet-scores.org")
 	   "* %t waga %?" :unnarrowed t)

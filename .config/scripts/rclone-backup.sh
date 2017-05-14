@@ -5,6 +5,9 @@
 # todo check connection so it's not using my virgin mobile packets
 # todo two-way copy of master's thesis stuff
 
+# update arch packages list
+pacman -Q | cut -d ' ' -f1 > ~/.arch-packages-list
+
 # config files to ~/.dotfiles git repo
 ~/.dotfiles/.sync.sh
 

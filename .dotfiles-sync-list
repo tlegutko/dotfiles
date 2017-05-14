@@ -1,4 +1,7 @@
 .Xresources
+.arch-packages-list
+.aspell.en.prepl
+.aspell.en.pws
 .dotfiles-sync-list
 .gitconfig
 .gitconfig.local
