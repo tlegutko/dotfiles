@@ -40,7 +40,6 @@
 (use-package doom-themes
   :pin melpa
   :diminish doom-buffer-mode
-  :init
   :config
   (load-theme 'doom-molokai t)
   (tool-bar-mode -1)
@@ -93,6 +92,7 @@
       kept-new-versions 6
       kept-old-versions 2
       version-control t)
+(setq create-lockfiles nil)
 
 (use-package simple
   :ensure nil

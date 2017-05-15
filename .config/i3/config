@@ -275,9 +275,9 @@ bindsym $mod+t $exec $scripts_dir/toggle_touchpad.sh
 $exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" 1
 bindsym $mod+m $exec $scripts_dir/toggle_trackpoint.sh
 
-# keyboard - caps lock alone is escape, when pressed with another button it's control
-$exec setxkbmap -layout pl -option ctrl:nocaps -option numpad:microsoft
-$exec xcape -t 170 -e 'Control_L=Escape'
+# caps lock and return act as control when pressed with another keys
+# when pressed alone, caps lock acts as escape
+$exec $scripts_dir/remap-keyboard.sh
 
 # cursor size & hiding
 $exec xrdb ~/.Xresources
