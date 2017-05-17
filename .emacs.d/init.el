@@ -212,7 +212,8 @@
   (setq org-capture-templates
 	'(("a" "Appointment" entry (file  "~/org/calendar.org" )
 	   "* %?\n%^T")
-	  ("p" "Personal journal" entry (file "~/org/personal-journal.org") "* %T %?")
+	  ("p" "Personal journal" entry (file "~/org/personal-journal.org")
+	   "* personal journal\n  %?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("t" "To do" entry (file "~/org/todo.org")
 	   "* TODO %?" :prepend t)
 	  ("l" "Laptop config" entry (file "~/org/laptop-config.org")
@@ -355,7 +356,14 @@
 (use-package flx)
 
 (use-package ivy
-  :diminish ivy-mode)
+  :diminish ivy-mode
+  :bind
+   (("C-c r" . ivy-resume)
+   :map ivy-minibuffer-map
+   ("C-," . ivy-minibuffer-shrink)
+   ("C-." . ivy-minibuffer-grow)
+   ([C-m] . ivy-toggle-fuzzy)
+   ("M-y" . ivy-next-line)))
 
 (use-package counsel
   :init
@@ -369,6 +377,7 @@
   (("M-y" . counsel-yank-pop)
    ("C-s" . counsel-grep-or-swiper)
    ("M-x" . counsel-M-x)
+   ([?\C-x C-m] . counsel-M-x)
    ("C-x C-f" . counsel-find-file)
    ("C-x f" . counsel-find-file)
    ("<f1> f" . counsel-describe-function)
@@ -379,11 +388,9 @@
    ("C-c g" . counsel-git)
    ("C-c j" . counsel-git-grep)
    ("C-c k" . counsel-ag)
-   ("C-x l" . counsel-locate)
-   ("C-c r" . ivy-resume)
-   :map ivy-minibuffer-map
-   ("M-y" . ivy-next-line))
+   ("C-x l" . counsel-locate))
   :config
+  (define-key input-decode-map [?\C-m] [C-m])
   (defun ivy-yank-action (x)
     (kill-new x))
   (defun ivy-copy-to-buffer-action (x)
