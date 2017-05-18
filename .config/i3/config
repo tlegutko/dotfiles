@@ -209,6 +209,7 @@ mode "resize" {
   bindsym Escape mode "default"
   bindsym $mod+Escape mode "default"
   bindsym $mod+r mode "default"
+  bindcode mod5+27 mode "default"
 }
 bindsym $mod+r mode "resize"
 
@@ -260,6 +261,7 @@ $exec dunst -config ~/.config/dunst/dunstrc
 
 # focus last window or restart daemon if crashed
 bindsym $mod+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"
+bindsym mod5+Shift+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"
 
 # double prssing workspace num goes back to previous one
 workspace_auto_back_and_forth no
@@ -291,19 +293,24 @@ for_window [class="Spotify"] move to workspace "10:spotify"
 $exec spotify
 
 # dropdown terminals
-$exec termite -t "1-dropdown"
+$exec termite -t "0-dropdown"
+$exec emacsclient -c -n -F "((title . \"1-dropdown\"))"
 $exec emacsclient -c -n -F "((title . \"2-dropdown\"))"
+$exec emacsclient -c -n -F "((title . \"3-dropdown\"))"
+$exec emacsclient -c -n -F "((title . \"4-dropdown\"))"
+for_window [title="0-dropdown"] floating enable 
+for_window [title="0-dropdown"] move scratchpad
 for_window [title="1-dropdown"] floating enable 
 for_window [title="1-dropdown"] move scratchpad
 for_window [title="2-dropdown"] floating enable 
 for_window [title="2-dropdown"] move scratchpad
-bindsym $mod+grave $exec $scripts_dir/toggle_dropdown_terminal.sh 1
-bindsym $mod+Shift+grave $exec termite -t "1-dropdown"
-bindsym Mod1+grave $exec $scripts_dir/toggle_dropdown_terminal.sh 2
-bindsym Mod1+Shift+grave $exec emacsclient -c -n -F '((title . \"2-dropdown\"))'
+for_window [title="3-dropdown"] floating enable 
+for_window [title="3-dropdown"] floating enable 
+for_window [title="4-dropdown"] move scratchpad
+for_window [title="4-dropdown"] move scratchpad
 
 # masters thesis add citation from clipboard and recompile latex
-bindsym $mod+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
+bindsym mod5+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
 
 # screen locking and suspending
 $exec xautolock -detectsleep \
@@ -344,3 +351,112 @@ mode "i3-jump-window" {
      bindsym $mod+apostrophe mode "default"
 }
 bindsym $mod+apostrophe mode "i3-jump-window"; $exec $scripts_dir/i3-ace-jump.sh
+bindsym mod5+Tab mode "i3-jump-window"; $exec $scripts_dir/i3-ace-jump.sh
+
+mode "command" {
+     bindsym Return $exec emacsclient -c -n; mode "default"
+     bindsym q kill; mode "default"
+     bindsym w $exec $scripts_dir/rename-workspace.sh; mode "default"
+     bindsym r mode "resize"; mode "default"
+     bindsym t $exec termite -d `xcwd`; mode "default"
+     bindsym d $exec i3-dmenu-desktop --dmenu="dmenu -b -i"; mode "default"
+     bindsym f fullscreen toggle; mode "default"
+     bindsym g $exec google-chrome-stable; mode "default"
+     bindsym v split h; mode "default"
+     bindsym b split v; mode "default"
+     bindsym Shift+c $exec ~/.sync.sh && i3-msg reload; mode "default"
+     bindsym Shift+r $exec ~/.sync.sh && i3-msg restart; mode "default"
+     bindsym Shift+e exec i3-msg exit; mode "default"
+     bindsym h focus left; mode "default"
+     bindsym j focus down; mode "default"
+     bindsym k focus up; mode "default"
+     bindsym l focus right; mode "default"
+     bindsym Shift+h move left; mode "default"
+     bindsym Shift+j move down; mode "default"
+     bindsym Shift+k move up; mode "default"
+     bindsym Shift+l move right; mode "default"
+     bindsym a focus parent; mode "default"
+     bindsym z focus child; mode "default"
+     bindsym 1 workspace number 1; mode "default"
+     bindsym 2 workspace number 2; mode "default"
+     bindsym 3 workspace number 3; mode "default"
+     bindsym 4 workspace number 4; mode "default"
+     bindsym 5 workspace number 5; mode "default"
+     bindsym 6 workspace number 6; mode "default"
+     bindsym 7 workspace number 7; mode "default"
+     bindsym 8 workspace number 8; mode "default"
+     bindsym 9 workspace number 9; mode "default"
+     bindsym 0 workspace number 10; mode "default"
+     bindsym Shift+1 move container to workspace number 1; mode "default"
+     bindsym Shift+2 move container to workspace number 2; mode "default"
+     bindsym Shift+3 move container to workspace number 3; mode "default"
+     bindsym Shift+4 move container to workspace number 4; mode "default"
+     bindsym Shift+5 move container to workspace number 5; mode "default"
+     bindsym Shift+6 move container to workspace number 6; mode "default"
+     bindsym Shift+7 move container to workspace number 7; mode "default"
+     bindsym Shift+8 move container to workspace number 8; mode "default"
+     bindsym Shift+9 move container to workspace number 9; mode "default"
+     bindsym Shift+0 move container to workspace number 10; mode "default"
+     bindsym m $exec $scripts_dir/toggle_trackpoint.sh; mode "default"
+     bindsym Shift+m $exec $scripts_dir/toggle_touchpad.sh; mode "default"
+     bindsym grave $exec $scripts_dir/toggle_dropdown_terminal.sh 0; mode "default"
+     bindsym Shift+grave $exec termite -t "0-dropdown"; mode "default"
+     bindsym F1 $exec $scripts_dir/toggle_dropdown_terminal.sh 1; mode "default"
+     bindsym Shift+F1 $exec emacsclient -c -n -F '((title . \"1-dropdown\"))'; mode "default"
+     bindsym F2 $exec $scripts_dir/toggle_dropdown_terminal.sh 2; mode "default"
+     bindsym Shift+F2 $exec emacsclient -c -n -F '((title . \"2-dropdown\"))'; mode "default"
+     bindsym F3 $exec $scripts_dir/toggle_dropdown_terminal.sh 3; mode "default"
+     bindsym Shift+F3 $exec emacsclient -c -n -F '((title . \"3-dropdown\"))'; mode "default"
+     bindsym F4 $exec $scripts_dir/toggle_dropdown_terminal.sh 4; mode "default"
+     bindsym Shift+F4 $exec emacsclient -c -n -F '((title . \"4-dropdown\"))'; mode "default"
+
+     bindsym mod5+Escape mode "default"
+     bindsym Escape mode "default"
+}
+bindsym mod5+Escape mode "command"
+
+# same as above, but with right alt and only letters for left hand that
+# do not collide with polish characters
+# bindcode needed as each letter with mod5 has different name
+# which would be even less readable (i.e. "q" is "Greek_pi")
+# codes can be found with xmodmap -pke
+bindsym mod5+Return $exec emacsclient -c -n
+bindcode mod5+24 kill
+bindcode mod5+25 $exec $scripts_dir/rename-workspace.sh
+bindcode mod5+27 mode "resize"
+bindcode mod5+28 $exec termite -d `xcwd`
+bindcode mod5+40 $exec i3-dmenu-desktop --dmenu="dmenu -b -i"
+bindcode mod5+41 fullscreen toggle
+bindcode mod5+42 $exec google-chrome-stable
+bindcode mod5+55 split h
+bindcode mod5+56 split v
+bindcode mod5+10 workspace number 1
+bindcode mod5+11 workspace number 2
+bindcode mod5+12 workspace number 3
+bindcode mod5+13 workspace number 4
+bindcode mod5+14 workspace number 5
+bindcode mod5+15 workspace number 6
+bindcode mod5+16 workspace number 7
+bindcode mod5+17 workspace number 8
+bindcode mod5+18 workspace number 9
+bindcode mod5+19 workspace number 10
+bindcode mod5+Shift+10 move container to workspace number 1
+bindcode mod5+Shift+11 move container to workspace number 2
+bindcode mod5+Shift+12 move container to workspace number 3
+bindcode mod5+Shift+13 move container to workspace number 4
+bindcode mod5+Shift+14 move container to workspace number 5
+bindcode mod5+Shift+15 move container to workspace number 6
+bindcode mod5+Shift+16 move container to workspace number 7
+bindcode mod5+Shift+17 move container to workspace number 8
+bindcode mod5+Shift+18 move container to workspace number 9
+bindcode mod5+Shift+19 move container to workspace number 10
+bindcode mod5+49 $exec $scripts_dir/toggle_dropdown_terminal.sh 0
+bindcode mod5+Shift+49 $exec termite -t "0-dropdown"
+bindsym mod5+F1 $exec $scripts_dir/toggle_dropdown_terminal.sh 1
+bindsym mod5+Shift+F1 $exec emacsclient -c -n -F '((title . \"1-dropdown\"))'
+bindsym mod5+F2 $exec $scripts_dir/toggle_dropdown_terminal.sh 2
+bindsym mod5+Shift+F2 $exec emacsclient -c -n -F '((title . \"2-dropdown\"))'
+bindsym mod5+F3 $exec $scripts_dir/toggle_dropdown_terminal.sh 3
+bindsym mod5+Shift+F3 $exec emacsclient -c -n -F '((title . \"3-dropdown\"))'
+bindsym mod5+F4 $exec $scripts_dir/toggle_dropdown_terminal.sh 4
+bindsym mod5+Shift+F4 $exec emacsclient -c -n -F '((title . \"4-dropdown\"))'
