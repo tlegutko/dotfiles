@@ -1,5 +1,4 @@
 # i3 config
-set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -17,7 +16,7 @@ font pango:monospace 8
 # font, it doesn’t scale on retina/hidpi displays.
 
 # Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
+floating_modifier Mod4
 
 # no window borders
 new_window pixel
@@ -31,52 +30,6 @@ client.focused          #4c7899 #285577 #ffffff #ff6000  #ffa500
 set $exec exec --no-startup-id
 set $exec_always exec_always --no-startup-id
 set $scripts_dir /home/tlegutko/.config/scripts
-
-# basics
-bindsym $mod+Return exec termite -d `xcwd`
-bindsym $mod+e $exec emacsclient -c -n
-bindsym $mod+c $exec google-chrome-stable
-bindsym $mod+o $exec okular
-bindsym $mod+q kill
-bindsym $mod+d $exec i3-dmenu-desktop --dmenu="dmenu -b -i"
-bindsym $mod+Shift+s $exec systemctl suspend
-
-# change focus
-bindsym $mod+h focus left
-bindsym $mod+j focus down
-bindsym $mod+k focus up
-bindsym $mod+l focus right
-
-bindsym $mod+KP_Left focus left
-bindsym $mod+KP_Down focus down
-bindsym $mod+KP_Up focus up
-bindsym $mod+KP_Right focus right
-
-# move focused window
-bindsym $mod+Shift+h move left
-bindsym $mod+Shift+j move down
-bindsym $mod+Shift+k move up
-bindsym $mod+Shift+l move right
-
-bindsym $mod+Shift+KP_Left move left
-bindsym $mod+Shift+KP_Down move down
-bindsym $mod+Shift+KP_Up move up
-bindsym $mod+Shift+KP_Right move right
-
-# split in horizontal orientation
-bindsym $mod+v split h
-
-# split in vertical orientation
-bindsym $mod+b split v
-
-# enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen toggle
-
-# focus the parent container
-bindsym $mod+a focus parent
-
-# focus the child container
-bindsym $mod+z focus child
 
 # monitor names
 # primary
@@ -100,13 +53,6 @@ $exec compton -cCzGb -t-3 -l-5 -r4 \
 # nice black wallpaper, needed because compton makes the default grey
 $exec hsetroot -solid "#000000"
 
-# presentation mode - mirror primary display to all outputs
-bindsym $mod+p $exec xrandr \
---output $lower_right --auto --primary \
---output $lower_left --auto --same-as $lower_right \
---output $upper_right --auto --same-as $lower_right \
---output $upper_left --auto --same-as $lower_right
-
 # workspace to monitor assignment for 4 monitors in grid
 # ensure workspaces are on appropriate output when plugging in additional displays
 for_window [workspace=1] move workspace to output $upper_left
@@ -120,53 +66,18 @@ for_window [workspace=8] move workspace to output $lower_right
 for_window [workspace=9] move workspace to output $lower_right 
 for_window [workspace=10] move workspace to output $lower_right
 
-# switch to workspace
-bindsym $mod+1 workspace number 1
-bindsym $mod+2 workspace number 2
-bindsym $mod+3 workspace number 3
-bindsym $mod+4 workspace number 4
-bindsym $mod+5 workspace number 5
-bindsym $mod+6 workspace number 6
-bindsym $mod+7 workspace number 7
-bindsym $mod+8 workspace number 8
-bindsym $mod+9 workspace number 9
-bindsym $mod+0 workspace number 10
-
 bindsym KP_Home workspace number 1
 bindsym KP_Prior workspace number 2
 bindsym KP_End workspace number 3
 bindsym KP_Next workspace number 4
-bindsym $mod+KP_Home workspace number 5
-bindsym $mod+KP_Prior workspace number 6
-bindsym $mod+KP_End workspace number 7
-bindsym $mod+KP_Next workspace number 8
 bindsym KP_Begin workspace number 9
-bindsym $mod+KP_Begin workspace number 10
-
-# move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace number 1
-bindsym $mod+Shift+2 move container to workspace number 2
-bindsym $mod+Shift+3 move container to workspace number 3
-bindsym $mod+Shift+4 move container to workspace number 4
-bindsym $mod+Shift+5 move container to workspace number 5
-bindsym $mod+Shift+6 move container to workspace number 6
-bindsym $mod+Shift+7 move container to workspace number 7
-bindsym $mod+Shift+8 move container to workspace number 8
-bindsym $mod+Shift+9 move container to workspace number 9
-bindsym $mod+Shift+0 move container to workspace number 10
 
 bindsym Shift+KP_Home move container to workspace number 1
 bindsym Shift+KP_Prior move container to workspace number 2
 bindsym Shift+KP_End move container to workspace number 3
 bindsym Shift+KP_Next move container to workspace number 4
-bindsym $mod+Shift+KP_Home move container to workspace number 5
-bindsym $mod+Shift+KP_Prior move container to workspace number 6
-bindsym $mod+Shift+KP_End move container to workspace number 7
-bindsym $mod+Shift+KP_Next move container to workspace number 8
 bindsym Shift+KP_Begin move container to workspace number 9
-bindsym $mod+Shift+KP_Begin move container to workspace number 10
 
-# move focused workspace to monitor
 workspace 1 output $upper_left
 workspace 2 output $upper_right
 workspace 3 output $lower_left
@@ -186,32 +97,6 @@ bindsym Mod1+Shift+KP_Left move workspace to output left
 bindsym Mod1+Shift+KP_Down move workspace to output down
 bindsym Mod1+Shift+KP_Up move workspace to output up
 bindsym Mod1+Shift+KP_Right move workspace to output right
-
-# rename workspace with dmenu
-bindsym $mod+w $exec $scripts_dir/rename-workspace.sh
-# reload the configuration file
-bindsym $mod+Shift+c $exec ~/.sync.sh && i3-msg reload
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r $exec ~/.sync.sh && i3-msg restart
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
-
-# more convenient visual mode in termite shortcut
-bindsym --release Mod1+Escape exec --no-startup-id xdotool key --clearmodifiers ctrl+shift+space
-
-# resize wirdow (you can also use the mouse for that)
-mode "resize" {
-  bindsym h resize shrink width 10 px or 10 ppt
-  bindsym j resize shrink height 10 px or 10 ppt
-  bindsym k resize grow height 10 px or 10 ppt
-  bindsym l resize grow width 10 px or 10 ppt
-  # exit resize mode
-  bindsym Escape mode "default"
-  bindsym $mod+Escape mode "default"
-  bindsym $mod+r mode "default"
-  bindcode mod5+27 mode "default"
-}
-bindsym $mod+r mode "resize"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -259,9 +144,11 @@ $exec redshift -l 50.094732:19.973673 -t 5500:3100
 $exec $scripts_dir/focus-last.py
 $exec dunst -config ~/.config/dunst/dunstrc
 
-# focus last window or restart daemon if crashed
-bindsym $mod+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"
-bindsym mod5+Shift+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"
+# app to workspace assignment
+for_window [class="Spotify"] move to workspace "10:spotify"
+
+# startup apps
+$exec spotify
 
 # double prssing workspace num goes back to previous one
 workspace_auto_back_and_forth no
@@ -271,11 +158,9 @@ $exec_always xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed"
 $exec_always xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Natural Scrolling Enabled" 1
 $exec_always xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Tapping Enabled" 1
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
-bindsym $mod+t $exec $scripts_dir/toggle_touchpad.sh
 
 # trackpoint
 $exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" 1
-bindsym $mod+m $exec $scripts_dir/toggle_trackpoint.sh
 
 # caps lock and return act as control when pressed with another keys
 # when pressed alone, caps lock acts as escape
@@ -285,12 +170,6 @@ $exec $scripts_dir/remap-keyboard.sh
 $exec xrdb ~/.Xresources
 $exec unclutter --timeout 1
 mouse_warping output
-
-# app to workspace assignment
-for_window [class="Spotify"] move to workspace "10:spotify"
-
-# startup apps
-$exec spotify
 
 # dropdown terminals
 $exec termite -t "0-dropdown"
@@ -316,6 +195,17 @@ $exec xautolock -detectsleep \
 -time 10 -locker "xset dpms force off" \
 -killtime 10 -killer "systemctl suspend"
 # -corners "----" -cornersize 150
+
+# resize wirdow (you can also use the mouse for that)
+mode "resize" {
+  bindsym h resize shrink width 10 px or 10 ppt
+  bindsym j resize shrink height 10 px or 10 ppt
+  bindsym k resize grow height 10 px or 10 ppt
+  bindsym l resize grow width 10 px or 10 ppt
+  # exit resize mode
+  bindsym Escape mode "default"
+  bindcode mod5+27 mode "default"
+}
 
 # ace-jump between windows
 popup_during_fullscreen leave_fullscreen
@@ -345,10 +235,9 @@ mode "i3-jump-window" {
      bindsym --release o $i3-jump-cmd "o" Control_L+Return
      bindsym --release p $i3-jump-cmd "p" Control_L+Return
      bindsym --release Escape $i3-jump-cmd Escape
-     bindsym $mod+apostrophe mode "default"
 }
-bindsym $mod+apostrophe mode "i3-jump-window"; $exec $scripts_dir/i3-ace-jump.sh
 bindsym mod5+Tab mode "i3-jump-window"; $exec $scripts_dir/i3-ace-jump.sh
+bindsym mod5+Shift+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"
 
 mode "command" {
      bindsym Return $exec emacsclient -c -n; mode "default"
@@ -375,6 +264,12 @@ mode "command" {
      bindsym Shift+l move right; mode "default"
      bindsym a focus parent; mode "default"
      bindsym z focus child; mode "default"
+     bindsym o $exec okular
+     bindsym p $exec xrandr \
+     --output $lower_right --auto --primary \
+     --output $lower_left --auto --same-as $lower_right \
+     --output $upper_right --auto --same-as $lower_right \
+     --output $upper_left --auto --same-as $lower_right
      bindsym 1 workspace number 1; mode "default"
      bindsym 2 workspace number 2; mode "default"
      bindsym 3 workspace number 3; mode "default"
@@ -408,6 +303,19 @@ mode "command" {
      bindsym Shift+F3 $exec emacsclient -c -n -F '((title . \"3-dropdown\"))'; mode "default"
      bindsym F4 $exec $scripts_dir/toggle_dropdown_terminal.sh 4; mode "default"
      bindsym Shift+F4 $exec emacsclient -c -n -F '((title . \"4-dropdown\"))'; mode "default"
+     bindsym Tab mode "i3-jump-window"; $exec $scripts_dir/i3-ace-jump.sh; mode "default"
+     bindsym Shift+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"; mode "default"
+     bindsym KP_Home workspace number 5; mode "default"
+     bindsym KP_Prior workspace number 6; mode "default"
+     bindsym KP_End workspace number 7; mode "default"
+     bindsym KP_Next workspace number 8; mode "default"
+     bindsym KP_Begin workspace number 10; mode "default"
+     bindsym Shift+KP_Home move container to workspace number 5; mode "default"
+     bindsym Shift+KP_Prior move container to workspace number 6; mode "default"
+     bindsym Shift+KP_End move container to workspace number 7; mode "default"
+     bindsym Shift+KP_Next move container to workspace number 8; mode "default"
+     bindsym Shift+KP_Begin move container to workspace number 10; mode "default"
+
      bindsym mod5+Escape mode "default"
      bindsym Escape mode "default"
 }
