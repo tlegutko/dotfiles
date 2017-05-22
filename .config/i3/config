@@ -309,9 +309,6 @@ for_window [title="3-dropdown"] floating enable
 for_window [title="4-dropdown"] move scratchpad
 for_window [title="4-dropdown"] move scratchpad
 
-# masters thesis add citation from clipboard and recompile latex
-bindsym mod5+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
-
 # screen locking and suspending
 $exec xautolock -detectsleep \
 -notify 30 \
@@ -367,6 +364,7 @@ mode "command" {
      bindsym Shift+c $exec ~/.sync.sh && i3-msg reload; mode "default"
      bindsym Shift+r $exec ~/.sync.sh && i3-msg restart; mode "default"
      bindsym Shift+e exec i3-msg exit; mode "default"
+     bindsym Shift+s $exec systemctl suspend; mode "default"
      bindsym h focus left; mode "default"
      bindsym j focus down; mode "default"
      bindsym k focus up; mode "default"
@@ -399,6 +397,7 @@ mode "command" {
      bindsym Shift+0 move container to workspace number 10; mode "default"
      bindsym m $exec $scripts_dir/toggle_trackpoint.sh; mode "default"
      bindsym Shift+m $exec $scripts_dir/toggle_touchpad.sh; mode "default"
+     bindsym bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
      bindsym grave $exec $scripts_dir/toggle_dropdown_terminal.sh 0; mode "default"
      bindsym Shift+grave $exec termite -t "0-dropdown"; mode "default"
      bindsym F1 $exec $scripts_dir/toggle_dropdown_terminal.sh 1; mode "default"
@@ -409,7 +408,6 @@ mode "command" {
      bindsym Shift+F3 $exec emacsclient -c -n -F '((title . \"3-dropdown\"))'; mode "default"
      bindsym F4 $exec $scripts_dir/toggle_dropdown_terminal.sh 4; mode "default"
      bindsym Shift+F4 $exec emacsclient -c -n -F '((title . \"4-dropdown\"))'; mode "default"
-
      bindsym mod5+Escape mode "default"
      bindsym Escape mode "default"
 }
@@ -421,6 +419,7 @@ bindsym mod5+Escape mode "command"
 # which would be even less readable (i.e. "q" is "Greek_pi")
 # codes can be found with xmodmap -pke
 bindsym mod5+Return $exec emacsclient -c -n
+bindsym mod1+Return $exec emacsclient -c -n
 bindcode mod5+24 kill
 bindcode mod5+25 $exec $scripts_dir/rename-workspace.sh
 bindcode mod5+27 mode "resize"

@@ -11,7 +11,7 @@ xmodmap -e "keycode 0x24 = Control_R"
 xmodmap -e "add Control = Control_R"
 
 pgrep xcape | xargs kill
-timeout=170 # something default so I don't end up without return
+timeout=300 # something default so I don't end up without return
 if [ -n "$1" ]; then
     timeout=$1
 fi

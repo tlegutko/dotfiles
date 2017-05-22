@@ -19,3 +19,5 @@ rcs ~/.dotfiles gdrive:dotfiles
 rcs ~/org gdrive:org
 rcs ~/masters-thesis gdrive:masters-thesis
 rcs ~/.emacs.d/snippets/org-mode gdrive:snippets/org-mode
+rcs ~/.aspell.en.prepl
+rcs ~/.aspell.en.pws

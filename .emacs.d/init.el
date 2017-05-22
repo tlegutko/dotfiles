@@ -79,6 +79,15 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
+(global-set-key (kbd "C-x K") 'kill-this-buffer)
+
+(defun switch-to-previous-buffer ()
+  "Switch to previously open buffer.
+Repeated invocations toggle between the two most recently open buffers."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+(global-set-key (kbd "C-x B") 'switch-to-previous-buffer)
+
 ;; backup and auto-save
 (setq backup-directory-alist
       `(("." . ,(expand-file-name
@@ -96,6 +105,8 @@
 
 (use-package simple
   :ensure nil
+  :init
+  (setq save-interprogram-paste-before-kill t)
   :bind
   (("C-c v" . visual-line-mode)))
 
@@ -348,7 +359,6 @@
   (add-hook 'auto-revert-mode-hook 'hook-diminish-auto-revert)
   (add-hook 'with-editor-mode-hook 'evil-insert-state))
 
-
 (use-package keychain-environment ;; so magit sees ssh-agent
   :config
   (keychain-refresh-environment))
@@ -357,27 +367,28 @@
 
 (use-package ivy
   :diminish ivy-mode
-  :bind
-   (("C-c r" . ivy-resume)
-   :map ivy-minibuffer-map
-   ("C-," . ivy-minibuffer-shrink)
-   ("C-." . ivy-minibuffer-grow)
-   ([C-m] . ivy-toggle-fuzzy)
-   ("M-y" . ivy-next-line)))
-
-(use-package counsel
   :init
   (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
   (setq ivy-count-format "(%d/%d) ")
   (setq ivy-height 12)
   (setq ivy-re-builders-alist
 	'((t . ivy--regex-fuzzy)))
   (setq ivy-initial-inputs-alist nil)
   :bind
+   (("C-c r" . ivy-resume)
+   :map ivy-minibuffer-map
+   ("C-," . ivy-minibuffer-shrink)
+   ("C-." . ivy-minibuffer-grow)
+   ("C-s" . ivy-toggle-fuzzy)
+   ("M-y" . ivy-next-line)))
+
+(use-package counsel
+  :bind
   (("M-y" . counsel-yank-pop)
    ("C-s" . counsel-grep-or-swiper)
    ("M-x" . counsel-M-x)
-   ([?\C-x C-m] . counsel-M-x)
+   ("C-x ," . counsel-M-x)
    ("C-x C-f" . counsel-find-file)
    ("C-x f" . counsel-find-file)
    ("<f1> f" . counsel-describe-function)
@@ -390,7 +401,6 @@
    ("C-c k" . counsel-ag)
    ("C-x l" . counsel-locate))
   :config
-  (define-key input-decode-map [?\C-m] [C-m])
   (defun ivy-yank-action (x)
     (kill-new x))
   (defun ivy-copy-to-buffer-action (x)
@@ -433,10 +443,10 @@
 (use-package avy
   :bind
   (("C-'" . avy-goto-char-2)
-   ("C-\"" . avy-goto-char)
-   ("M-'" . avy-goto-word-1)
+   ("M-'" . avy-goto-line)
    ("M-\"" . avy-goto-word-0)
-   ("C-]" . avy-goto-line)))
+   ("C-]" . avy-goto-word-1)
+   ("C-\"" . avy-goto-char)))
 
 (use-package yasnippet
   :diminish yas-minor-mode
