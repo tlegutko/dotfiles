@@ -243,6 +243,7 @@ mode "command" {
      bindsym Return $exec emacsclient -c -n; mode "default"
      bindsym q kill; mode "default"
      bindsym w $exec $scripts_dir/rename-workspace.sh; mode "default"
+     bindsym e $exec emacsclient -c -n; mode "default"
      bindsym r mode "resize"; mode "default"
      bindsym t $exec termite -d `xcwd`; mode "default"
      bindsym d $exec i3-dmenu-desktop --dmenu="dmenu -b -i"; mode "default"
@@ -327,7 +328,6 @@ bindsym mod5+Escape mode "command"
 # which would be even less readable (i.e. "q" is "Greek_pi")
 # codes can be found with xmodmap -pke
 bindsym mod5+Return $exec emacsclient -c -n
-bindsym mod1+Return $exec emacsclient -c -n
 bindcode mod5+24 kill
 bindcode mod5+25 $exec $scripts_dir/rename-workspace.sh
 bindcode mod5+27 mode "resize"
