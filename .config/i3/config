@@ -151,7 +151,7 @@ for_window [class="Spotify"] move to workspace "10:spotify"
 $exec spotify
 
 # double prssing workspace num goes back to previous one
-workspace_auto_back_and_forth no
+workspace_auto_back_and_forth yes
 
 # touchpad
 $exec_always xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 1
@@ -203,6 +203,7 @@ mode "resize" {
   bindsym k resize grow height 10 px or 10 ppt
   bindsym l resize grow width 10 px or 10 ppt
   # exit resize mode
+  bindsym r mode "default"
   bindsym Escape mode "default"
   bindcode mod5+27 mode "default"
 }
@@ -244,7 +245,7 @@ mode "command" {
      bindsym q kill; mode "default"
      bindsym w $exec $scripts_dir/rename-workspace.sh; mode "default"
      bindsym e $exec emacsclient -c -n; mode "default"
-     bindsym r mode "resize"; mode "default"
+     bindsym r mode "resize";
      bindsym t $exec termite -d `xcwd`; mode "default"
      bindsym d $exec i3-dmenu-desktop --dmenu="dmenu -b -i"; mode "default"
      bindsym f fullscreen toggle; mode "default"
@@ -253,7 +254,7 @@ mode "command" {
      bindsym b split v; mode "default"
      bindsym Shift+c $exec ~/.sync.sh && i3-msg reload; mode "default"
      bindsym Shift+r $exec ~/.sync.sh && i3-msg restart; mode "default"
-     bindsym Shift+e exec i3-msg exit; mode "default"
+     bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
      bindsym Shift+s $exec systemctl suspend; mode "default"
      bindsym h focus left; mode "default"
      bindsym j focus down; mode "default"
@@ -265,12 +266,12 @@ mode "command" {
      bindsym Shift+l move right; mode "default"
      bindsym a focus parent; mode "default"
      bindsym z focus child; mode "default"
-     bindsym o $exec okular
+     bindsym o $exec okular; mode "default"
      bindsym p $exec xrandr \
      --output $lower_right --auto --primary \
      --output $lower_left --auto --same-as $lower_right \
      --output $upper_right --auto --same-as $lower_right \
-     --output $upper_left --auto --same-as $lower_right
+     --output $upper_left --auto --same-as $lower_right; mode "default"
      bindsym 1 workspace number 1; mode "default"
      bindsym 2 workspace number 2; mode "default"
      bindsym 3 workspace number 3; mode "default"
@@ -293,7 +294,7 @@ mode "command" {
      bindsym Shift+0 move container to workspace number 10; mode "default"
      bindsym m $exec $scripts_dir/toggle_trackpoint.sh; mode "default"
      bindsym Shift+m $exec $scripts_dir/toggle_touchpad.sh; mode "default"
-     bindsym bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
+     bindsym bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh; mode "default"
      bindsym grave $exec $scripts_dir/toggle_dropdown_terminal.sh 0; mode "default"
      bindsym Shift+grave $exec termite -t "0-dropdown"; mode "default"
      bindsym F1 $exec $scripts_dir/toggle_dropdown_terminal.sh 1; mode "default"

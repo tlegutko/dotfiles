@@ -3,14 +3,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(global-hl-line-mode t)
- '(linum-relative-global-mode t)
  '(org-agenda-files
    (quote
-    ("~/org/miracle-evening.org" "~/org/laptop-config.org" "~/masters-thesis/masters-thesis.org" "~/masters-thesis/prof-bipin-meetings.org" "~/org/weekly-summary.org" "~/org/pmo-journal.org" "~/org/todo.org" "~/org/calendar.org" "~/org/miracle-morning.org" "~/org/personal-journal.org" "~/org/scala.org" "~/org/dance-notes.org")))
+    ("~/org/ania-birthday.org" "~/org/miracle-evening.org" "~/org/laptop-config.org" "~/masters-thesis/masters-thesis.org" "~/masters-thesis/prof-bipin-meetings.org" "~/org/weekly-summary.org" "~/org/pmo-journal.org" "~/org/todo.org" "~/org/calendar.org" "~/org/miracle-morning.org" "~/org/personal-journal.org" "~/org/scala.org" "~/org/dance-notes.org")))
  '(package-selected-packages
    (quote
-    (org-bullets nlinum neotree key-chord dired-x dired sublimity-scroll ag company-mode org-gcal which-key counsel-projectile flx expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package linum-relative evil)))
+    (org-bullets neotree key-chord dired-x dired sublimity-scroll ag company-mode org-gcal which-key counsel-projectile flx expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package evil)))
  '(vc-annotate-background "#181e26")
  '(vc-annotate-color-map
    (quote

@@ -30,12 +30,25 @@
 (setq-default mode-line-frame-identification nil)
 
 (use-package all-the-icons)
+
 (use-package neotree
   :bind
   (("C-c d" . neotree-toggle))
   :config
   (add-hook 'neotree-mode-hook 'evil-insert-state))
-(use-package nlinum)
+
+(use-package hl-line
+  :config
+  (hl-line-mode 1))
+
+(use-package nlinum-relative
+  :bind
+  (("C-c n" . nlinum-mode))
+  :config
+  (nlinum-relative-setup-evil)
+  (add-hook 'emacs-lisp-mode-hook 'nlinum-relative-mode)
+  (add-hook 'LaTeX-mode-hook 'nlinum-relative-mode)
+  (add-hook 'conf-space-mode-hook 'nlinum-relative-mode))
 
 (use-package doom-themes
   :pin melpa
@@ -130,6 +143,8 @@ Repeated invocations toggle between the two most recently open buffers."
 	("C-p" . evil-previous-line)
 	:map evil-insert-state-map
 	("C-t" . transpose-chars)
+	("C-a" . move-beginning-of-line)
+	("C-e" . move-end-of-line)
 	("C-y" . yank)
 	:map evil-motion-state-map
 	("$" . evil-last-non-blank)
@@ -204,18 +219,10 @@ Repeated invocations toggle between the two most recently open buffers."
   :init
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex))
 
-;; line numbers
-(use-package linum-relative
-  :diminish linum-relative-mode
-  :init
-  (setq linum-relative-current-symbol "")
-  :config
-  (global-linum-mode t)
-  (linum-relative-on))
-
 ;;; org mode
 (use-package org
   :init
+  (setq org-clock-mode-line-total 'current)
   (setq org-clock-persist 'history)
   (setq calendar-week-start-day 1)
   (setq org-startup-truncated 'nil)
@@ -363,18 +370,12 @@ Repeated invocations toggle between the two most recently open buffers."
   :config
   (keychain-refresh-environment))
 
-(use-package flx)
-
 (use-package ivy
   :diminish ivy-mode
   :init
   (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
   (setq ivy-count-format "(%d/%d) ")
   (setq ivy-height 12)
-  (setq ivy-re-builders-alist
-	'((t . ivy--regex-fuzzy)))
-  (setq ivy-initial-inputs-alist nil)
   :bind
    (("C-c r" . ivy-resume)
    :map ivy-minibuffer-map
@@ -441,12 +442,11 @@ Repeated invocations toggle between the two most recently open buffers."
   (counsel-projectile-on))
 
 (use-package avy
+  :init
+  (setq avy-timeout-seconds 0.4)
   :bind
-  (("C-'" . avy-goto-char-2)
-   ("M-'" . avy-goto-line)
-   ("M-\"" . avy-goto-word-0)
-   ("C-]" . avy-goto-word-1)
-   ("C-\"" . avy-goto-char)))
+  (("C-'" . avy-goto-char-timer)
+   ("M-'" . avy-goto-line)))
 
 (use-package yasnippet
   :diminish yas-minor-mode
