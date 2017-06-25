@@ -34,6 +34,7 @@ bluez-utils
 bmon
 boost-libs
 bridge-utils
+brltty
 bzip2
 c-ares
 ca-certificates
@@ -45,6 +46,7 @@ cairo-perl
 cairomm
 cantarell-fonts
 cdparanoia
+celt0.5.1
 cifs-utils
 classpath
 cmake
@@ -81,11 +83,13 @@ e2fsprogs
 elfutils
 emacs
 enchant
+espeak
 ethtool
 exiv2
 expac
 expat
 fakeroot
+ffmpeg
 fftw
 file
 filesystem
@@ -143,6 +147,7 @@ graphite
 grep
 groff
 gsettings-desktop-schemas
+gsm
 gst-plugins-base
 gst-plugins-base-libs
 gstreamer
@@ -198,9 +203,11 @@ jack
 jansson
 jasper
 java-environment-common
+java-openjfx
 java-runtime-common
 jbig2dec
 jdk8-openjdk
+jemalloc
 jfsutils
 jq
 jre8-openjdk
@@ -250,6 +257,7 @@ kwayland
 kwidgetsaddons
 kwindowsystem
 kxmlgui
+lame
 lcms2
 ldb
 ldns
@@ -259,14 +267,18 @@ libao
 libappindicator-gtk3
 libarchive
 libart-lgpl
+libass
 libassuan
 libasyncns
 libatasmart
 libatomic_ops
+libavc1394
 libbluray
 libbonobo
 libbonoboui
 libbsd
+libcaca
+libcacard
 libcanberra
 libcanberra-pulse
 libcap
@@ -285,6 +297,8 @@ libdbusmenu-glib
 libdbusmenu-gtk3
 libdbusmenu-qt5
 libdrm
+libdvdnav
+libdvdread
 libedit
 libelf
 libepoxy
@@ -309,6 +323,7 @@ libice
 libid3tag
 libidl2
 libidn
+libiec61883
 libimobiledevice
 libindicator-gtk3
 libinput
@@ -319,10 +334,12 @@ libldap
 liblqr
 libmm-glib
 libmnl
+libmodplug
 libmpc
 libmtp
 libndp
 libnewt
+libnfs
 libnftnl
 libnghttp2
 libnl
@@ -343,6 +360,7 @@ libpng
 libproxy
 libpsl
 libpulse
+libraw1394
 librsvg
 libsamplerate
 libsasl
@@ -356,6 +374,7 @@ libsodium
 libsoup
 libsoxr
 libspectre
+libssh
 libssh2
 libsynctex
 libsystemd
@@ -375,15 +394,18 @@ libusbmuxd
 libutempter
 libutil-linux
 libuv
+libva
 libvdpau
 libvisual
 libvoikko
 libvorbis
+libvpx
 libwacom
 libwbclient
 libwebp
 libwnck
 libx11
+libx264
 libxau
 libxaw
 libxcb
@@ -425,6 +447,7 @@ linux-headers
 llvm-libs
 lm_sensors
 logrotate
+lua52
 lvm2
 lz4
 lzo
@@ -434,6 +457,7 @@ m4
 make
 man-db
 man-pages
+maven
 mdadm
 media-player-info
 mesa
@@ -442,6 +466,7 @@ mkinitcpio-busybox
 mlocate
 mobile-broadband-provider-info
 mpfr
+mpv
 mtdev
 mtr
 muparser
@@ -458,6 +483,7 @@ npm
 npth
 nspr
 nss
+numactl
 nvidia-dkms
 nvidia-settings
 nvidia-utils
@@ -465,6 +491,7 @@ ocl-icd
 okular
 oniguruma
 openal
+opencore-amr
 openjpeg2
 openresolv
 openssh
@@ -556,6 +583,7 @@ poppler
 poppler-glib
 poppler-qt5
 popt
+portaudio
 potrace
 powertop
 procps-ng
@@ -596,6 +624,7 @@ python2-gobject2
 python2-olefile
 python2-pillow
 qca-qt5
+qemu
 qt5-base
 qt5-declarative
 qt5-multimedia
@@ -617,6 +646,7 @@ ripgrep
 rsync
 rtkit
 rtmpdump
+rubberband
 run-parts
 s-nail
 sbc
@@ -624,8 +654,11 @@ sbt
 scala
 scala-docs
 scala-sources
+schroedinger
 scrnsaverproto
 scrot
+sdl2
+seabios
 sed
 semver
 shadow
@@ -640,7 +673,9 @@ sonnet
 sound-theme-freedesktop
 source-highlight
 speech-dispatcher
+speex
 speexdsp
+spice
 spotify
 sqlite
 startup-notification
@@ -652,6 +687,7 @@ systemd-sysvcompat
 t1lib
 talloc
 tar
+tcl
 tdb
 termite
 termite-terminfo
@@ -671,18 +707,25 @@ tslib
 ttf-dejavu
 ttf-font-awesome
 tzdata
+uchardet
 udisks2
 unclutter-xfixes-git
 unison
 unzip
 upower
 usbmuxd
+usbredir
 usbutils
 util-linux
+v4l-utils
 vala
+vamp-plugin-sdk
+vde2
 vi
+vid.stab
 videoproto
 vim-runtime
+virglrenderer
 visualvm
 vte-common
 vte3-ng
@@ -694,6 +737,7 @@ wget
 which
 wireless_tools
 wpa_supplicant
+x265
 xautolock
 xbitmaps
 xcalib
@@ -743,6 +787,7 @@ xorg-xset
 xorg-xwininfo
 xproto
 xsel
+xvidcore
 xz
 yad
 yajl

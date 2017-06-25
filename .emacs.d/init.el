@@ -42,13 +42,20 @@
   (hl-line-mode 1))
 
 (use-package nlinum-relative
+  :init
+  (setq nlinum-relative-current-symbol "")
+  (setq nlinum-relative-offset 1)
   :bind
-  (("C-c n" . nlinum-mode))
-  :config
-  (nlinum-relative-setup-evil)
-  (add-hook 'emacs-lisp-mode-hook 'nlinum-relative-mode)
-  (add-hook 'LaTeX-mode-hook 'nlinum-relative-mode)
-  (add-hook 'conf-space-mode-hook 'nlinum-relative-mode))
+  (("C-c n" . nlinum-mode)
+   ("C-c N" . nlinum-relative-toggle)))
+
+;; outside of use-package, as nlinum doesn't load by default when in daemon mode
+;; see https://github.com/kaushalmodi/.emacs.d/issues/4
+(defun nlinum-hook-on ()
+  (nlinum-mode)
+  (nlinum-relative-on))
+(add-hook 'emacs-lisp-mode-hook 'nlinum-hook-on)
+(add-hook 'scala-mode-hook 'nlinum-hook-on)
 
 (use-package doom-themes
   :pin melpa
@@ -78,11 +85,11 @@
   ;; And you can brighten other buffers (unconditionally) with:
   (add-hook 'ediff-prepare-buffer-hook 'doom-buffer-mode)
   ;; brighter minibuffer when active
-  (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
+  ;; (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
   ;; Enable custom neotree theme
   (doom-themes-neotree-config)  ; all-the-icons fonts must be installed!
   ;; Enable nlinum line highlighting
-  (doom-themes-nlinum-config)   ; requires nlinum and hl-line-mode
+  ;; (doom-themes-nlinum-config)   ; requires nlinum and hl-line-mode
   ;; Necessary for org-mode
   (setq org-fontify-whole-heading-line t
 	org-fontify-done-headline t
@@ -121,7 +128,7 @@ Repeated invocations toggle between the two most recently open buffers."
   :init
   (setq save-interprogram-paste-before-kill t)
   :bind
-  (("C-c v" . visual-line-mode)))
+  (("C-c V" . visual-line-mode)))
 
 (use-package evil
   :init
@@ -143,7 +150,7 @@ Repeated invocations toggle between the two most recently open buffers."
 	("C-p" . evil-previous-line)
 	:map evil-insert-state-map
 	("C-t" . transpose-chars)
-	("C-a" . move-beginning-of-line)
+	("C-a" . back-to-indentation)
 	("C-e" . move-end-of-line)
 	("C-y" . yank)
 	:map evil-motion-state-map
@@ -208,9 +215,15 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (use-package openwith
   :init
-  (setq openwith-associations '(("\\.pdf\\'" "okular" (file))))
+  (setq openwith-associations '(("\\.pdf\\'" "okular" (file))
+				("\\.mov\\'" "mpv" (file))))
   :config
   (openwith-mode t))
+
+(use-package files
+  :ensure nil
+  :init
+  (setq large-file-warning-threshold nil))
 
 (use-package reftex
   :diminish reftex-mode
@@ -237,9 +250,9 @@ Repeated invocations toggle between the two most recently open buffers."
 	  ("l" "Laptop config" entry (file "~/org/laptop-config.org")
 	   "* TODO %?" :prepend t)
 	  ("m" "Miracle morning" entry (file "~/org/miracle-morning.org")
-	   "* miracle morning\nmm%?" :unnarrowed t :clock-in t :clock-resume t)
+	   "* miracle morning\nmm%?" :clock-in t :clock-resume t)
 	  ("e" "Miracle evening" entry (file "~/org/miracle-evening.org")
-	   "* miracle evening\n  %?" :unnarrowed t :clock-in t :clock-resume t)
+	   "* miracle evening\nme%?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("w" "Weekly summary" entry (file "~/org/weekly-summary.org")
 	   "* weekly summary\nws%?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("D" "Dance notes" entry (file "~/org/dance-notes.org")
@@ -276,7 +289,13 @@ Repeated invocations toggle between the two most recently open buffers."
   (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
   (org-clock-persistence-insinuate)
   (add-hook 'org-capture-mode-hook 'evil-insert-state)
-  (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) )))
+  (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . nil)
+     (sh . t)
+     (shell . t))))
+
 
 (use-package org-bullets
   :config
@@ -321,24 +340,32 @@ Repeated invocations toggle between the two most recently open buffers."
    scala-indent:use-javadoc-style t
    scala-indent:align-parameters t)
   :config
-
   ;; prefer smartparens for parens handling
   (remove-hook 'post-self-insert-hook
                'scala-indent:indent-on-parentheses)
   (sp-local-pair 'scala-mode "(" nil :post-handlers '(("||\n[i]" "RET")))
   (sp-local-pair 'scala-mode "{" nil
 		 :post-handlers '(("||\n[i]" "RET")
-				  ("| " "SPC"))))
+				  ("| " "SPC")))
+  (bind-key "C-c e" 'ensime scala-mode-map)
+  (bind-key "C-c e" 'ensime-shutdown scala-mode-map))
 
 (use-package expand-region)
 
 (use-package company
-  :diminish company-mode)
+  :diminish company-mode
+  :config
+  (defun company-next-prev-bindings ()
+    (with-eval-after-load 'company
+      (define-key company-active-map (kbd "M-n") nil)
+      (define-key company-active-map (kbd "M-p") nil)
+      (define-key company-active-map (kbd "C-n") #'company-select-next)
+      (define-key company-active-map (kbd "C-p") #'company-select-previous))))
+
 
 (use-package ensime
   :pin melpa-stable
-  :diminish ensime-mode
-  :init
+  ;; :diminish ensime-mode
   :config
   (require 'ensime-expand-region))
 
@@ -348,7 +375,8 @@ Repeated invocations toggle between the two most recently open buffers."
             (show-paren-mode t)
             (smartparens-mode t)
 	    (ensime-mode t)
-	    (scala-mode:goto-start-of-code)))
+	    (scala-mode:goto-start-of-code)
+	    (company-next-prev-bindings)))
 
 (use-package magit
   :init
@@ -370,6 +398,10 @@ Repeated invocations toggle between the two most recently open buffers."
   :config
   (keychain-refresh-environment))
 
+(use-package smerge-mode
+  :init
+  (setq smerge-command-prefix "\C-cv"))
+
 (use-package ivy
   :diminish ivy-mode
   :init
@@ -377,11 +409,11 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq ivy-count-format "(%d/%d) ")
   (setq ivy-height 12)
   :bind
-   (("C-c r" . ivy-resume)
+  (("C-c r" . ivy-resume)
    :map ivy-minibuffer-map
    ("C-," . ivy-minibuffer-shrink)
    ("C-." . ivy-minibuffer-grow)
-   ("C-s" . ivy-toggle-fuzzy)
+   ("C-s" . ivy-next-line)
    ("M-y" . ivy-next-line)))
 
 (use-package counsel
@@ -446,6 +478,9 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq avy-timeout-seconds 0.4)
   :bind
   (("C-'" . avy-goto-char-timer)
+   ([C-escape] . avy-goto-char-timer)
+   ([C-S-escape] . avy-goto-line)
+   ("C-`" . avy-goto-line)
    ("M-'" . avy-goto-line)))
 
 (use-package yasnippet
@@ -528,7 +563,33 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
   (setq dired-omit-mode t))
 
-(use-package key-chord
+(use-package dired-narrow
+  :bind
+  (:map dired-mode-map
+	("/" . dired-narrow)))
+
+(defun dired-find-file-other-frame ()
+  "In Dired, visit this file or directory in another window."
+  (interactive)
+  (find-file-other-frame (dired-get-file-for-visit)))
+
+(eval-after-load "dired"
+  '(define-key dired-mode-map "F" 'dired-find-file-other-frame))
+
+(use-package buffer-move
+  :bind
+  (("C-x 4 h" . buf-move-left)
+   ("C-x 4 j" . buf-move-down)
+   ("C-x 4 k" . buf-move-up)
+   ("C-x 4 l" . buf-move-right)))
+
+(use-package ace-window
+  :init
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  (setq aw-scope 'frame)
+  :bind
+  (([C-tab] . ace-window)))
+
+(use-package winner
   :config
-  (key-chord-mode 1)
-  (key-chord-define evil-insert-state-map  "jk" 'evil-normal-state))
+  (winner-mode 1))
