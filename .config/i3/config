@@ -139,10 +139,10 @@ bindsym --release Print $exec scrot -s -e 'xclip -selection clipboard -t image/p
 # daemons
 $exec nm-applet
 $exec /usr/lib/kdeconnectd
-$exec indicator-kdeconnect
 $exec redshift -l 50.094732:19.973673 -t 5500:3100
 $exec $scripts_dir/focus-last.py
 $exec dunst -config ~/.config/dunst/dunstrc
+# $exec /usr/bin/emacs --daemon
 
 # app to workspace assignment
 for_window [class="Spotify"] move to workspace "10:spotify"

@@ -332,6 +332,9 @@ Repeated invocations toggle between the two most recently open buffers."
   (show-smartparens-global-mode))
 
 ;; scala
+(use-package sbt-mode
+  :pin melpa)
+
 (use-package scala-mode
   :defer t
   :pin melpa
@@ -348,7 +351,7 @@ Repeated invocations toggle between the two most recently open buffers."
 		 :post-handlers '(("||\n[i]" "RET")
 				  ("| " "SPC")))
   (bind-key "C-c e" 'ensime scala-mode-map)
-  (bind-key "C-c e" 'ensime-shutdown scala-mode-map))
+  (bind-key "C-c E" 'ensime-shutdown scala-mode-map))
 
 (use-package expand-region)
 
@@ -364,7 +367,10 @@ Repeated invocations toggle between the two most recently open buffers."
 
 
 (use-package ensime
-  :pin melpa-stable
+  :pin melpa
+  :init
+  (setq ensime-startup-notification nil)
+  (setq ensime-startup-snapshot-notification nil)
   ;; :diminish ensime-mode
   :config
   (require 'ensime-expand-region))
@@ -561,7 +567,8 @@ Repeated invocations toggle between the two most recently open buffers."
   :config
   (setq-default dired-omit-files-p t)
   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
-  (setq dired-omit-mode t))
+  (setq dired-omit-mode t)
+  (setq dired-listing-switches "-alh"))
 
 (use-package dired-narrow
   :bind
