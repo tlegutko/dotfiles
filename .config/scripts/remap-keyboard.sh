@@ -8,10 +8,17 @@
 
 setxkbmap -layout pl -option numpad:microsoft -option ctrl:nocaps
 
+# return as ctrl
 xmodmap -e "remove Control = Control_R"
 xmodmap -e "keycode 0x69 = Return"
 xmodmap -e "keycode 0x24 = Control_R"
 xmodmap -e "add Control = Control_R"
+
+# Tab and backslash as additional Super keys
+xmodmap -e "keycode 247 = backslash"
+xmodmap -e "keycode 51 = Super_R"
+xmodmap -e "keycode 248 = backslash"
+xmodmap -e "keycode 23 = Super_L"
 
 # kill running instance
 curr_xcape=$(pgrep xcape)
@@ -22,4 +29,4 @@ if [ -n "$1" ]; then
     timeout=$1
 fi
 
-xcape -t $timeout -e "Control_L=Escape;Control_R=Return"
+xcape -t $timeout -e "Control_L=Escape;Control_R=Return;Super_L=Tab;Super_R=backslash"

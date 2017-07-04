@@ -216,6 +216,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package openwith
   :init
   (setq openwith-associations '(("\\.pdf\\'" "okular" (file))
+				("\\.mp4\\'" "mpv" (file))
 				("\\.mov\\'" "mpv" (file))))
   :config
   (openwith-mode t))
@@ -600,3 +601,5 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package winner
   :config
   (winner-mode 1))
+
+(message "Config loaded successfully")
