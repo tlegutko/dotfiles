@@ -54,8 +54,7 @@
 (defun nlinum-hook-on ()
   (nlinum-mode)
   (nlinum-relative-on))
-(add-hook 'emacs-lisp-mode-hook 'nlinum-hook-on)
-(add-hook 'scala-mode-hook 'nlinum-hook-on)
+;; (add-hook 'emacs-lisp-mode-hook 'nlinum-hook-on)
 
 (use-package doom-themes
   :pin melpa
@@ -149,10 +148,9 @@ Repeated invocations toggle between the two most recently open buffers."
 	("C-n" . evil-next-line)
 	("C-p" . evil-previous-line)
 	:map evil-insert-state-map
-	("C-t" . transpose-chars)
+	([escape] . evil-normal-state)
+	("C-o" . evil-execute-in-normal-state)
 	("C-a" . back-to-indentation)
-	("C-e" . move-end-of-line)
-	("C-y" . yank)
 	:map evil-motion-state-map
 	("$" . evil-last-non-blank)
 	("g_" . evil-end-of-line)
@@ -168,6 +166,8 @@ Repeated invocations toggle between the two most recently open buffers."
   (defun my-evil-split-line ()
     (interactive)
     (kbd "r RET"))
+  (define-key evil-normal-state-map "Q" (kbd "@q"))
+  (setq evil-insert-state-map (make-sparse-keymap))
   (evil-define-key 'normal term-raw-map "p" 'term-paste)
   (evil-define-key 'normal term-raw-map "j" 'term-send-down)
   (evil-define-key 'normal term-raw-map "k" 'term-send-up)
@@ -242,27 +242,27 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq org-startup-truncated 'nil)
   (setq org-agenda-start-with-log-mode t)
   (setq org-capture-templates
-	'(("a" "Appointment" entry (file  "~/org/calendar.org" )
+	'(("a" "Appointment" plain (file  "~/org/calendar.org" )
 	   "* %?\n%^T")
-	  ("p" "Personal journal" entry (file "~/org/personal-journal.org")
+	  ("p" "Personal journal" plain (file "~/org/personal-journal.org")
 	   "* personal journal\n  %?" :unnarrowed t :clock-in t :clock-resume t)
-	  ("t" "To do" entry (file "~/org/todo.org")
+	  ("t" "To do" plain (file "~/org/todo.org")
 	   "* TODO %?" :prepend t)
-	  ("l" "Laptop config" entry (file "~/org/laptop-config.org")
+	  ("l" "Laptop config" plain (file "~/org/laptop-config.org")
 	   "* TODO %?" :prepend t)
-	  ("m" "Miracle morning" entry (file "~/org/miracle-morning.org")
+	  ("m" "Miracle morning" plain (file "~/org/miracle-morning.org")
 	   "* miracle morning\nmm%?" :clock-in t :clock-resume t)
-	  ("e" "Miracle evening" entry (file "~/org/miracle-evening.org")
+	  ("e" "Miracle evening" plain (file "~/org/miracle-evening.org")
 	   "* miracle evening\nme%?" :unnarrowed t :clock-in t :clock-resume t)
-	  ("w" "Weekly summary" entry (file "~/org/weekly-summary.org")
+	  ("w" "Weekly summary" plain (file "~/org/weekly-summary.org")
 	   "* weekly summary\nws%?" :unnarrowed t :clock-in t :clock-resume t)
-	  ("D" "Dance notes" entry (file "~/org/dance-notes.org")
+	  ("D" "Dance notes" plain (file "~/org/dance-notes.org")
 	   "* %?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("b" "Books and articles")
-	  ("bt" "To-read list" entry (file "~/org/books-to-read.org") "* %?")
-	  ("bn" "Notes from books" entry (file "~/org/books-notes.org") "* %?")
+	  ("bt" "To-read list" plain (file "~/org/books-to-read.org") "* %?")
+	  ("bn" "Notes from books" plain (file "~/org/books-notes.org") "* %?")
 	  ("d" "Diet")
-	  ("dw" "Weight" entry (file "~/org/diet-scores.org")
+	  ("dw" "Weight" plain (file "~/org/diet-scores.org")
 	   "* %t waga %?" :unnarrowed t)
 	  ("ds" "Score" plain (file "~/org/diet-scores.org")
 	   "* %t ocena %?" :unnarrowed t)
@@ -278,11 +278,16 @@ Repeated invocations toggle between the two most recently open buffers."
    ("\C-cc" . org-capture)
    ("\C-cb" . org-iswitchb)
    :map org-mode-map
+   ([C-tab] . nil)
+   ([S-tab] . nil)
+   ([backtab] . nil)
    ("M-TAB" . org-global-cycle)
    ("\M-q" . toggle-truncate-lines))
   :config
   (unbind-key "C-'" org-mode-map) ;; for avy to use
   (unbind-key "C-]" org-mode-map) ;; for avy to use
+  (unbind-key "[C-tab]" org-mode-map) ;; for avy to use
+  (unbind-key "[S-tab]" org-mode-map) ;; for yasnippet-prev-field
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-log-states)   ; turn off logging
@@ -373,12 +378,16 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq ensime-startup-notification nil)
   (setq ensime-startup-snapshot-notification nil)
   ;; :diminish ensime-mode
+  :bind
+  (:map ensime-mode-map
+   ("M-m" . ensime-forward-note))
   :config
   (require 'ensime-expand-region))
 
 ;; scala-mode hooks
 (add-hook 'scala-mode-hook
           (lambda ()
+	    (nlinum-hook-on)
             (show-paren-mode t)
             (smartparens-mode t)
 	    (ensime-mode t)
@@ -392,8 +401,10 @@ Repeated invocations toggle between the two most recently open buffers."
   :config
   (setq magit-completing-read-function 'ivy-completing-read)
   :bind
-  ("C-x g" . magit-status)
-  ("C-x M-g" . magit-dispatch-popup)
+  (("C-x g" . magit-status)
+   ("C-x M-g" . magit-dispatch-popup)
+   :map magit-status-mode-map
+   ([C-tab] . nil))
   :config
   (defun hook-diminish-auto-revert ()
     (interactive)
@@ -421,7 +432,8 @@ Repeated invocations toggle between the two most recently open buffers."
    ("C-," . ivy-minibuffer-shrink)
    ("C-." . ivy-minibuffer-grow)
    ("C-s" . ivy-next-line)
-   ("M-y" . ivy-next-line)))
+   ("M-y" . ivy-next-line)
+   ("M-m" . ivy-next-history-element)))
 
 (use-package counsel
   :bind
@@ -492,8 +504,11 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (use-package yasnippet
   :diminish yas-minor-mode
-  :config
-  (yas-global-mode 1))
+  :bind
+  (:map yas-minor-mode-map
+	([tab] . yas-expand)
+	([backtab] . yas-prev-field)))
+(yas-global-mode)
 
 (use-package notifications
   :config
@@ -584,6 +599,25 @@ Repeated invocations toggle between the two most recently open buffers."
 (eval-after-load "dired"
   '(define-key dired-mode-map "F" 'dired-find-file-other-frame))
 
+(use-package peep-dired
+  :init
+  (setq peep-dired-cleanup-on-disable t)
+  (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))
+  :bind
+  (:map dired-mode-map
+	("P" . peep-dired))
+  :config
+  (evil-define-key 'normal peep-dired-mode-map (kbd "<SPC>") 'peep-dired-scroll-page-down
+                                             (kbd "C-<SPC>") 'peep-dired-scroll-page-up
+                                             (kbd "<backspace>") 'peep-dired-scroll-page-up
+                                             (kbd "j") 'peep-dired-next-file
+                                             (kbd "k") 'peep-dired-prev-file
+                                             (kbd "n") 'peep-dired-next-file
+                                             (kbd "p") 'peep-dired-prev-file)
+  (add-hook 'peep-dired-hook 'evil-normalize-keymaps))
+
+(global-set-key (kbd "M-V") 'scroll-other-window-down)
+
 (use-package buffer-move
   :bind
   (("C-x 4 h" . buf-move-left)
@@ -594,7 +628,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package ace-window
   :init
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-  (setq aw-scope 'frame)
+  (setq aw-scope 'global)
   :bind
   (([C-tab] . ace-window)))
 

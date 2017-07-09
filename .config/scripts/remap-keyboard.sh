@@ -17,8 +17,13 @@ xmodmap -e "add Control = Control_R"
 # Tab and backslash as additional Super keys
 xmodmap -e "keycode 247 = backslash"
 xmodmap -e "keycode 51 = Super_R"
-xmodmap -e "keycode 248 = backslash"
+xmodmap -e "keycode 248 = Tab"
 xmodmap -e "keycode 23 = Super_L"
+
+# Right alt behaves as left alt
+xmodmap -e "clear Mod1"
+xmodmap -e "keycode 108 = Alt_R"
+xmodmap -e "add Mod1 = Alt_L Alt_R Meta_L"
 
 # kill running instance
 curr_xcape=$(pgrep xcape)

@@ -24,7 +24,7 @@ hide_edge_borders smart
 
 # colors
 # class                 border  backgr. text    indicator child_border
-client.focused          #4c7899 #285577 #ffffff #ff6000  #ffa500
+client.focused          #4c7899 #285577 #ffffff #cc0000   #f57c00
 
 # convenient aliases
 set $mod Mod4
@@ -56,16 +56,16 @@ $exec hsetroot -solid "#000000"
 
 # workspace to monitor assignment for 4 monitors in grid
 # ensure workspaces are on appropriate output when plugging in additional displays
-for_window [workspace=1] move workspace to output $upper_left
-for_window [workspace=2] move workspace to output $upper_right
-for_window [workspace=3] move workspace to output $lower_left
-for_window [workspace=4] move workspace to output $lower_right
-for_window [workspace=5] move workspace to output $upper_left
-for_window [workspace=6] move workspace to output $upper_right
-for_window [workspace=7] move workspace to output $lower_left
-for_window [workspace=8] move workspace to output $lower_right
-for_window [workspace=9] move workspace to output $lower_right 
-for_window [workspace=10] move workspace to output $lower_right
+# for_window [workspace=1] move workspace to output $upper_left
+# for_window [workspace=2] move workspace to output $upper_right
+# for_window [workspace=3] move workspace to output $lower_left
+# for_window [workspace=4] move workspace to output $lower_right
+# for_window [workspace=5] move workspace to output $upper_left
+# for_window [workspace=6] move workspace to output $upper_right
+# for_window [workspace=7] move workspace to output $lower_left
+# for_window [workspace=8] move workspace to output $lower_right
+# for_window [workspace=9] move workspace to output $lower_right 
+# for_window [workspace=10] move workspace to output $lower_right
 
 workspace 1 output $upper_left
 workspace 2 output $upper_right
@@ -75,7 +75,7 @@ workspace 5 output $upper_left
 workspace 6 output $upper_right
 workspace 7 output $lower_left
 workspace 8 output $lower_right
-workspace 9 output $lower_right 
+# workspace 9 output $lower_right 
 workspace 10 output $lower_right 
 
 # Start i3bar to display a workspace bar (plus the system information i3status
@@ -87,6 +87,7 @@ bar {
 	status_command i3blocks
   colors {
     binding_mode #ffa500 #285577 #ffffff 
+    focused_workspace  #cc0000 #f57c00 #222222
   }
 }
 set $bar_refresh pkill -RTMIN+10 i3blocks
@@ -140,10 +141,6 @@ $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
 
 # trackpoint
 $exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" 1
-
-# caps lock and return act as control when pressed with another keys
-# when pressed alone, caps lock acts as escape
-$exec $scripts_dir/remap-keyboard.sh
 
 # cursor size & hiding
 $exec xrdb ~/.Xresources
@@ -216,8 +213,8 @@ mode "i3-jump-window" {
      bindsym --release p $i3-jump-cmd "p" Control_L+Return
      bindsym --release Escape $i3-jump-cmd Escape
 }
-bindsym mod5+Tab mode "i3-jump-window"; $exec $scripts_dir/i3-ace-jump.sh
-bindsym Control+mod5+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"
+# bindsym mod5+Tab mode "i3-jump-window"; $exec $scripts_dir/i3-ace-jump.sh
+# bindsym Control+mod5+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"
 
 # basic bindings
 bindsym $mod+Return $exec emacsclient -c -n
@@ -225,6 +222,7 @@ bindsym $mod+q kill
 bindsym $mod+w $exec $scripts_dir/rename-workspace.sh
 bindsym $mod+e $exec emacsclient -c -n
 bindsym $mod+r mode "resize"
+bindsym $mod+y mode "resize"
 bindsym $mod+t $exec termite -d `xcwd`
 bindsym $mod+d $exec i3-dmenu-desktop --dmenu="dmenu -b -i"
 bindsym $mod+f fullscreen toggle
@@ -232,7 +230,7 @@ bindsym $mod+g $exec google-chrome-stable
 bindsym $mod+v split h
 bindsym $mod+b split v
 bindsym $mod+c $exec ~/.sync.sh && i3-msg reload
-bindsym $mod+y $exec ~/.sync.sh && i3-msg restart
+bindsym Control+$mod+r $exec ~/.sync.sh && i3-msg restart
 bindsym Control+$mod+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 bindsym $mod+s $exec systemctl suspend
 bindsym $mod+h focus left
@@ -284,12 +282,12 @@ bindsym $mod+F3 $exec $scripts_dir/toggle_dropdown_terminal.sh 3
 bindsym Control+$mod+F3 $exec emacsclient -c -n -F '((title . \"3-dropdown\"))'
 bindsym $mod+F4 $exec $scripts_dir/toggle_dropdown_terminal.sh 4
 bindsym Control+$mod+F4 $exec emacsclient -c -n -F '((title . \"4-dropdown\"))'
-bindsym $mod+Tab mode "i3-jump-window"
-bindsym Control+$mod+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"
-bindsym Control+$mod+KP_Left move workspace to output left
-bindsym Control+$mod+KP_Down move workspace to output down
-bindsym Control+$mod+KP_Up move workspace to output up
-bindsym Control+$mod+KP_Right move workspace to output right
+bindsym $mod+KP_Left move workspace to output left
+bindsym $mod+KP_Down move workspace to output down
+bindsym $mod+KP_Up move workspace to output up
+bindsym $mod+KP_Right move workspace to output right
+# bindsym $mod+Tab mode "i3-jump-window"
+# bindsym Control+$mod+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"
 # bindsym KP_Home workspace number 1
 # bindsym KP_Prior workspace number 2
 # bindsym KP_End workspace number 3
@@ -311,7 +309,36 @@ bindsym Control+$mod+KP_Right move workspace to output right
 # bindsym Shift+KP_Begin move container to workspace number 9
 # bindsym $mod+Shift+KP_Begin move container to workspace number 10
 
+# caps lock and return act as control when pressed with another keys
+# tab and backslash act as super when pressed with another keys
+# when pressed alone, caps lock acts as escape
+$exec $scripts_dir/remap-keyboard.sh
+
 # polish characters with letters typed by right hand can be typed while holding left alt
-bindsym --release mod1+o $exec xdotool key --clearmodifiers --delay 1 U00F3
-bindsym --release mod1+l $exec xdotool key --clearmodifiers --delay 1 U0142
-bindsym --release mod1+n $exec xdotool key --clearmodifiers --delay 1 U0144
+set $insert-keycode exec --no-startup-id xdotool key --clearmodifiers --delay 1
+bindsym --release mod1+shift+a $insert-keycode U0104
+bindsym --release mod1+a $insert-keycode U0105
+bindsym --release mod1+shift+c $insert-keycode U0106
+bindsym --release mod1+c $insert-keycode U0107
+bindsym --release mod1+shift+e $insert-keycode U0118
+bindsym --release mod1+e $insert-keycode U0119
+bindsym --release mod1+shift+l $insert-keycode U0141
+bindsym --release mod1+l $insert-keycode U0142
+bindsym --release mod1+shift+n $insert-keycode U0143
+bindsym --release mod1+n $insert-keycode U0144
+bindsym --release mod1+shift+o $insert-keycode U00D3
+bindsym --release mod1+o $insert-keycode U00F3
+bindsym --release mod1+shift+s $insert-keycode U015A
+bindsym --release mod1+s $insert-keycode U015B
+bindsym --release mod1+shift+x $insert-keycode U0179
+bindsym --release mod1+x $insert-keycode U017A
+bindsym --release mod1+shift+z $insert-keycode U017B
+bindsym --release mod1+z $insert-keycode U017C
+# fixes typing pipe / bar "|"
+bindsym --release shift+backslash $insert-keycode U007C
+
+# app-specific-shortcuts
+set $app-specific exec --no-startup-id ~/.dotfiles/.config/scripts/app-specific-shortcut.sh
+bindsym --release Control+Shift+p $app-specific google-chrome Control+p Up
+bindsym --release Control+Shift+n $app-specific google-chrome Control+n Down
+bindsym --release Control+Shift+c $app-specific google-chrome Control+c Control+c
