@@ -15,6 +15,7 @@
 .config/chrome-flags.conf
 .config/dunst
 .config/etc
+.config/gtk-3.0
 .config/i3
 .config/i3blocks
 .config/idea64.vmoptions
