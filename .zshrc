@@ -12,7 +12,8 @@ COMPLETION_WAITING_DOTS="true"
 if [ $EMACS ]; then
     plugins=(git)
 else
-    plugins=(git vi-mode)
+    plugins=(git)
+    # plugins=(git vi-mode)
 fi
 source $ZSH/oh-my-zsh.sh
 

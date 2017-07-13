@@ -54,7 +54,7 @@
 (defun nlinum-hook-on ()
   (nlinum-mode)
   (nlinum-relative-on))
-;; (add-hook 'emacs-lisp-mode-hook 'nlinum-hook-on)
+(add-hook 'emacs-lisp-mode-hook 'nlinum-hook-on)
 
 (use-package doom-themes
   :pin melpa
@@ -147,6 +147,7 @@ Repeated invocations toggle between the two most recently open buffers."
 	("C-S-v" . evil-visual-block)
 	("C-n" . evil-next-line)
 	("C-p" . evil-previous-line)
+	("C-a" . back-to-indentation)
 	:map evil-insert-state-map
 	([escape] . evil-normal-state)
 	("C-o" . evil-execute-in-normal-state)
@@ -265,7 +266,7 @@ Repeated invocations toggle between the two most recently open buffers."
 	  ("dw" "Weight" plain (file "~/org/diet-scores.org")
 	   "* %t waga %?" :unnarrowed t)
 	  ("ds" "Score" plain (file "~/org/diet-scores.org")
-	   "* %t ocena %?" :unnarrowed t)
+	   "* %^t ocena %?" :unnarrowed t)
 	  ))
   :bind
   (("C-c C-x C-j" . org-clock-goto)
@@ -371,18 +372,18 @@ Repeated invocations toggle between the two most recently open buffers."
       (define-key company-active-map (kbd "C-n") #'company-select-next)
       (define-key company-active-map (kbd "C-p") #'company-select-previous))))
 
-
 (use-package ensime
   :pin melpa
   :init
   (setq ensime-startup-notification nil)
   (setq ensime-startup-snapshot-notification nil)
   ;; :diminish ensime-mode
-  :bind
-  (:map ensime-mode-map
-   ("M-m" . ensime-forward-note))
   :config
   (require 'ensime-expand-region))
+
+(use-package popup-imenu
+  :commands popup-imenu
+  :bind ("M-i" . popup-imenu))
 
 ;; scala-mode hooks
 (add-hook 'scala-mode-hook
@@ -432,8 +433,7 @@ Repeated invocations toggle between the two most recently open buffers."
    ("C-," . ivy-minibuffer-shrink)
    ("C-." . ivy-minibuffer-grow)
    ("C-s" . ivy-next-line)
-   ("M-y" . ivy-next-line)
-   ("M-m" . ivy-next-history-element)))
+   ("M-y" . ivy-next-line)))
 
 (use-package counsel
   :bind
@@ -462,8 +462,8 @@ Repeated invocations toggle between the two most recently open buffers."
    t
    '(("i" ivy-copy-to-buffer-action "insert")
      ("y" ivy-yank-action "yank")))
-  (defun counsel-yank-zsh-history ()
-    "Yank the zsh history"
+  (defun counsel-zsh-history ()
+    "Insert element from the zsh history"
     (interactive)
     (let (hist-cmd collection val)
       (shell-command "history -r") ; reload history
@@ -478,7 +478,8 @@ Repeated invocations toggle between the two most recently open buffers."
 		 (setq val (if (= 1 (length collection)) (car collection)
 			     (ivy-read (format "Zsh history:") collection))))
 	(kill-new val)
-	(message "%s => kill-ring" val))))
+	;; (message "%s => kill-ring" val)
+        (insert val))))
   (ivy-mode 1))
 
 (use-package projectile
@@ -577,6 +578,12 @@ Repeated invocations toggle between the two most recently open buffers."
       (if (/= arg 1)
 	  (apply 'insert-shell-output-at-position command-position)
 	(shell-command (car command-position))))))
+
+(use-package comint
+  :ensure nil
+  :bind
+  (:map shell-mode-map
+	("M-r" . counsel-zsh-history)))
 
 (use-package dired-x
   :ensure nil

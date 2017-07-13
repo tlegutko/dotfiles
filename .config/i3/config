@@ -54,19 +54,6 @@ $exec compton -cCzGb -t-3 -l-5 -r4 \
 # nice black wallpaper, needed because compton makes the default grey
 $exec hsetroot -solid "#000000"
 
-# workspace to monitor assignment for 4 monitors in grid
-# ensure workspaces are on appropriate output when plugging in additional displays
-# for_window [workspace=1] move workspace to output $upper_left
-# for_window [workspace=2] move workspace to output $upper_right
-# for_window [workspace=3] move workspace to output $lower_left
-# for_window [workspace=4] move workspace to output $lower_right
-# for_window [workspace=5] move workspace to output $upper_left
-# for_window [workspace=6] move workspace to output $upper_right
-# for_window [workspace=7] move workspace to output $lower_left
-# for_window [workspace=8] move workspace to output $lower_right
-# for_window [workspace=9] move workspace to output $lower_right 
-# for_window [workspace=10] move workspace to output $lower_right
-
 workspace 1 output $upper_left
 workspace 2 output $upper_right
 workspace 3 output $lower_left
@@ -114,8 +101,6 @@ bindsym KP_Enter $exec "playerctl play-pause && $delayed_bar_refresh"
 # bluetooth
 bindsym KP_Divide $exec "$scripts_dir/bluetooth_off.sh && $delayed_bar_refresh"
 bindsym KP_Multiply $exec "$scripts_dir/bluetooth_on.sh && $delayed_bar_refresh"
-# screenshot of selection
-bindsym --release Print $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/'
 
 # daemons
 $exec nm-applet
@@ -133,19 +118,21 @@ $exec spotify
 # double prssing workspace num goes back to previous one
 workspace_auto_back_and_forth yes
 
+popup_during_fullscreen leave_fullscreen
+
 # touchpad
-$exec_always xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 1
-$exec_always xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Natural Scrolling Enabled" 1
-$exec_always xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Tapping Enabled" 1
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
 
 # trackpoint
 $exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" 1
 
+# remapping keyboard.. a lot!
+$exec $scripts_dir/remap-keyboard.sh
+
 # cursor size & hiding
 $exec xrdb ~/.Xresources
 $exec unclutter --timeout 1
-mouse_warping output
+mouse_warping none
 
 # dropdown terminals
 $exec termite -t "0-dropdown"
@@ -184,38 +171,6 @@ mode "resize" {
   bindcode mod5+27 mode "default"
 }
 
-# ace-jump between windows
-popup_during_fullscreen leave_fullscreen
-for_window [class="Yad"] floating enable
-set $i3-jump-cmd mode "default"; exec --no-startup-id xdotool key --delay 0 --clearmodifiers
-mode "i3-jump-window" {
-     bindsym --release a $i3-jump-cmd "a" Control_L+Return
-     bindsym --release 2 $i3-jump-cmd "2" Control_L+Return
-     bindsym --release s $i3-jump-cmd "s" Control_L+Return
-     bindsym --release d $i3-jump-cmd "d" Control_L+Return
-     bindsym --release f $i3-jump-cmd "f" Control_L+Return
-     bindsym --release g $i3-jump-cmd "g" Control_L+Return
-     bindsym --release q $i3-jump-cmd "q" Control_L+Return
-     bindsym --release w $i3-jump-cmd "w" Control_L+Return
-     bindsym --release e $i3-jump-cmd "e" Control_L+Return
-     bindsym --release r $i3-jump-cmd "r" Control_L+Return
-     bindsym --release t $i3-jump-cmd "t" Control_L+Return
-     bindsym --release z $i3-jump-cmd "z" Control_L+Return
-     bindsym --release x $i3-jump-cmd "x" Control_L+Return
-     bindsym --release c $i3-jump-cmd "c" Control_L+Return
-     bindsym --release v $i3-jump-cmd "v" Control_L+Return
-     bindsym --release j $i3-jump-cmd "j" Control_L+Return
-     bindsym --release k $i3-jump-cmd "k" Control_L+Return
-     bindsym --release l $i3-jump-cmd "l" Control_L+Return
-     bindsym --release m $i3-jump-cmd "m" Control_L+Return
-     bindsym --release i $i3-jump-cmd "i" Control_L+Return
-     bindsym --release o $i3-jump-cmd "o" Control_L+Return
-     bindsym --release p $i3-jump-cmd "p" Control_L+Return
-     bindsym --release Escape $i3-jump-cmd Escape
-}
-# bindsym mod5+Tab mode "i3-jump-window"; $exec $scripts_dir/i3-ace-jump.sh
-# bindsym Control+mod5+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"
-
 # basic bindings
 bindsym $mod+Return $exec emacsclient -c -n
 bindsym $mod+q kill
@@ -244,7 +199,9 @@ bindsym Control+$mod+l move right
 bindsym $mod+a focus parent
 bindsym $mod+z focus child
 bindsym $mod+o $exec okular
-bindsym $mod+p $exec xrandr \
+# screenshot of selection
+bindsym --release $mod+p $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/'
+bindsym Control+$mod+p $exec xrandr \
      --output $lower_right --auto --primary \
      --output $lower_left --auto --same-as $lower_right \
      --output $upper_right --auto --same-as $lower_right \
@@ -286,59 +243,3 @@ bindsym $mod+KP_Left move workspace to output left
 bindsym $mod+KP_Down move workspace to output down
 bindsym $mod+KP_Up move workspace to output up
 bindsym $mod+KP_Right move workspace to output right
-# bindsym $mod+Tab mode "i3-jump-window"
-# bindsym Control+$mod+Tab $exec "$scripts_dir/focus-last.py --switch || $scripts_dir/focus-last.py"
-# bindsym KP_Home workspace number 1
-# bindsym KP_Prior workspace number 2
-# bindsym KP_End workspace number 3
-# bindsym KP_Next workspace number 4
-# bindsym $mod+KP_Home workspace number 5
-# bindsym $mod+KP_Prior workspace number 6
-# bindsym $mod+KP_End workspace number 7
-# bindsym $mod+KP_Next workspace number 8
-# bindsym KP_Begin workspace number 9
-# bindsym $mod+KP_Begin workspace number 10
-# bindsym Shift+KP_Home move container to workspace number 1
-# bindsym Shift+KP_Prior move container to workspace number 2
-# bindsym Shift+KP_End move container to workspace number 3
-# bindsym Shift+KP_Next move container to workspace number 4
-# bindsym $mod+Shift+KP_Home move container to workspace number 5
-# bindsym $mod+Shift+KP_Prior move container to workspace number 6
-# bindsym $mod+Shift+KP_End move container to workspace number 7
-# bindsym $mod+Shift+KP_Next move container to workspace number 8
-# bindsym Shift+KP_Begin move container to workspace number 9
-# bindsym $mod+Shift+KP_Begin move container to workspace number 10
-
-# caps lock and return act as control when pressed with another keys
-# tab and backslash act as super when pressed with another keys
-# when pressed alone, caps lock acts as escape
-$exec $scripts_dir/remap-keyboard.sh
-
-# polish characters with letters typed by right hand can be typed while holding left alt
-set $insert-keycode exec --no-startup-id xdotool key --clearmodifiers --delay 1
-bindsym --release mod1+shift+a $insert-keycode U0104
-bindsym --release mod1+a $insert-keycode U0105
-bindsym --release mod1+shift+c $insert-keycode U0106
-bindsym --release mod1+c $insert-keycode U0107
-bindsym --release mod1+shift+e $insert-keycode U0118
-bindsym --release mod1+e $insert-keycode U0119
-bindsym --release mod1+shift+l $insert-keycode U0141
-bindsym --release mod1+l $insert-keycode U0142
-bindsym --release mod1+shift+n $insert-keycode U0143
-bindsym --release mod1+n $insert-keycode U0144
-bindsym --release mod1+shift+o $insert-keycode U00D3
-bindsym --release mod1+o $insert-keycode U00F3
-bindsym --release mod1+shift+s $insert-keycode U015A
-bindsym --release mod1+s $insert-keycode U015B
-bindsym --release mod1+shift+x $insert-keycode U0179
-bindsym --release mod1+x $insert-keycode U017A
-bindsym --release mod1+shift+z $insert-keycode U017B
-bindsym --release mod1+z $insert-keycode U017C
-# fixes typing pipe / bar "|"
-bindsym --release shift+backslash $insert-keycode U007C
-
-# app-specific-shortcuts
-set $app-specific exec --no-startup-id ~/.dotfiles/.config/scripts/app-specific-shortcut.sh
-bindsym --release Control+Shift+p $app-specific google-chrome Control+p Up
-bindsym --release Control+Shift+n $app-specific google-chrome Control+n Down
-bindsym --release Control+Shift+c $app-specific google-chrome Control+c Control+c
