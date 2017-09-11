@@ -69,7 +69,7 @@
   ;; font is 1/10 of height
   (set-face-attribute 'default nil :height 80)
   ;;; i3-like mouse hover effect
-  (setq mouse-autoselect-window t)
+  (setq mouse-autoselect-window nil)
   ;;; Settings (defaults)
   (setq doom-enable-bold nil    ; if nil, bolding are universally disabled
 	doom-enable-italic t  ; if nil, italics are universally disabled
@@ -77,7 +77,7 @@
 	doom-one-brighter-modeline nil
 	doom-one-brighter-comments nil)
   ;;; OPTIONAL
-  ;; brighter source buffers (that represent files)
+  ;; brighter source buffers (that represent file)
   (add-hook 'find-file-hook 'doom-buffer-mode-maybe)
   ;; ...if you use auto-revert-mode
   (add-hook 'after-revert-hook 'doom-buffer-mode-maybe)
@@ -197,14 +197,16 @@ Repeated invocations toggle between the two most recently open buffers."
   (defun recompile-pdf-on-save ()
     "Recompile latex on save with external script."
     (when (eq major-mode 'latex-mode)
-      (call-process "~/.config/scripts/recompile-masters-thesis.sh")))
+      (call-process "/home/tlegutko/resume/recompile-resume.sh")))
   (add-hook 'after-save-hook #'recompile-pdf-on-save)
   (add-hook 'LaTeX-mode-hook 'flyspell-mode))
 
 (use-package flyspell
   :bind
   (:map flyspell-mode-map
-	("C-:" . flyspell-save-word))
+	("C-;" . nil)
+	("C-'" . flyspell-auto-correct-previous-word)
+	("C-\"" . flyspell-save-word))
   :config
   (defun flyspell-save-word ()
     "Save word to personal dictionary."
@@ -259,6 +261,8 @@ Repeated invocations toggle between the two most recently open buffers."
 	   "* weekly summary\nws%?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("D" "Dance notes" plain (file "~/org/dance-notes.org")
 	   "* %?" :unnarrowed t :clock-in t :clock-resume t)
+	  ("P" "PMO journal" plain (file "~/org/pmo-journal.org")
+	   "* %u\n  %?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("b" "Books and articles")
 	  ("bt" "To-read list" plain (file "~/org/books-to-read.org") "* %?")
 	  ("bn" "Notes from books" plain (file "~/org/books-notes.org") "* %?")
@@ -287,8 +291,6 @@ Repeated invocations toggle between the two most recently open buffers."
   :config
   (unbind-key "C-'" org-mode-map) ;; for avy to use
   (unbind-key "C-]" org-mode-map) ;; for avy to use
-  (unbind-key "[C-tab]" org-mode-map) ;; for avy to use
-  (unbind-key "[S-tab]" org-mode-map) ;; for yasnippet-prev-field
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-log-states)   ; turn off logging
@@ -383,7 +385,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (use-package popup-imenu
   :commands popup-imenu
-  :bind ("M-i" . popup-imenu))
+  :bind ("M-i" . popup-imenu)) ;; great for ensime
 
 ;; scala-mode hooks
 (add-hook 'scala-mode-hook
@@ -497,19 +499,17 @@ Repeated invocations toggle between the two most recently open buffers."
   :init
   (setq avy-timeout-seconds 0.4)
   :bind
-  (("C-'" . avy-goto-char-timer)
-   ([C-escape] . avy-goto-char-timer)
+  (([C-escape] . avy-goto-char-timer)
    ([C-S-escape] . avy-goto-line)
-   ("C-`" . avy-goto-line)
-   ("M-'" . avy-goto-line)))
+   ("C-\\" . avy-goto-line)))
 
 (use-package yasnippet
   :diminish yas-minor-mode
-  :bind
-  (:map yas-minor-mode-map
-	([tab] . yas-expand)
-	([backtab] . yas-prev-field)))
-(yas-global-mode)
+  :commands yas-minor-mode
+  :init
+  (add-hook 'org-mode-hook #'yas-minor-mode)
+  :config
+  (yas-reload-all))
 
 (use-package notifications
   :config
@@ -537,16 +537,7 @@ Repeated invocations toggle between the two most recently open buffers."
   :diminish undo-tree-mode
   :config (global-undo-tree-mode))
 
-(defun comment-or-uncomment-region-or-line ()
-  "Comments or uncomments the region or the current line if there's no active region."
-  (interactive)
-  (let (beg end)
-    (if (region-active-p)
-	(setq beg (region-beginning) end (region-end))
-      (setq beg (line-beginning-position) end (line-end-position)))
-    (comment-or-uncomment-region beg end)))
-(global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
-(global-set-key (kbd "M-[") (kbd "["))
+(global-set-key (kbd "C-;") 'comment-line)
 
 (use-package sh-script
   :init
@@ -597,14 +588,6 @@ Repeated invocations toggle between the two most recently open buffers."
   :bind
   (:map dired-mode-map
 	("/" . dired-narrow)))
-
-(defun dired-find-file-other-frame ()
-  "In Dired, visit this file or directory in another window."
-  (interactive)
-  (find-file-other-frame (dired-get-file-for-visit)))
-
-(eval-after-load "dired"
-  '(define-key dired-mode-map "F" 'dired-find-file-other-frame))
 
 (use-package peep-dired
   :init

@@ -97,6 +97,9 @@ bindsym XF86AudioMicMute $exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
 bindsym KP_Insert $exec "playerctl previous && $delayed_bar_refresh"
 bindsym KP_Delete $exec "playerctl next && $delayed_bar_refresh"
 bindsym KP_Enter $exec "playerctl play-pause && $delayed_bar_refresh"
+bindsym $mod+comma  $exec "playerctl previous && $delayed_bar_refresh"
+bindsym $mod+period $exec "playerctl next && $delayed_bar_refresh"
+bindsym $mod+slash $exec "playerctl play-pause && $delayed_bar_refresh"
 
 # bluetooth
 bindsym KP_Divide $exec "$scripts_dir/bluetooth_off.sh && $delayed_bar_refresh"
@@ -132,7 +135,7 @@ $exec $scripts_dir/remap-keyboard.sh
 # cursor size & hiding
 $exec xrdb ~/.Xresources
 $exec unclutter --timeout 1
-mouse_warping none
+mouse_warping output
 
 # dropdown terminals
 $exec termite -t "0-dropdown"
@@ -201,6 +204,7 @@ bindsym $mod+z focus child
 bindsym $mod+o $exec okular
 # screenshot of selection
 bindsym --release $mod+p $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/'
+# presentation mirroring mode
 bindsym Control+$mod+p $exec xrandr \
      --output $lower_right --auto --primary \
      --output $lower_left --auto --same-as $lower_right \
