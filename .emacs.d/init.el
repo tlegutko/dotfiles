@@ -21,6 +21,9 @@
 ;; use-package always auto install packages
 (setq use-package-always-ensure t)
 
+;; always confirm with y-or-n
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 ;;; look & feel
 (setq-default mode-line-mule-info nil)
 (setq-default mode-line-modified nil)
@@ -183,6 +186,16 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package evil-surround
   :config
   (global-evil-surround-mode 1))
+
+(use-package evil-goggles
+  :diminish evil-goggles-mode
+  :config
+  (evil-goggles-mode)
+  ;; optionally use diff-mode's faces; as a result, deleted text
+  ;; will be highlighed with `diff-removed` face which is typically
+  ;; some red color (as defined by the color theme)
+  ;; other faces such as `diff-added` will be used for other actions
+  (evil-goggles-use-diff-faces))
 
 (defun sync-init-el-on-save ()
   "Sync .dotfiles/.emacs.d/init.el after save."
@@ -379,6 +392,7 @@ Repeated invocations toggle between the two most recently open buffers."
   :init
   (setq ensime-startup-notification nil)
   (setq ensime-startup-snapshot-notification nil)
+  (setq ensime-search-interface 'ivy)
   ;; :diminish ensime-mode
   :config
   (require 'ensime-expand-region))
@@ -578,6 +592,8 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (use-package dired-x
   :ensure nil
+  :init
+  (setq dired-dwim-target t)
   :config
   (setq-default dired-omit-files-p t)
   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
@@ -625,5 +641,41 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package winner
   :config
   (winner-mode 1))
+
+(use-package multiple-cursors
+  :bind
+  (("C-S-c C-S-c" . mc/edit-lines)
+  ("C->" . mc/mark-next-like-this)
+  ("C-<" . mc/mark-previous-like-this)
+  ("C-c C->" . mc/mark-all-like-this)
+  ("C-c C-<" . mc/insert-numbers)
+  :map mc/keymap
+  ([return] . nil)))
+
+(use-package eshell
+  :commands eshell
+  :bind
+  (("C-x `" . eshell)
+   ("C-c `" . eshell))
+  :config
+  (add-hook 'eshell-mode-hook
+            (lambda ()
+              (define-key eshell-mode-map
+                (kbd "<tab>") 'completion-at-point)
+              (define-key eshell-mode-map
+                (kbd "C-r")
+                'counsel-esh-history)
+              (define-key eshell-mode-map
+                (kbd "M-r")
+                'counsel-esh-history))))
+
+(use-package tramp
+  :ensure nil
+  :init
+  (add-to-list 'tramp-connection-properties
+	      (list (regexp-quote "android") "remote-shell" "sh"))
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+  (add-to-list 'tramp-remote-path "/system/xbin")
+  (add-to-list 'tramp-remote-process-environment "TMPDIR=$HOME"))
 
 (message "Config loaded successfully")

@@ -5,10 +5,10 @@
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
    (quote
-    ("~/org/daily-activities.org" "~/org/it-feedback.org" "~/org/miracle-evening.org" "~/org/laptop-config.org" "~/org/weekly-summary.org" "~/org/pmo-journal.org" "~/org/todo.org" "~/org/calendar.org" "~/org/miracle-morning.org" "~/org/personal-journal.org" "~/org/scala.org" "~/org/dance-notes.org")))
+    ("~/org/new-job.org" "~/org/daily-activities.org" "~/org/it-feedback.org" "~/org/miracle-evening.org" "~/org/laptop-config.org" "~/org/weekly-summary.org" "~/org/pmo-journal.org" "~/org/todo.org" "~/org/calendar.org" "~/org/miracle-morning.org" "~/org/personal-journal.org" "~/org/scala.org" "~/org/dance-notes.org")))
  '(package-selected-packages
    (quote
-    (popup-imenu comint peep-dired scala-mode ace-window buffer-move dired-narrow org-bullets neotree dired-x dired sublimity-scroll ag company-mode org-gcal which-key counsel-projectile flx expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package evil)))
+    (multiple-cursors evil-goggles popup-imenu comint peep-dired scala-mode ace-window buffer-move dired-narrow org-bullets neotree dired-x dired sublimity-scroll ag company-mode org-gcal which-key counsel-projectile flx expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package evil)))
  '(vc-annotate-background "#181e26")
  '(vc-annotate-color-map
    (quote
@@ -36,4 +36,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(evil-goggles-delete-face ((t (:inherit diff-removed))))
+ '(evil-goggles-paste-face ((t (:inherit diff-added))))
+ '(evil-goggles-undo-redo-add-face ((t (:inherit diff-added))))
+ '(evil-goggles-undo-redo-change-face ((t (:inherit diff-changed))))
+ '(evil-goggles-undo-redo-remove-face ((t (:inherit diff-removed))))
+ '(evil-goggles-yank-face ((t (:inherit diff-changed)))))
