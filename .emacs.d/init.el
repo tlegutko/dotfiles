@@ -24,6 +24,9 @@
 ;; always confirm with y-or-n
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+;; mause autoselect window - off because it messes with ace-window and i3 mouse_warping
+(setq mouse-autoselect-window nil)
+
 ;;; look & feel
 (setq-default mode-line-mule-info nil)
 (setq-default mode-line-modified nil)
@@ -130,7 +133,7 @@ Repeated invocations toggle between the two most recently open buffers."
   :init
   (setq save-interprogram-paste-before-kill t)
   :bind
-  (("C-c V" . visual-line-mode)))
+  (("C-c v" . visual-line-mode)))
 
 (use-package evil
   :init
@@ -179,6 +182,9 @@ Repeated invocations toggle between the two most recently open buffers."
   (evil-define-key 'normal term-raw-map (kbd "C-r") 'term-send-raw)
   (evil-define-key 'normal term-raw-map (kbd "C-c") 'term-send-raw)
   (add-hook 'emacs-lisp-mode-hook
+	    (function (lambda ()
+			(setq evil-shift-width 2))))
+  (add-hook 'scala-mode-hook
 	    (function (lambda ()
 			(setq evil-shift-width 2))))
   (evil-mode 1))
@@ -233,6 +239,7 @@ Repeated invocations toggle between the two most recently open buffers."
   :init
   (setq openwith-associations '(("\\.pdf\\'" "okular" (file))
 				("\\.mp4\\'" "mpv" (file))
+				("\\.mp3\\'" "mpv" (file))
 				("\\.mov\\'" "mpv" (file))))
   :config
   (openwith-mode t))
@@ -254,35 +261,41 @@ Repeated invocations toggle between the two most recently open buffers."
   :init
   (setq org-clock-mode-line-total 'current)
   (setq org-clock-persist 'history)
-  (setq calendar-week-start-day 1)
+  (setq org-agenda-start-on-weekday 6)
   (setq org-startup-truncated 'nil)
   (setq org-agenda-start-with-log-mode t)
   (setq org-capture-templates
-	'(("a" "Appointment" plain (file  "~/org/calendar.org" )
-	   "* %?\n%^T")
-	  ("p" "Personal journal" plain (file "~/org/personal-journal.org")
-	   "* personal journal\n  %?" :unnarrowed t :clock-in t :clock-resume t)
-	  ("t" "To do" plain (file "~/org/todo.org")
-	   "* TODO %?" :prepend t)
+	'(
+	  ("d" "Dance notes" plain (file "~/org/dance-notes.org")
+	   "* %?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("l" "Laptop config" plain (file "~/org/laptop-config.org")
 	   "* TODO %?" :prepend t)
 	  ("m" "Miracle morning" plain (file "~/org/miracle-morning.org")
-	   "* miracle morning\nmm%?" :clock-in t :clock-resume t)
+	   "* miracle morning %U\nmm%?" :clock-in t :clock-resume t)
 	  ("e" "Miracle evening" plain (file "~/org/miracle-evening.org")
-	   "* miracle evening\nme%?" :unnarrowed t :clock-in t :clock-resume t)
+	   "* miracle evening %U\nme%?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("w" "Weekly summary" plain (file "~/org/weekly-summary.org")
-	   "* weekly summary\nws%?" :unnarrowed t :clock-in t :clock-resume t)
-	  ("D" "Dance notes" plain (file "~/org/dance-notes.org")
-	   "* %?" :unnarrowed t :clock-in t :clock-resume t)
+	   "* weekly summary %U\nws%?" :unnarrowed t :clock-in t :clock-resume t)
+	  ("b" "Books and articles")
+	  ("bt" "To-read list" plain (file "~/org/books-to-read.org")
+	   "* %?" :unnarrowed t)
+	  ("bn" "Notes from books" plain (file "~/org/books-notes.org")
+	   "* %?" :unnarrowed t)
+	  ("t" "To do" plain (file "~/org/todo.org")
+	   "* TODO %?" :prepend t)
+	  ("a" "Appointment" plain (file  "~/org/calendar.org" )
+	   "* %?\n%^T")
+	  ("p" "personal journal" plain (file "~/org/personal-journal.org")
+	   "* personal journal\n  %?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("P" "PMO journal" plain (file "~/org/pmo-journal.org")
 	   "* %u\n  %?" :unnarrowed t :clock-in t :clock-resume t)
-	  ("b" "Books and articles")
-	  ("bt" "To-read list" plain (file "~/org/books-to-read.org") "* %?")
-	  ("bn" "Notes from books" plain (file "~/org/books-notes.org") "* %?")
-	  ("d" "Diet")
-	  ("dw" "Weight" plain (file "~/org/diet-scores.org")
+	  ("S" "Longer time period summary")
+	  ("Sm" "Monthly summary" plain (file "~/org/monthly-summary.org")
+	   "* monthly summary %U\nms%?" :unnarrowed t :clock-in t :clock-resume t)
+	  ("D" "Diet")
+	  ("Dw" "Weight" plain (file "~/org/diet-scores.org")
 	   "* %t waga %?" :unnarrowed t)
-	  ("ds" "Score" plain (file "~/org/diet-scores.org")
+	  ("Ds" "Score" plain (file "~/org/diet-scores.org")
 	   "* %^t ocena %?" :unnarrowed t)
 	  ))
   :bind
@@ -297,13 +310,16 @@ Repeated invocations toggle between the two most recently open buffers."
    ("\C-cb" . org-iswitchb)
    :map org-mode-map
    ([C-tab] . nil)
-   ([S-tab] . nil)
-   ([backtab] . nil)
-   ("M-TAB" . org-global-cycle)
+   ([return] . org-return-indent)
+   ("C-m" . org-return-indent)
+   ([M-tab] . org-global-cycle)
+   ([M-S-tab] . org-global-cycle)
    ("\M-q" . toggle-truncate-lines))
   :config
   (unbind-key "C-'" org-mode-map) ;; for avy to use
   (unbind-key "C-]" org-mode-map) ;; for avy to use
+  (setq org-return-follows-link t)
+  (setq org-cycle-emulate-tab 'white)
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-log-states)   ; turn off logging
@@ -354,12 +370,10 @@ Repeated invocations toggle between the two most recently open buffers."
   (show-smartparens-global-mode))
 
 ;; scala
-(use-package sbt-mode
-  :pin melpa)
+(use-package sbt-mode)
 
 (use-package scala-mode
   :defer t
-  :pin melpa
   :init
   (setq
    scala-indent:use-javadoc-style t
@@ -388,7 +402,7 @@ Repeated invocations toggle between the two most recently open buffers."
       (define-key company-active-map (kbd "C-p") #'company-select-previous))))
 
 (use-package ensime
-  :pin melpa
+  :pin melpa-stable
   :init
   (setq ensime-startup-notification nil)
   (setq ensime-startup-snapshot-notification nil)
@@ -512,6 +526,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package avy
   :init
   (setq avy-timeout-seconds 0.4)
+  (setq avy-keys (number-sequence ?a ?z))
   :bind
   (([C-escape] . avy-goto-char-timer)
    ([C-S-escape] . avy-goto-line)
@@ -522,6 +537,9 @@ Repeated invocations toggle between the two most recently open buffers."
   :commands yas-minor-mode
   :init
   (add-hook 'org-mode-hook #'yas-minor-mode)
+  :bind
+  (:map yas-minor-mode-map
+   ("C-c y" . yas-expand))
   :config
   (yas-reload-all))
 
@@ -594,6 +612,8 @@ Repeated invocations toggle between the two most recently open buffers."
   :ensure nil
   :init
   (setq dired-dwim-target t)
+  :bind
+  (("C-x j" . dired-jump))
   :config
   (setq-default dired-omit-files-p t)
   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
@@ -661,7 +681,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (add-hook 'eshell-mode-hook
             (lambda ()
               (define-key eshell-mode-map
-                (kbd "<tab>") 'completion-at-point)
+                (kbd "<tab>") 'eshell-pcomplete)
               (define-key eshell-mode-map
                 (kbd "C-r")
                 'counsel-esh-history)
@@ -669,13 +689,30 @@ Repeated invocations toggle between the two most recently open buffers."
                 (kbd "M-r")
                 'counsel-esh-history))))
 
-(use-package tramp
-  :ensure nil
-  :init
-  (add-to-list 'tramp-connection-properties
-	      (list (regexp-quote "android") "remote-shell" "sh"))
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
-  (add-to-list 'tramp-remote-path "/system/xbin")
-  (add-to-list 'tramp-remote-process-environment "TMPDIR=$HOME"))
+;; tramp
+(require 'tramp)
+(add-to-list 'tramp-connection-properties
+	    (list nil "remote-shell" "sh"))
+(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+(add-to-list 'tramp-remote-path "/system/xbin")
+(add-to-list 'tramp-remote-process-environment "TMPDIR=$HOME")
+
+(use-package restclient
+  :bind
+  (:map restclient-mode-map
+  ("C-c C-c" . restclient-http-send-current-stay-in-window)
+  ("C-c C-v" . restclient-http-send-current)
+  ("C-c n n" . nil)))
+
+;; org-mode to github markdown export command
+(use-package ox-gfm)
+
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 (message "Config loaded successfully")

@@ -58,3 +58,5 @@
 [include]
   path = .gitconfig.local # user info
 
+[magit]
+	hideCampaign = true

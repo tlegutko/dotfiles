@@ -12,12 +12,11 @@ pacman -Q | cut -d ' ' -f1 > ~/.arch-packages-list
 ~/.dotfiles/.sync.sh
 
 function rcs {
-    rclone sync -L $@
+    rclone sync -v --stats=1s -L $@
 }    
 # sync everything with gDrive
 rcs ~/.dotfiles gdrive:dotfiles
 rcs ~/org gdrive:org
-rcs ~/masters-thesis gdrive:masters-thesis
 rcs ~/.emacs.d/snippets/org-mode gdrive:snippets/org-mode
-rcs ~/.aspell.en.prepl
-rcs ~/.aspell.en.pws
+rcs ~/resume gdrive:cv/resume
+rcs ~/Music/audiobooks gdrive:audiobooks

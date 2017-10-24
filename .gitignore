@@ -1,2 +1,3 @@
 /.gitconfig.local
 /.emacs.d/org-gcal-credentials.el
+/.emacs.d/.emacs.desktop

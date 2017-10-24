@@ -136,6 +136,7 @@ $exec $scripts_dir/remap-keyboard.sh
 $exec xrdb ~/.Xresources
 $exec unclutter --timeout 1
 mouse_warping output
+focus_follows_mouse no
 
 # dropdown terminals
 $exec termite -t "0-dropdown"
@@ -202,8 +203,9 @@ bindsym Control+$mod+l move right
 bindsym $mod+a focus parent
 bindsym $mod+z focus child
 bindsym $mod+o $exec okular
+bindsym $mod+i $exec intellij-idea-ultimate-edition
 # screenshot of selection
-bindsym --release $mod+p $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/'
+bindsym --release $mod+p $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/screenshots/'
 # presentation mirroring mode
 bindsym Control+$mod+p $exec xrandr \
      --output $lower_right --auto --primary \

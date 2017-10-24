@@ -19,3 +19,4 @@ alias em='emacsclient -t'
 alias sd='~/.dotfiles/.sync.sh'
 
 eval $(keychain --eval --quiet --nogui id_rsa)
+[ $TERM = "dumb" ] && unsetopt zle && PS1='$ '
