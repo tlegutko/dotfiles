@@ -191,7 +191,8 @@ bindsym $mod+b split v
 bindsym $mod+c $exec ~/.sync.sh && i3-msg reload
 bindsym Control+$mod+r $exec ~/.sync.sh && i3-msg restart
 bindsym Control+$mod+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
-bindsym $mod+s $exec systemctl suspend
+bindsym $mod+s $exec i3lock -c 000000
+bindsym Control+$mod+q $exec systemctl suspend
 bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
@@ -222,6 +223,9 @@ bindsym $mod+7 workspace number 7
 bindsym $mod+8 workspace number 8
 bindsym $mod+9 workspace number 9
 bindsym $mod+0 workspace number 10
+bindsym $mod+minus workspace number 11
+bindsym $mod+equal workspace number 12
+bindsym $mod+BackSpace workspace number 13
 bindsym Control+$mod+1 move container to workspace number 1
 bindsym Control+$mod+2 move container to workspace number 2
 bindsym Control+$mod+3 move container to workspace number 3
@@ -232,6 +236,9 @@ bindsym Control+$mod+7 move container to workspace number 7
 bindsym Control+$mod+8 move container to workspace number 8
 bindsym Control+$mod+9 move container to workspace number 9
 bindsym Control+$mod+0 move container to workspace number 10
+bindsym Control+$mod+minus move container to workspace number 11
+bindsym Control+$mod+equal move container to workspace number 12
+bindsym Control+$mod+BackSpace move container to workspace number 13
 bindsym $mod+m $exec $scripts_dir/toggle_trackpoint.sh
 bindsym Control+$mod+m $exec $scripts_dir/toggle_touchpad.sh
 bindsym $mod+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh

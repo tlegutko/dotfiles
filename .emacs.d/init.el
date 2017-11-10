@@ -63,42 +63,91 @@
 (add-hook 'emacs-lisp-mode-hook 'nlinum-hook-on)
 
 (use-package doom-themes
-  :pin melpa
-  :diminish doom-buffer-mode
+  :init
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+	doom-themes-enable-italic t) ; if nil, italics is universally disabled
   :config
-  (load-theme 'doom-molokai t)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
   (line-number-mode -1)
   (size-indication-mode -1)
   ;; font is 1/10 of height
-  (set-face-attribute 'default nil :height 80)
+  (set-face-attribute 'default nil :height 110)
   ;;; i3-like mouse hover effect
   (setq mouse-autoselect-window nil)
-  ;;; Settings (defaults)
-  (setq doom-enable-bold nil    ; if nil, bolding are universally disabled
-	doom-enable-italic t  ; if nil, italics are universally disabled
-	;; doom-one specific settings
-	doom-one-brighter-modeline nil
-	doom-one-brighter-comments nil)
-  ;;; OPTIONAL
-  ;; brighter source buffers (that represent file)
-  (add-hook 'find-file-hook 'doom-buffer-mode-maybe)
-  ;; ...if you use auto-revert-mode
-  (add-hook 'after-revert-hook 'doom-buffer-mode-maybe)
-  ;; And you can brighten other buffers (unconditionally) with:
-  (add-hook 'ediff-prepare-buffer-hook 'doom-buffer-mode)
-  ;; brighter minibuffer when active
-  ;; (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
+  ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+  ;; may have their own settings.
+  (load-theme 'doom-molokai t)
+
+  ;; Enable flashing mode-line on errors
+  ;; (doom-themes-visual-bell-config)
+
   ;; Enable custom neotree theme
   (doom-themes-neotree-config)  ; all-the-icons fonts must be installed!
-  ;; Enable nlinum line highlighting
-  ;; (doom-themes-nlinum-config)   ; requires nlinum and hl-line-mode
-  ;; Necessary for org-mode
-  (setq org-fontify-whole-heading-line t
-	org-fontify-done-headline t
-	org-fontify-quote-and-verse-blocks t))
+
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+
+(use-package solaire-mode
+  :config
+  ;; brighten buffers (that represent real files)
+  (add-hook 'after-change-major-mode-hook #'turn-on-solaire-mode)
+  ;; To enable solaire-mode unconditionally for certain modes:
+  (add-hook 'ediff-prepare-buffer-hook #'solaire-mode)
+
+  ;; ...if you use auto-revert-mode:
+  (add-hook 'after-revert-hook #'turn-on-solaire-mode)
+
+  ;; highlight the minibuffer when it is activated:
+  (add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer)
+
+  ;; if the bright and dark background colors are the wrong way around, use this
+  ;; to switch the backgrounds of the `default` and `solaire-default-face` faces.
+  ;; This should be used *after* you load the active theme!
+  ;;
+  ;; NOTE: This is necessary for themes in the doom-themes package!
+  ;; (solaire-mode-swap-bg)	       
+  )
+
+;; (use-package doom-themes
+;;   :pin melpa
+;;   :diminish doom-buffer-mode
+;;   :config
+;;   (load-theme 'doom-molokai t)
+;;   (tool-bar-mode -1)
+;;   (menu-bar-mode -1)
+;;   (scroll-bar-mode -1)
+;;   (line-number-mode -1)
+;;   (size-indication-mode -1)
+;;   ;; font is 1/10 of height
+;;   (set-face-attribute 'default nil :height 110)
+;;   ;;; i3-like mouse hover effect
+;;   (setq mouse-autoselect-window nil)
+;;   ;;; Settings (defaults)
+;;   (setq doom-enable-bold nil    ; if nil, bolding are universally disabled
+;; 	doom-enable-italic t  ; if nil, italics are universally disabled
+;; 	;; doom-one specific settings
+;; 	doom-one-brighter-modeline nil
+;; 	doom-one-brighter-comments nil)
+;;   ;;; OPTIONAL
+;;   ;; brighter source buffers (that represent file)
+;;   (add-hook 'find-file-hook 'doom-buffer-mode-maybe)
+;;   ;; ...if you use auto-revert-mode
+;;   (add-hook 'after-revert-hook 'doom-buffer-mode-maybe)
+;;   ;; And you can brighten other buffers (unconditionally) with:
+;;   (add-hook 'ediff-prepare-buffer-hook 'doom-buffer-mode)
+;;   ;; brighter minibuffer when active
+;;   ;; (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
+;;   ;; Enable custom neotree theme
+;;   (doom-themes-neotree-config)  ; all-the-icons fonts must be installed!
+;;   ;; Enable nlinum line highlighting
+;;   ;; (doom-themes-nlinum-config)   ; requires nlinum and hl-line-mode
+;;   ;; Necessary for org-mode
+;;   (setq org-fontify-whole-heading-line t
+;; 	org-fontify-done-headline t
+;; 	org-fontify-quote-and-verse-blocks t))
 
 ;;; automatic custom variables
 (setq custom-file "~/.emacs.d/custom.el")
@@ -264,6 +313,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq org-agenda-start-on-weekday 6)
   (setq org-startup-truncated 'nil)
   (setq org-agenda-start-with-log-mode t)
+  (setq org-duration-format (quote h:mm))
   (setq org-capture-templates
 	'(
 	  ("d" "Dance notes" plain (file "~/org/dance-notes.org")
@@ -714,5 +764,30 @@ Repeated invocations toggle between the two most recently open buffers."
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
+
+(defun copy-buffer-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+(global-set-key (kbd "C-c f") 'copy-buffer-name-to-clipboard)
+
+(use-package ediff
+  :ensure nil
+  :init
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  :config
+  (defun ediff-copy-both-to-C ()
+    (interactive)
+    (ediff-copy-diff ediff-current-difference nil 'C nil
+		    (concat
+		      (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+		      (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
+  (defun add-d-to-ediff-mode-map () (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
+  (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map))
 
 (message "Config loaded successfully")

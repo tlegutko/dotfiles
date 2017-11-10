@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 terminal_num=$1
 is_last_activated_dropdown=$(xprop -id `xdotool getactivewindow` | grep -c "WM_NAME(STRING) = \"${terminal_num}-dropdown\"")

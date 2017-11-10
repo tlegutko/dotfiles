@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # interactively rename workspace with dmenu
 
 full_name=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name')
