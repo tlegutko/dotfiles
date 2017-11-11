@@ -34,17 +34,15 @@ set $scripts_dir /home/tlegutko/.config/scripts
 
 # monitor names
 # primary
-set $lower_right "DP-4"
+set $lower_center "DP-4"
 # HDMI
-set $lower_left "DP-1"
-# miniDP
-set $upper_right "DP-0"
+set $upper_left "DP-1"
 # USB-C
-set $upper_left "DP-6"
+set $upper_right "DP-6"
 
 # nvidia same as xrandr, but ForceFullCompositionPipeline fixes screen tearing
 $exec xrandr --output $lower_right --primary
-$exec_always nvidia-settings --assign CurrentMetaMode="DP-4: 1920x1080 +1920+1080 { ForceFullCompositionPipeline = On }, DP-1: 1920x1080 +0+1080 { ForceFullCompositionPipeline = On }, DP-0: 1920x1080 +1920+0 { ForceFullCompositionPipeline = On }, DP-6: 1680x1050 +240+30 { ForceFullCompositionPipeline = On }"
+$exec_always nvidia-settings --assign CurrentMetaMode="DP-4: 1920x1080 +960+1080 { ForceFullCompositionPipeline = On }, DP-6: 1920x1080 +1920+0 { ForceFullCompositionPipeline = On }, DP-1: 1680x1050 +240+30 { ForceFullCompositionPipeline = On }"
 
 #compton compositor to eliminate stutters when scrolling
 $exec compton -cCzGb -t-3 -l-5 -r4 \
@@ -56,14 +54,14 @@ $exec hsetroot -solid "#000000"
 
 workspace 1 output $upper_left
 workspace 2 output $upper_right
-workspace 3 output $lower_left
-workspace 4 output $lower_right
+workspace 3 output $upper_left
+workspace 4 output $upper_right
 workspace 5 output $upper_left
 workspace 6 output $upper_right
-workspace 7 output $lower_left
-workspace 8 output $lower_right
-# workspace 9 output $lower_right 
-workspace 10 output $lower_right 
+workspace 7 output $lower_center
+workspace 8 output $lower_center
+workspace 9 output $lower_center 
+workspace 10 output $lower_center 
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -127,7 +125,7 @@ popup_during_fullscreen leave_fullscreen
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
 
 # trackpoint
-$exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" 1
+$exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" -1
 
 # remapping keyboard.. a lot!
 $exec $scripts_dir/remap-keyboard.sh
@@ -156,11 +154,11 @@ for_window [title="4-dropdown"] move scratchpad
 for_window [title="4-dropdown"] move scratchpad
 
 # screen locking and suspending
-$exec xautolock -detectsleep \
+$exec_always pkill xautolock; xautolock -detectsleep \
 -notify 30 \
 -notifier "notify-send 'Sleeping time' 'Turning screen off in 30s.'" \
--time 10 -locker "xset dpms force off" \
--killtime 10 -killer "systemctl suspend"
+-time 10 -locker "xset dpms force off"
+# -killtime 10 -killer "systemctl suspend"
 # -corners "----" -cornersize 150
 
 # resize wirdow (you can also use the mouse for that)
@@ -181,7 +179,6 @@ bindsym $mod+q kill
 bindsym $mod+w $exec $scripts_dir/rename-workspace.sh
 bindsym $mod+e $exec emacsclient -c -n
 bindsym $mod+r mode "resize"
-bindsym $mod+y mode "resize"
 bindsym $mod+t $exec termite -d `xcwd`
 bindsym $mod+d $exec i3-dmenu-desktop --dmenu="dmenu -b -i"
 bindsym $mod+f fullscreen toggle

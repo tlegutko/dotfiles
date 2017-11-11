@@ -8,7 +8,7 @@
     ("~/org/shopping-wishlist.org" "~/org/svietlana-praca.org" "~/org/books-notes.org" "~/org/new-job.org" "~/org/daily-activities.org" "~/org/it-feedback.org" "~/org/miracle-evening.org" "~/org/laptop-config.org" "~/org/weekly-summary.org" "~/org/pmo-journal.org" "~/org/todo.org" "~/org/calendar.org" "~/org/miracle-morning.org" "~/org/personal-journal.org" "~/org/scala.org" "~/org/dance-notes.org")))
  '(package-selected-packages
    (quote
-    (markdown-mode ox-gfm restclient multiple-cursors evil-goggles popup-imenu comint peep-dired scala-mode ace-window buffer-move dired-narrow org-bullets neotree dired-x dired sublimity-scroll ag company-mode org-gcal which-key counsel-projectile flx expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package evil)))
+    (solaire-mode ediff-wind markdown-mode ox-gfm restclient multiple-cursors evil-goggles popup-imenu comint peep-dired scala-mode ace-window buffer-move dired-narrow org-bullets neotree dired-x dired sublimity-scroll ag company-mode org-gcal which-key counsel-projectile flx expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package evil)))
  '(vc-annotate-background "#181e26")
  '(vc-annotate-color-map
    (quote

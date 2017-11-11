@@ -74,7 +74,7 @@
   (line-number-mode -1)
   (size-indication-mode -1)
   ;; font is 1/10 of height
-  (set-face-attribute 'default nil :height 110)
+  (set-face-attribute 'default nil :height 80)
   ;;; i3-like mouse hover effect
   (setq mouse-autoselect-window nil)
   ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
@@ -161,6 +161,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 (global-set-key (kbd "C-x B") 'switch-to-previous-buffer)
+(global-set-key (kbd "C-c b") 'switch-to-previous-buffer)
 
 ;; backup and auto-save
 (setq backup-directory-alist
@@ -357,7 +358,6 @@ Repeated invocations toggle between the two most recently open buffers."
    ("\C-cl" . org-store-link)
    ("\C-ca" . org-agenda)
    ("\C-cc" . org-capture)
-   ("\C-cb" . org-iswitchb)
    :map org-mode-map
    ([C-tab] . nil)
    ([return] . org-return-indent)
@@ -369,11 +369,17 @@ Repeated invocations toggle between the two most recently open buffers."
   (unbind-key "C-'" org-mode-map) ;; for avy to use
   (unbind-key "C-]" org-mode-map) ;; for avy to use
   (setq org-return-follows-link t)
-  (setq org-cycle-emulate-tab 'white)
+  (setq org-cycle-emulate-tab 'whitestart)
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-log-states)   ; turn off logging
       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+  (defun yas-org-very-safe-expand ()
+    (let ((yas-fallback-behavior 'return-nil)) (yas-expand)))
+  (add-hook 'org-mode-hook
+  	    (lambda ()
+  	      (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
+  	      (define-key yas-keymap [tab] 'yas-next-field)))
   (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
   (org-clock-persistence-insinuate)
   (add-hook 'org-capture-mode-hook 'evil-insert-state)
@@ -505,6 +511,7 @@ Repeated invocations toggle between the two most recently open buffers."
   :diminish ivy-mode
   :init
   (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
   (setq ivy-count-format "(%d/%d) ")
   (setq ivy-height 12)
   :bind
@@ -758,7 +765,6 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package ox-gfm)
 
 (use-package markdown-mode
-  :ensure t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -790,4 +796,16 @@ Repeated invocations toggle between the two most recently open buffers."
   (defun add-d-to-ediff-mode-map () (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
   (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map))
 
-(message "Config loaded successfully")
+(defun increment-number-at-point ()
+  (interactive)
+  (skip-chars-backward "0-9")
+  (or (looking-at "[0-9]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
+(defun decrement-number-at-point ()
+  (interactive)
+  (skip-chars-backward "0-9")
+  (or (looking-at "[0-9]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (1- (string-to-number (match-string 0))))))
+(global-set-key (kbd "C-c -") 'decrement-number-at-point)

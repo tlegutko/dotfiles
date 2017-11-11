@@ -27,6 +27,7 @@ bash
 bc
 binutils
 bison
+blas
 bluez
 bluez-firmware
 bluez-libs
@@ -47,7 +48,9 @@ cairo-perl
 cairomm
 cantarell-fonts
 cdparanoia
+celt
 celt0.5.1
+chromaprint
 cifs-utils
 cmake
 cmark
@@ -90,6 +93,8 @@ ethtool
 exiv2
 expac
 expat
+faac
+faad2
 fakeroot
 ffmpeg
 fftw
@@ -135,6 +140,7 @@ glib2
 glib2-docs
 glibc
 glibmm
+glu
 gmp
 gnome-common
 gnome-mime-data
@@ -152,14 +158,20 @@ google-chrome
 gpgme
 gpm
 gptfdisk
+graphene
 graphite
+graphviz
 grep
 groff
 gsettings-desktop-schemas
+gsfonts
 gsm
+gst-plugins-bad
 gst-plugins-base
 gst-plugins-base-libs
 gstreamer
+gstreamer0.10
+gstreamer0.10-base
 gtk-doc
 gtk-update-icon-cache
 gtk2
@@ -167,6 +179,7 @@ gtk2-perl
 gtk3
 gtkimageview
 gtkmm3
+gts
 guile
 gvfs
 gvim
@@ -256,6 +269,7 @@ haskell-temporary
 haskell-texmath
 haskell-text
 haskell-tf-random
+haskell-th-abstraction
 haskell-time-locale-compat
 haskell-tls
 haskell-transformers-base
@@ -365,7 +379,9 @@ kwayland
 kwidgetsaddons
 kwindowsystem
 kxmlgui
+ladspa
 lame
+lapack
 lcms2
 ldb
 ldns
@@ -406,7 +422,10 @@ libdatrie
 libdbusmenu-glib
 libdbusmenu-gtk3
 libdbusmenu-qt5
+libdc1394
+libdca
 libdrm
+libdv
 libdvdnav
 libdvdread
 libedit
@@ -415,12 +434,16 @@ libepoxy
 libev
 libevdev
 libevent
+libexif
 libfakekey
+libfdk-aac
 libffi
 libfontenc
 libgcrypt
+libgee
 libglade
 libglvnd
+libgme
 libgnome
 libgnome-data
 libgnome-keyring
@@ -443,9 +466,13 @@ libksba
 libldap
 liblqr
 libmm-glib
+libmms
 libmnl
 libmodplug
+libmp4v2
 libmpc
+libmpcdec
+libmpeg2
 libmtp
 libndp
 libnewt
@@ -456,6 +483,7 @@ libnl
 libnm
 libnm-glib
 libnotify
+libofa
 libogg
 libomxil-bellagio
 libopenssl-1.0-compat
@@ -487,6 +515,7 @@ libsoxr
 libspectre
 libspeechd
 libspiro
+libsrtp
 libssh
 libssh2
 libsynctex
@@ -577,6 +606,7 @@ maven
 mdadm
 media-player-info
 mesa
+mjpegtools
 mkinitcpio
 mkinitcpio-busybox
 mlocate
@@ -588,6 +618,7 @@ mtr
 muparser
 nano
 ncurses
+neon
 netctl
 nettle
 network-manager-applet
@@ -604,6 +635,7 @@ numactl
 nvidia-dkms
 nvidia-settings
 nvidia-utils
+obs-studio
 ocl-icd
 okular
 oniguruma
@@ -701,6 +733,7 @@ poppler-glib
 poppler-qt5
 popt
 portaudio
+postgresql-libs
 potrace
 powertop
 procps-ng
@@ -751,6 +784,7 @@ qt5-svg
 qt5-tools
 qt5-x11extras
 qt5-xmlpatterns
+r
 randrproto
 rclone
 readline
@@ -758,9 +792,10 @@ recordproto
 redshift-minimal
 reiserfsprogs
 renderproto
-rfkill
 rhash
 ripgrep
+rstudio-desktop-bin
+rstudio-server-bin
 rsync
 rtkit
 rtmpdump
@@ -776,6 +811,7 @@ scala-sources
 schroedinger
 scrnsaverproto
 scrot
+sdl
 sdl2
 seabios
 sed
@@ -790,7 +826,9 @@ snappy
 solid
 sonnet
 sound-theme-freedesktop
+soundtouch
 source-highlight
+spandsp
 speech-dispatcher
 speex
 speexdsp
@@ -851,12 +889,14 @@ visualvm
 volume_key
 vte-common
 vte3-ng
+vulkan-icd-loader
 wayland
 wayland-protocols
 webkit2gtk
 webrtc-audio-processing
 wget
 which
+wildmidi
 wireless_tools
 wpa_supplicant
 x265
@@ -923,4 +963,5 @@ zita-alsa-pcmi
 zita-resampler
 zlib
 zsh
+zvbi
 zziplib

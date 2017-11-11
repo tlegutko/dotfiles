@@ -20,3 +20,4 @@ rcs ~/org gdrive:org
 rcs ~/.emacs.d/snippets/org-mode gdrive:snippets/org-mode
 rcs ~/resume gdrive:cv/resume
 rcs ~/Music/audiobooks gdrive:audiobooks
+rcs ~/Documents gdrive:Documents
