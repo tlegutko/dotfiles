@@ -29,14 +29,20 @@ xmodmap -e "keycode 248 = Tab"
 xmodmap -e "keycode 23 = Super_L"
 xmodmap -e "add Mod4 = Super_L Super_R"
 
+# two extra Alts on grave / tilde and backspace
+xmodmap -e "keycode 249 = grave asciitilde grave asciitilde notsign logicalor notsign"
+xmodmap -e "keycode 49 = Alt_L"
+xmodmap -e "keycode 250 = BackSpace BackSpace BackSpace BackSpace"
+xmodmap -e "keycode 22 = Alt_R"
+
 # kill running instance
 curr_xcape=$(pgrep xcape)
 [[ -n $curr_xcape ]] && kill $curr_xcape
 
-timeout=300 # something default so I don't end up without return
+timeout=150 # something default so I don't end up without return
 if [ -n "$1" ]; then
     timeout=$1
 fi
 
 #when keys on the left are pressed within timeout threshold, they act as keys on the right
-xcape -t $timeout -e "Control_L=Escape;Control_R=Return;Super_L=Tab;Super_R=backslash"
+xcape -t $timeout -e "Control_L=Escape;Control_R=Return;Super_L=Tab;Super_R=backslash;Alt_L=grave;Alt_R=BackSpace"

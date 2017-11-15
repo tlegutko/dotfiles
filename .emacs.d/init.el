@@ -35,14 +35,6 @@
 (setq-default mode-line-client nil)
 (setq-default mode-line-frame-identification nil)
 
-(use-package all-the-icons)
-
-(use-package neotree
-  :bind
-  (("C-c d" . neotree-toggle))
-  :config
-  (add-hook 'neotree-mode-hook 'evil-insert-state))
-
 (use-package hl-line
   :config
   (hl-line-mode 1))
@@ -63,6 +55,7 @@
 (add-hook 'emacs-lisp-mode-hook 'nlinum-hook-on)
 
 (use-package doom-themes
+  :pin melpa
   :init
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
@@ -84,70 +77,26 @@
   ;; Enable flashing mode-line on errors
   ;; (doom-themes-visual-bell-config)
 
-  ;; Enable custom neotree theme
-  (doom-themes-neotree-config)  ; all-the-icons fonts must be installed!
-
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
 (use-package solaire-mode
+  :pin melpa
   :config
   ;; brighten buffers (that represent real files)
   (add-hook 'after-change-major-mode-hook #'turn-on-solaire-mode)
   ;; To enable solaire-mode unconditionally for certain modes:
   (add-hook 'ediff-prepare-buffer-hook #'solaire-mode)
-
   ;; ...if you use auto-revert-mode:
   (add-hook 'after-revert-hook #'turn-on-solaire-mode)
-
   ;; highlight the minibuffer when it is activated:
   (add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer)
-
   ;; if the bright and dark background colors are the wrong way around, use this
   ;; to switch the backgrounds of the `default` and `solaire-default-face` faces.
   ;; This should be used *after* you load the active theme!
   ;;
   ;; NOTE: This is necessary for themes in the doom-themes package!
-  ;; (solaire-mode-swap-bg)	       
-  )
-
-;; (use-package doom-themes
-;;   :pin melpa
-;;   :diminish doom-buffer-mode
-;;   :config
-;;   (load-theme 'doom-molokai t)
-;;   (tool-bar-mode -1)
-;;   (menu-bar-mode -1)
-;;   (scroll-bar-mode -1)
-;;   (line-number-mode -1)
-;;   (size-indication-mode -1)
-;;   ;; font is 1/10 of height
-;;   (set-face-attribute 'default nil :height 110)
-;;   ;;; i3-like mouse hover effect
-;;   (setq mouse-autoselect-window nil)
-;;   ;;; Settings (defaults)
-;;   (setq doom-enable-bold nil    ; if nil, bolding are universally disabled
-;; 	doom-enable-italic t  ; if nil, italics are universally disabled
-;; 	;; doom-one specific settings
-;; 	doom-one-brighter-modeline nil
-;; 	doom-one-brighter-comments nil)
-;;   ;;; OPTIONAL
-;;   ;; brighter source buffers (that represent file)
-;;   (add-hook 'find-file-hook 'doom-buffer-mode-maybe)
-;;   ;; ...if you use auto-revert-mode
-;;   (add-hook 'after-revert-hook 'doom-buffer-mode-maybe)
-;;   ;; And you can brighten other buffers (unconditionally) with:
-;;   (add-hook 'ediff-prepare-buffer-hook 'doom-buffer-mode)
-;;   ;; brighter minibuffer when active
-;;   ;; (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
-;;   ;; Enable custom neotree theme
-;;   (doom-themes-neotree-config)  ; all-the-icons fonts must be installed!
-;;   ;; Enable nlinum line highlighting
-;;   ;; (doom-themes-nlinum-config)   ; requires nlinum and hl-line-mode
-;;   ;; Necessary for org-mode
-;;   (setq org-fontify-whole-heading-line t
-;; 	org-fontify-done-headline t
-;; 	org-fontify-quote-and-verse-blocks t))
+  (solaire-mode-swap-bg))
 
 ;;; automatic custom variables
 (setq custom-file "~/.emacs.d/custom.el")
@@ -186,72 +135,13 @@ Repeated invocations toggle between the two most recently open buffers."
   (("C-c v" . visual-line-mode)))
 
 (use-package evil
-  :init
-  (setq evil-normal-state-tag "")
-  ;; separate sentences by one space
-  (setq sentence-end-double-space nil)
-  ;; paste from x clipboard in visual mode
-  (fset 'evil-visual-update-x-selection 'ignore)
   :bind
-  (:map evil-normal-state-map
-	("M-." . nil)
-	("C-k" . my-evil-scroll-up)
-	("C-j" . my-evil-scroll-down)
-	("C-t" . transpose-chars)
-	("K" . my-evil-split-line)
-	("C-v" . scroll-up-command)
-	("C-S-v" . evil-visual-block)
-	("C-n" . evil-next-line)
-	("C-p" . evil-previous-line)
-	("C-a" . back-to-indentation)
-	:map evil-insert-state-map
-	([escape] . evil-normal-state)
-	("C-o" . evil-execute-in-normal-state)
-	("C-a" . back-to-indentation)
-	:map evil-motion-state-map
-	("$" . evil-last-non-blank)
-	("g_" . evil-end-of-line)
-	("C-]" . nil) ;; for avy to use
-	("C-v" . scroll-up-command))
+  ("C-c o" . evil-execute-in-normal-state)
   :config
-  (defun my-evil-scroll-up ()
-    (interactive)
-    (evil-scroll-up nil))
-  (defun my-evil-scroll-down ()
-    (interactive)
-    (evil-scroll-down nil))
-  (defun my-evil-split-line ()
-    (interactive)
-    (kbd "r RET"))
-  (define-key evil-normal-state-map "Q" (kbd "@q"))
-  (setq evil-insert-state-map (make-sparse-keymap))
-  (evil-define-key 'normal term-raw-map "p" 'term-paste)
-  (evil-define-key 'normal term-raw-map "j" 'term-send-down)
-  (evil-define-key 'normal term-raw-map "k" 'term-send-up)
-  (evil-define-key 'normal term-raw-map (kbd "RET") 'term-send-raw)
-  (evil-define-key 'normal term-raw-map (kbd "C-r") 'term-send-raw)
-  (evil-define-key 'normal term-raw-map (kbd "C-c") 'term-send-raw)
-  (add-hook 'emacs-lisp-mode-hook
-	    (function (lambda ()
-			(setq evil-shift-width 2))))
   (add-hook 'scala-mode-hook
 	    (function (lambda ()
 			(setq evil-shift-width 2))))
-  (evil-mode 1))
-
-(use-package evil-surround
-  :config
-  (global-evil-surround-mode 1))
-
-(use-package evil-goggles
-  :diminish evil-goggles-mode
-  :config
-  (evil-goggles-mode)
-  ;; optionally use diff-mode's faces; as a result, deleted text
-  ;; will be highlighed with `diff-removed` face which is typically
-  ;; some red color (as defined by the color theme)
-  ;; other faces such as `diff-added` will be used for other actions
-  (evil-goggles-use-diff-faces))
+  (evil-mode 0))
 
 (defun sync-init-el-on-save ()
   "Sync .dotfiles/.emacs.d/init.el after save."
@@ -382,7 +272,6 @@ Repeated invocations toggle between the two most recently open buffers."
   	      (define-key yas-keymap [tab] 'yas-next-field)))
   (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
   (org-clock-persistence-insinuate)
-  (add-hook 'org-capture-mode-hook 'evil-insert-state)
   (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -496,8 +385,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (defun hook-diminish-auto-revert ()
     (interactive)
     (diminish 'auto-revert-mode))
-  (add-hook 'auto-revert-mode-hook 'hook-diminish-auto-revert)
-  (add-hook 'with-editor-mode-hook 'evil-insert-state))
+  (add-hook 'auto-revert-mode-hook 'hook-diminish-auto-revert))
 
 (use-package keychain-environment ;; so magit sees ssh-agent
   :config
@@ -688,16 +576,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))
   :bind
   (:map dired-mode-map
-	("P" . peep-dired))
-  :config
-  (evil-define-key 'normal peep-dired-mode-map (kbd "<SPC>") 'peep-dired-scroll-page-down
-                                             (kbd "C-<SPC>") 'peep-dired-scroll-page-up
-                                             (kbd "<backspace>") 'peep-dired-scroll-page-up
-                                             (kbd "j") 'peep-dired-next-file
-                                             (kbd "k") 'peep-dired-prev-file
-                                             (kbd "n") 'peep-dired-next-file
-                                             (kbd "p") 'peep-dired-prev-file)
-  (add-hook 'peep-dired-hook 'evil-normalize-keymaps))
+	("P" . peep-dired)))
 
 (global-set-key (kbd "M-V") 'scroll-other-window-down)
 
@@ -809,3 +688,7 @@ Repeated invocations toggle between the two most recently open buffers."
       (error "No number at point"))
   (replace-match (number-to-string (1- (string-to-number (match-string 0))))))
 (global-set-key (kbd "C-c -") 'decrement-number-at-point)
+
+(global-set-key (kbd "C-c h") help-map)
+(global-set-key (kbd "C-h") 'backward-delete-char-untabify)
+(global-set-key (kbd "M-h") 'backward-kill-word)

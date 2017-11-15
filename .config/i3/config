@@ -111,7 +111,7 @@ $exec $scripts_dir/focus-last.py
 $exec dunst -config ~/.config/dunst/dunstrc
 
 # app to workspace assignment
-for_window [class="Spotify"] move to workspace "10:spotify"
+for_window [class="Spotify"] move to workspace "12:spotify"
 
 # startup apps
 $exec spotify
@@ -188,7 +188,7 @@ bindsym $mod+b split v
 bindsym $mod+c $exec ~/.sync.sh && i3-msg reload
 bindsym Control+$mod+r $exec ~/.sync.sh && i3-msg restart
 bindsym Control+$mod+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
-bindsym $mod+s $exec i3lock -c 000000
+bindsym $mod+s $exec systemctl suspend
 bindsym Control+$mod+q $exec systemctl suspend
 bindsym $mod+h focus left
 bindsym $mod+j focus down
