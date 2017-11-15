@@ -3,12 +3,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files
-   (quote
-    ("~/org/shopping-wishlist.org" "~/org/svietlana-praca.org" "~/org/books-notes.org" "~/org/new-job.org" "~/org/daily-activities.org" "~/org/it-feedback.org" "~/org/miracle-evening.org" "~/org/laptop-config.org" "~/org/weekly-summary.org" "~/org/pmo-journal.org" "~/org/todo.org" "~/org/calendar.org" "~/org/miracle-morning.org" "~/org/personal-journal.org" "~/org/scala.org" "~/org/dance-notes.org")))
+ '(org-agenda-files (quote ("~/org/job-workplace.org")))
  '(package-selected-packages
    (quote
-    (solaire-mode doom-themes ediff-wind markdown-mode ox-gfm restclient multiple-cursors evil-goggles popup-imenu comint peep-dired scala-mode ace-window buffer-move dired-narrow org-bullets dired-x dired sublimity-scroll ag company-mode org-gcal which-key counsel-projectile flx expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package evil)))
+    (solaire-mode ediff-wind markdown-mode ox-gfm restclient multiple-cursors popup-imenu comint peep-dired scala-mode ace-window buffer-move dired-narrow org-bullets dired-x dired sublimity-scroll ag company-mode org-gcal which-key counsel-projectile flx expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package evil)))
  '(vc-annotate-background "#181e26")
  '(vc-annotate-color-map
    (quote

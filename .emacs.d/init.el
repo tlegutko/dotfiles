@@ -67,7 +67,7 @@
   (line-number-mode -1)
   (size-indication-mode -1)
   ;; font is 1/10 of height
-  (set-face-attribute 'default nil :height 80)
+  (set-face-attribute 'default nil :height 110)
   ;;; i3-like mouse hover effect
   (setq mouse-autoselect-window nil)
   ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
@@ -272,7 +272,6 @@ Repeated invocations toggle between the two most recently open buffers."
   	      (define-key yas-keymap [tab] 'yas-next-field)))
   (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
   (org-clock-persistence-insinuate)
-  (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . nil)
@@ -283,13 +282,6 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
-(use-package org-gcal
-  :pin melpa
-  :init
-  (load "~/.emacs.d/org-gcal-credentials.el")
-  (setq org-gcal-up-days 7) ; before today
-  (setq org-gcal-down-days 7)) ; after today
 
 ;; smart partentheses
 (use-package smartparens
@@ -546,12 +538,6 @@ Repeated invocations toggle between the two most recently open buffers."
       (if (/= arg 1)
 	  (apply 'insert-shell-output-at-position command-position)
 	(shell-command (car command-position))))))
-
-(use-package comint
-  :ensure nil
-  :bind
-  (:map shell-mode-map
-	("M-r" . counsel-zsh-history)))
 
 (use-package dired-x
   :ensure nil

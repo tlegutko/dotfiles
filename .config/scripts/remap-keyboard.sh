@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 # usage ./remap-keyboard.sh 200 - sets the timeout for keypress
 # if run without params, it sets delay to default 200ms
 # if something goes wrong, control+m is treated as return in terminal / emacs
@@ -18,7 +17,7 @@ xmodmap -e "add Control = Control_R"
 xmodmap -e "clear Mod4"
 xmodmap -e "clear Mod1"
 xmodmap -e "keycode 133 = Alt_L"
-xmodmap -e "keycode 107 = Alt_R"
+xmodmap -e "keycode 134 = Alt_R"
 xmodmap -e "keycode 64 = ISO_Level3_Shift"
 xmodmap -e "add Mod1 = Alt_L Alt_R"
 

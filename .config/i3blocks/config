@@ -29,36 +29,36 @@ command=~/.config/i3blocks/blocks/$BLOCK_NAME
 separator_block_width=15
 markup=pango   
 
-[playerctl]
-label=
-instance=spotify
-interval=5
-signal=10
+# [playerctl]
+# label=
+# instance=spotify
+# interval=5
+# signal=10
 
-[audio]
-label=
-interval=10
-signal=10
+# [audio]
+# label=
+# interval=10
+# signal=10
 
-[bluetooth]
-label=
-interval=10
-signal=10
+# [bluetooth]
+# label=
+# interval=10
+# signal=10
 
-[brightness]
-label=
-interval=once
-signal=10
+# [brightness]
+# label=
+# interval=once
+# signal=10
 
-[mobile-battery]
-label=
-interval=60
-signal=10
+# [mobile-battery]
+# label=
+# interval=60
+# signal=10
 
-[battery]
-label=
-instance=0
-interval=30
+# [battery]
+# label=
+# instance=0
+# interval=30
 
 [datetime]
 label=
