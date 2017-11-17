@@ -584,7 +584,15 @@ Repeated invocations toggle between the two most recently open buffers."
   :config
   (winner-mode 1))
 
+(use-package cc-mode
+  :bind 
+  (:map java-mode-map
+   ("(" . nil)
+   (")" . nil)))
+
 (use-package multiple-cursors
+  :init
+  (setq mc/cmds-to-run-for-all '(c-electric-delete-forward c-electric-paren))
   :bind
   (("C-S-c C-S-c" . mc/edit-lines)
   ("C->" . mc/mark-next-like-this)

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # usage ./remap-keyboard.sh 200 - sets the timeout for keypress
 # if run without params, it sets delay to default 200ms
