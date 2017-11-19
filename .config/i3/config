@@ -58,10 +58,13 @@ workspace 3 output $upper_left
 workspace 4 output $upper_right
 workspace 5 output $upper_left
 workspace 6 output $upper_right
-workspace 7 output $lower_center
-workspace 8 output $lower_center
+workspace 7 output $upper_left
+workspace 8 output $upper_right
 workspace 9 output $lower_center 
-workspace 10 output $lower_center 
+workspace 10 output $lower_center
+workspace 11 output $lower_center 
+workspace 12 output $lower_center 
+workspace 13 output $lower_center 
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -186,18 +189,18 @@ bindsym $mod+g $exec google-chrome-stable
 bindsym $mod+v split h
 bindsym $mod+b split v
 bindsym $mod+c $exec ~/.sync.sh && i3-msg reload
-bindsym Control+$mod+r $exec ~/.sync.sh && i3-msg restart
-bindsym Control+$mod+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym Mod1+$mod+r $exec ~/.sync.sh && i3-msg restart
+bindsym Mod1+$mod+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 bindsym $mod+s $exec systemctl suspend
-bindsym Control+$mod+q $exec systemctl suspend
+bindsym Mod1+$mod+q $exec systemctl suspend
 bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
-bindsym Control+$mod+h move left
-bindsym Control+$mod+j move down
-bindsym Control+$mod+k move up
-bindsym Control+$mod+l move right
+bindsym Mod1+$mod+h move left
+bindsym Mod1+$mod+j move down
+bindsym Mod1+$mod+k move up
+bindsym Mod1+$mod+l move right
 bindsym $mod+a focus parent
 bindsym $mod+z focus child
 bindsym $mod+o $exec okular
@@ -205,7 +208,7 @@ bindsym $mod+i $exec intellij-idea-ultimate-edition
 # screenshot of selection
 bindsym --release $mod+p $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/screenshots/'
 # presentation mirroring mode
-bindsym Control+$mod+p $exec xrandr \
+bindsym Mod1+$mod+p $exec xrandr \
      --output $lower_right --auto --primary \
      --output $lower_left --auto --same-as $lower_right \
      --output $upper_right --auto --same-as $lower_right \
@@ -223,32 +226,32 @@ bindsym $mod+0 workspace number 10
 bindsym $mod+minus workspace number 11
 bindsym $mod+equal workspace number 12
 bindsym $mod+BackSpace workspace number 13
-bindsym Control+$mod+1 move container to workspace number 1
-bindsym Control+$mod+2 move container to workspace number 2
-bindsym Control+$mod+3 move container to workspace number 3
-bindsym Control+$mod+4 move container to workspace number 4
-bindsym Control+$mod+5 move container to workspace number 5
-bindsym Control+$mod+6 move container to workspace number 6
-bindsym Control+$mod+7 move container to workspace number 7
-bindsym Control+$mod+8 move container to workspace number 8
-bindsym Control+$mod+9 move container to workspace number 9
-bindsym Control+$mod+0 move container to workspace number 10
-bindsym Control+$mod+minus move container to workspace number 11
-bindsym Control+$mod+equal move container to workspace number 12
-bindsym Control+$mod+BackSpace move container to workspace number 13
+bindsym Mod1+$mod+1 move container to workspace number 1
+bindsym Mod1+$mod+2 move container to workspace number 2
+bindsym Mod1+$mod+3 move container to workspace number 3
+bindsym Mod1+$mod+4 move container to workspace number 4
+bindsym Mod1+$mod+5 move container to workspace number 5
+bindsym Mod1+$mod+6 move container to workspace number 6
+bindsym Mod1+$mod+7 move container to workspace number 7
+bindsym Mod1+$mod+8 move container to workspace number 8
+bindsym Mod1+$mod+9 move container to workspace number 9
+bindsym Mod1+$mod+0 move container to workspace number 10
+bindsym Mod1+$mod+minus move container to workspace number 11
+bindsym Mod1+$mod+equal move container to workspace number 12
+bindsym Mod1+$mod+BackSpace move container to workspace number 13
 bindsym $mod+m $exec $scripts_dir/toggle_trackpoint.sh
-bindsym Control+$mod+m $exec $scripts_dir/toggle_touchpad.sh
+bindsym Mod1+$mod+m $exec $scripts_dir/toggle_touchpad.sh
 bindsym $mod+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
 bindsym $mod+grave $exec $scripts_dir/toggle_dropdown_terminal.sh 0
-bindsym Control+$mod+grave $exec termite -t "0-dropdown"
+bindsym Mod1+$mod+grave $exec termite -t "0-dropdown"
 bindsym $mod+F1 $exec $scripts_dir/toggle_dropdown_terminal.sh 1
-bindsym Control+$mod+F1 $exec emacsclient -c -n -F '((title . \"1-dropdown\"))'
+bindsym Mod1+$mod+F1 $exec emacsclient -c -n -F '((title . \"1-dropdown\"))'
 bindsym $mod+F2 $exec $scripts_dir/toggle_dropdown_terminal.sh 2
-bindsym Control+$mod+F2 $exec emacsclient -c -n -F '((title . \"2-dropdown\"))'
+bindsym Mod1+$mod+F2 $exec emacsclient -c -n -F '((title . \"2-dropdown\"))'
 bindsym $mod+F3 $exec $scripts_dir/toggle_dropdown_terminal.sh 3
-bindsym Control+$mod+F3 $exec emacsclient -c -n -F '((title . \"3-dropdown\"))'
+bindsym Mod1+$mod+F3 $exec emacsclient -c -n -F '((title . \"3-dropdown\"))'
 bindsym $mod+F4 $exec $scripts_dir/toggle_dropdown_terminal.sh 4
-bindsym Control+$mod+F4 $exec emacsclient -c -n -F '((title . \"4-dropdown\"))'
+bindsym Mod1+$mod+F4 $exec emacsclient -c -n -F '((title . \"4-dropdown\"))'
 bindsym $mod+KP_Left move workspace to output left
 bindsym $mod+KP_Down move workspace to output down
 bindsym $mod+KP_Up move workspace to output up
