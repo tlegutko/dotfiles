@@ -84,11 +84,7 @@ bindsym KP_Add $exec "xbacklight +10 && $bar_refresh"
 $exec xbacklight -set 30
 
 # volume & playback cotrol
-bindsym XF86AudioRaiseVolume $exec \
-  "pactl set-sink-mute @DEFAULT_SINK@ false \
-  && (($($scripts_dir/sound_status.sh) <= 90)) \
-  && pactl set-sink-volume @DEFAULT_SINK@ +10% \
-  && $bar_refresh"
+bindsym XF86AudioRaiseVolume $exec $scripts_dir/raise-volume-below-threshold.sh
 bindsym XF86AudioLowerVolume $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $bar_refresh"
 bindsym XF86AudioMute $exec "pactl set-sink-mute @DEFAULT_SINK@ toggle && $bar_refresh"
 bindsym XF86AudioMicMute $exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
@@ -100,8 +96,8 @@ bindsym $mod+period $exec "playerctl next && $delayed_bar_refresh"
 bindsym $mod+slash $exec "playerctl play-pause && $delayed_bar_refresh"
 
 # bluetooth
-bindsym KP_Divide $exec "$scripts_dir/bluetooth_off.sh && $delayed_bar_refresh"
-bindsym KP_Multiply $exec "$scripts_dir/bluetooth_on.sh && $delayed_bar_refresh"
+bindsym KP_Divide $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $bar_refresh"
+bindsym KP_Multiply $exec $scripts_dir/raise-volume-below-threshold.sh
 
 # daemons
 $exec nm-applet
@@ -112,14 +108,17 @@ $exec redshift -l 50.094732:19.973673 -t 5500:3100
 
 # app to workspace assignment
 for_window [class="Spotify"] move to workspace "12:spotify"
+assign [title="DEV - Google Chrome"] "8:selenium-chrome-driver"
+for_window [title="DEV - Google Chrome"] move to workspace "8:selenium-chrome-driver"
 
 # startup apps
 $exec spotify
 
 # double prssing workspace num goes back to previous one
-workspace_auto_back_and_forth yes
+workspace_auto_back_and_forth no
+Bindsym $mod+Tab workspace back_and_forth
 
-popup_during_fullscreen leave_fullscreen
+Popup_during_fullscreen leave_fullscreen
 
 # touchpad
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
@@ -169,6 +168,7 @@ mode "resize" {
   bindsym l resize grow width 10 px or 10 ppt
   # exit resize mode
   bindsym r mode "default"
+  bindsym $mod+r mode "default"
   bindsym Escape mode "default"
   bindcode mod5+27 mode "default"
 }

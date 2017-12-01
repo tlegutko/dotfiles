@@ -133,7 +133,8 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq save-interprogram-paste-before-kill t)
   :bind
   (("C-a" . back-to-indentation)
-   ("C-k" . kill-whole-line)
+   ("C-k" . kill-line)
+   ("M-k" . kill-whole-line)
    ("C-c v" . visual-line-mode)))
 
 (use-package evil
@@ -595,6 +596,8 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package cc-mode
   :bind 
   (:map java-mode-map
+   ("," . nil)
+   (";" . nil)
    ("(" . nil)
    (")" . nil)))
 
@@ -698,3 +701,4 @@ Repeated invocations toggle between the two most recently open buffers."
 (global-set-key (kbd "C-M-.") 'end-of-buffer)
 
 (use-package wgrep)
+(setq browse-url-browser-function 'browse-url-chrome)
