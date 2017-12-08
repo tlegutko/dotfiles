@@ -181,6 +181,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package openwith
   :init
   (setq openwith-associations '(("\\.pdf\\'" "okular" (file))
+				("\\.png\\'" "feh" (file))
 				("\\.mp4\\'" "mpv" (file))
 				("\\.mp3\\'" "mpv" (file))
 				("\\.mov\\'" "mpv" (file))))
@@ -702,3 +703,19 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (use-package wgrep)
 (setq browse-url-browser-function 'browse-url-chrome)
+
+(use-package hydra)
+(use-package image+
+  :config
+  (eval-after-load 'image '(require 'image+))
+  (eval-after-load 'image+
+  `(when (require 'hydra nil 
+     (defhydra imagex-sticky-binding (global-map "C-x C-l")
+       "Manipulating Image"
+       ("+" imagex-sticky-zoom-in "zoom in")
+       ("-" imagex-sticky-zoom-out "zoom out")
+       ("M" imagex-sticky-maximize "maximize")
+       ("O" imagex-sticky-restore-original "restore original")
+       ("S" imagex-sticky-save-image "save file")
+       ("r" imagex-sticky-rotate-right "rotate right")
+       ("l" imagex-sticky-rotate-left "rotate left")))))

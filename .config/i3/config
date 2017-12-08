@@ -110,6 +110,8 @@ $exec redshift -l 50.094732:19.973673 -t 5500:3100
 for_window [class="Spotify"] move to workspace "12:spotify"
 assign [title="DEV - Google Chrome"] "8:selenium-chrome-driver"
 for_window [title="DEV - Google Chrome"] move to workspace "8:selenium-chrome-driver"
+for_window [title="127.0.0.1:8081/.* - Google Chrome"] move to workspace "8:selenium-chrome-driver"
+assign [title="127.0.0.1:8081/.* - Google Chrome"] "8:selenium-chrome-driver"
 
 # startup apps
 $exec spotify
@@ -201,7 +203,7 @@ bindsym Mod1+$mod+l move right
 bindsym $mod+a focus parent
 bindsym $mod+z focus child
 bindsym $mod+o $exec okular
-bindsym $mod+i $exec /home/tlegutko/.local/share/JetBrains/Toolbox/apps/IDEA-C/ch-0/172.4343.14/bin/idea.sh
+bindsym $mod+i $exec /home/tlegutko/.local/share/JetBrains/Toolbox/apps/IDEA-C/ch-0/173.3727.127/bin/idea.sh
 # screenshot of selection
 bindsym --release $mod+p $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/screenshots/'
 # presentation mirroring mode
