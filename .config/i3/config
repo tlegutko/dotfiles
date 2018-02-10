@@ -101,6 +101,13 @@ bindsym KP_Enter $exec "playerctl play-pause && $delayed_bar_refresh"
 bindsym $mod+comma  $exec "playerctl previous && $delayed_bar_refresh"
 bindsym $mod+period $exec "playerctl next && $delayed_bar_refresh"
 bindsym $mod+slash $exec "playerctl play-pause && $delayed_bar_refresh"
+bindsym $mod+apostrophe $exec \
+  "pactl set-sink-mute @DEFAULT_SINK@ false \
+  && (($($scripts_dir/sound_status.sh) <= 90)) \
+  && pactl set-sink-volume @DEFAULT_SINK@ +10% \
+  && $bar_refresh"
+bindsym $mod+semicolon $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $bar_refresh"
+
 
 # bluetooth
 bindsym KP_Divide $exec "$scripts_dir/bluetooth_off.sh && $delayed_bar_refresh"
@@ -128,7 +135,7 @@ popup_during_fullscreen leave_fullscreen
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
 
 # trackpoint
-$exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" -1
+$exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" -0.4
 
 # remapping keyboard.. a lot!
 $exec $scripts_dir/remap-keyboard.sh
