@@ -195,6 +195,7 @@ bindsym $mod+f fullscreen toggle
 bindsym $mod+g $exec google-chrome-stable
 bindsym $mod+v split h
 bindsym $mod+b split v
+bindsym $mod+n $exec ~/.emacs_anywhere/bin/run
 bindsym $mod+c $exec ~/.sync.sh && i3-msg reload
 bindsym Mod1+$mod+r $exec ~/.sync.sh && i3-msg restart
 bindsym Mod1+$mod+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
