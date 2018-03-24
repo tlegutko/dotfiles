@@ -32,17 +32,21 @@ set $exec exec --no-startup-id
 set $exec_always exec_always --no-startup-id
 set $scripts_dir /home/tlegutko/.config/scripts
 
+# floating toggle
+bindsym Mod1+$mod+space floating toggle
+
 # monitor names
 # primary
-set $lower_center "DP-4"
+set $lower "DP-4"
 # HDMI
-set $upper_left "DP-1"
+set $upper "DP-1"
 # USB-C
-set $upper_right "DP-6"
+# set $upper_right "DP-6"
 
 # nvidia same as xrandr, but ForceFullCompositionPipeline fixes screen tearing
-$exec xrandr --output $lower_right --primary
-$exec_always nvidia-settings --assign CurrentMetaMode="DP-4: 1920x1080 +960+1080 { ForceFullCompositionPipeline = On }, DP-6: 1920x1080 +1920+0 { ForceFullCompositionPipeline = On }, DP-1: 1680x1050 +240+30 { ForceFullCompositionPipeline = On }"
+# $exec xrandr --output $lower_center --primary
+# $exec_always nvidia-settings --assign CurrentMetaMode="DP-4: 1920x1080 +0+1080 { ForceFullCompositionPipeline = On }, DP-1: 1680x1050 +240+30 { ForceFullCompositionPipeline = On }"
+$exec_always xrandr --output $lower --auto --primary --output $upper --auto --above $lower
 
 #compton compositor to eliminate stutters when scrolling
 $exec compton -cCzGb -t-3 -l-5 -r4 \
@@ -52,21 +56,36 @@ $exec compton -cCzGb -t-3 -l-5 -r4 \
 # nice black wallpaper, needed because compton makes the default grey
 $exec hsetroot -solid "#000000"
 
-workspace 1 output $upper_left
-workspace 2 output $upper_right
-workspace 3 output $upper_left
-workspace 4 output $upper_right
-workspace 5 output $upper_left
-workspace 6 output $upper_right
-workspace 7 output $upper_left
-workspace 8 output $upper_right
-workspace 9 output $lower_center 
-workspace 10 output $lower_center
-workspace 11 output $lower_center 
-workspace 12 output $lower_center 
-workspace 13 output $lower_center 
+workspace 1 output $upper
+workspace 2 output $lower
+workspace 3 output $upper
+workspace 4 output $lower
+workspace 5 output $upper
+workspace 6 output $lower
+workspace 7 output $upper
+workspace 8 output $lower
+workspace 9 output $upper
+workspace 10 output $lower
+workspace 11 output $lower
+workspace 12 output $lower
+workspace 13 output $lower
 
-# Start i3bar to display a workspace bar (plus the system information i3status
+# ensure workspaces are on appropriate output when plugging in additional displays
+# for_window [workspace=1] move workspace to output $upper_left
+# for_window [workspace=2] move workspace to output $upper_right
+# for_window [workspace=3] move workspace to output $upper_left
+# for_window [workspace=4] move workspace to output $upper_right
+# for_window [workspace=5] move workspace to output $upper_left
+# for_window [workspace=6] move workspace to output $upper_right
+# for_window [workspace=7] move workspace to output $upper_left
+# for_window [workspace=8] move workspace to output $upper_right
+# for_window [workspace=9] move workspace to output $lower_center 
+# for_window [workspace=10] move workspace to output $lower_center
+# for_window [workspace=11] move workspace to output $lower_center 
+# for_window [workspace=12] move workspace to output $lower_center 
+# for_window [workspace=13] move workspace to output $lower_center
+
+# i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
         position top
@@ -101,6 +120,11 @@ bindsym KP_Enter $exec "playerctl play-pause && $delayed_bar_refresh"
 bindsym $mod+comma  $exec "playerctl previous && $delayed_bar_refresh"
 bindsym $mod+period $exec "playerctl next && $delayed_bar_refresh"
 bindsym $mod+slash $exec "playerctl play-pause && $delayed_bar_refresh"
+bindsym Mod1+$mod+comma $exec "echo '{ \\"command\\": [\\"seek\\", \\"-5\\", \\"relative\\", \\"exact\\"] }' | socat - ~/.mpvsocket"
+bindsym Mod1+$mod+period $exec "echo '{ \\"command\\": [\\"seek\\", \\"+5\\", \\"relative\\", \\"exact\\"] }' | socat - ~/.mpvsocket"
+bindsym Mod1+$mod+slash $exec "echo \\"cycle pause\\" | socat - ~/.mpvsocket"
+bindsym $mod+bracketleft $exec "echo '{ \\"command\\": [\\"multiply\\", \\"speed\\", \\"1/1.1\\"] }' | socat - ~/.mpvsocket"
+bindsym $mod+bracketright $exec "echo '{ \\"command\\": [\\"multiply\\", \\"speed\\", \\"1.1\\"] }' | socat - ~/.mpvsocket"
 bindsym $mod+apostrophe $exec \
   "pactl set-sink-mute @DEFAULT_SINK@ false \
   && (($($scripts_dir/sound_status.sh) <= 90)) \
@@ -121,13 +145,14 @@ $exec $scripts_dir/focus-last.py
 $exec dunst -config ~/.config/dunst/dunstrc
 
 # app to workspace assignment
-for_window [class="Spotify"] move to workspace "12:spotify"
+for_window [class="Spotify"] move to workspace "13:spotify"
 
 # startup apps
 $exec spotify
 
 # double prssing workspace num goes back to previous one
 workspace_auto_back_and_forth yes
+bindsym $mod+Tab workspace back_and_forth
 
 popup_during_fullscreen leave_fullscreen
 
@@ -135,7 +160,7 @@ popup_during_fullscreen leave_fullscreen
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
 
 # trackpoint
-$exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" -0.4
+$exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" -0.2
 
 # remapping keyboard.. a lot!
 $exec $scripts_dir/remap-keyboard.sh
@@ -178,6 +203,7 @@ mode "resize" {
   bindsym k resize grow height 10 px or 10 ppt
   bindsym l resize grow width 10 px or 10 ppt
   # exit resize mode
+  bindsym $mod+r mode "default"
   bindsym r mode "default"
   bindsym Escape mode "default"
   bindcode mod5+27 mode "default"
@@ -249,7 +275,7 @@ bindsym Mod1+$mod+equal move container to workspace number 12
 bindsym Mod1+$mod+BackSpace move container to workspace number 13
 bindsym $mod+m $exec $scripts_dir/toggle_trackpoint.sh
 bindsym Mod1+$mod+m $exec $scripts_dir/toggle_touchpad.sh
-bindsym $mod+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
+# bindsym $mod+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
 bindsym $mod+grave $exec $scripts_dir/toggle_dropdown_terminal.sh 0
 bindsym Mod1+$mod+grave $exec termite -t "0-dropdown"
 bindsym $mod+F1 $exec $scripts_dir/toggle_dropdown_terminal.sh 1

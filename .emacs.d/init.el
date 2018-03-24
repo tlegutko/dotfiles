@@ -103,6 +103,8 @@
 (load custom-file)
 
 (global-set-key (kbd "C-x K") 'kill-this-buffer)
+(global-unset-key (kbd "C-z"))
+(setq sentence-end-double-space nil)
 
 (defun switch-to-previous-buffer ()
   "Switch to previously open buffer.
@@ -133,12 +135,14 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq save-interprogram-paste-before-kill t)
   :bind
   (("C-a" . back-to-indentation)
-   ("C-k" . kill-whole-line)
+   ("M-m" . beginning-of-line)
+   ("C-k" . kill-line)
+   ("M-k" . kill-whole-line)
    ("C-c v" . visual-line-mode)))
 
 (use-package evil
   :bind
-  ("C-c o" . evil-execute-in-normal-state)
+  ("M-o" . evil-execute-in-normal-state)
   :config
   (add-hook 'scala-mode-hook
 	    (function (lambda ()
@@ -213,9 +217,11 @@ Repeated invocations toggle between the two most recently open buffers."
 	   "* miracle morning %U\nmm%?" :clock-in t :clock-resume t)
 	  ("e" "Miracle evening" plain (file "~/org/miracle-evening.org")
 	   "* miracle evening %U\nme%?" :unnarrowed t :clock-in t :clock-resume t)
-	  ("s" "Periodsummary")
+	  ("a" "Ask question" plain (file "~/org/questions.org")
+	   "* %?" :unnarrowed t)
+	  ("s" "Periodic summary")
 	  ("sw" "Weekly summary" plain (file "~/org/weekly-summary.org")
-	   "* weekly summary %U\nws%?" :unnarrowed t :clock-in t :clock-resume t)
+	   "* weekly summary %u--%u\nws%?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("sm" "Monthly summary" plain (file "~/org/monthly-summary.org")
 	   "* monthly summary %U\nms%?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("st" "Trimonthly summary" plain (file "~/org/trimonthly-summary.org")
@@ -243,8 +249,7 @@ Repeated invocations toggle between the two most recently open buffers."
 	  ("Dw" "Weight" plain (file "~/org/diet-scores.org")
 	   "* %t waga %?" :unnarrowed t)
 	  ("Ds" "Score" plain (file "~/org/diet-scores.org")
-	   "* %^t ocena %?" :unnarrowed t)
-	  ))
+	   "* %^t ocena %?" :unnarrowed t)))
   :bind
   (("C-c C-x C-j" . org-clock-goto)
    ("C-c C-x C-i" . org-clock-in)
@@ -256,6 +261,10 @@ Repeated invocations toggle between the two most recently open buffers."
    ("\C-cc" . org-capture)
    :map org-mode-map
    ("M-h" . nil)
+   ("M-p" . org-metaup)
+   ("M-n" . org-metadown)
+   ("C-M-p" . org-metaright)
+   ("C-M-n" . org-metaleft)
    ([C-tab] . nil)
    ("C-a" . nil)
    ([return] . org-return-indent)
@@ -264,10 +273,12 @@ Repeated invocations toggle between the two most recently open buffers."
    ([M-S-tab] . org-global-cycle)
    ("\M-q" . toggle-truncate-lines))
   :config
+  ;; Enable Confluence export
+  (require 'ox-confluence)
   (unbind-key "C-'" org-mode-map) ;; for avy to use
   (unbind-key "C-]" org-mode-map) ;; for avy to use
   (setq org-return-follows-link t)
-  (setq org-cycle-emulate-tab 'whitestart)
+  (setq org-cycle-emulate-tab 'white)
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-log-states)   ; turn off logging
@@ -280,7 +291,6 @@ Repeated invocations toggle between the two most recently open buffers."
   	      (define-key yas-keymap [tab] 'yas-next-field)))
   (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
   (org-clock-persistence-insinuate)
-  (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . nil)
@@ -291,13 +301,6 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
-(use-package org-gcal
-  :pin melpa
-  :init
-  (load "~/.emacs.d/org-gcal-credentials.el")
-  (setq org-gcal-up-days 7) ; before today
-  (setq org-gcal-down-days 7)) ; after today
 
 ;; smart partentheses
 (use-package smartparens
@@ -555,11 +558,11 @@ Repeated invocations toggle between the two most recently open buffers."
 	  (apply 'insert-shell-output-at-position command-position)
 	(shell-command (car command-position))))))
 
-(use-package comint
-  :ensure nil
-  :bind
-  (:map shell-mode-map
-	("M-r" . counsel-zsh-history)))
+;; (use-package comint
+;;   :ensure nil
+;;   :bind
+;;   (:map shell-mode-map
+;; 	("M-r" . counsel-zsh-history)))
 
 (use-package dired-x
   :ensure nil
@@ -582,9 +585,18 @@ Repeated invocations toggle between the two most recently open buffers."
   :init
   (setq peep-dired-cleanup-on-disable t)
   (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))
+  (setq peep-dired-cleanup-eagerly nil)
   :bind
-  (:map dired-mode-map
-	("P" . peep-dired)))
+  (:map peep-dired-mode-map
+	("p" . peep-dired-prev-file)
+	("n" . peep-dired-next-file)
+	("r" . dired-rotate)
+   :map dired-mode-map
+   ("P" . peep-dired))
+   :config
+   (defun dired-rotate ()
+     (interactive)
+     (shell-command "sh /home/tlegutko/rotate.sh" (dired-file-name-at-point))))
 
 (global-set-key (kbd "M-V") 'scroll-other-window-down)
 
@@ -695,8 +707,8 @@ Repeated invocations toggle between the two most recently open buffers."
   (or (looking-at "[0-9]+")
       (error "No number at point"))
   (replace-match (number-to-string (1- (string-to-number (match-string 0))))))
+(global-set-key (kbd "C-c +") 'increment-number-at-point)
 (global-set-key (kbd "C-c -") 'decrement-number-at-point)
-
 (global-set-key (kbd "C-c h") help-map)
 (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
 (global-set-key (kbd "M-h") 'backward-kill-word)
@@ -704,3 +716,14 @@ Repeated invocations toggle between the two most recently open buffers."
 (global-set-key (kbd "C-M-.") 'end-of-buffer)
 
 (use-package wgrep)
+(use-package async
+  :config
+  (dired-async-mode 1))
+
+(use-package atomic-chrome
+  :init
+  (setq atomic-chrome-buffer-open-style 'split)
+  :config
+  (atomic-chrome-start-server))
+
+(delete-selection-mode 1)
