@@ -34,12 +34,14 @@ set $scripts_dir /home/tlegutko/.config/scripts
 
 # monitor names
 set $left "DP-1"
-set $right "HDMI-2"
+set $center "HDMI-2"
+set $right "DP-2"
 
 # nvidia same as xrandr, but ForceFullCompositionPipeline fixes screen tearing
 $exec_always xrandr \
 --output $left --auto --pos 0x0 \
---output $right --auto --pos 1920x0 --primary \
+--output $center --auto --pos 1920x0 --primary \
+--output $right --auto --pos 3840x0 --primary
 
 #compton compositor to eliminate stutters when scrolling
 # $exec compton -cCzGb -t-3 -l-5 -r4 \
@@ -50,18 +52,18 @@ $exec_always xrandr \
 # $exec hsetroot -solid "#000000"
 
 workspace 1 output $left
-workspace 2 output $right
-workspace 3 output $left
-workspace 4 output $right
-workspace 5 output $left
+workspace 2 output $center
+workspace 3 output $right
+workspace 4 output $left
+workspace 5 output $center
 workspace 6 output $right
 workspace 7 output $left
-workspace 8 output $right
-workspace 9 output $left 
-workspace 10 output $right 
-workspace 11 output $left
+workspace 8 output $center
+workspace 9 output $right
+workspace 10 output $left 
+workspace 11 output $center
 workspace 12 output $right
-workspace 13 output $left 
+workspace 13 output $right
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -94,6 +96,8 @@ bindsym KP_Enter $exec "playerctl play-pause && $delayed_bar_refresh"
 bindsym $mod+comma  $exec "playerctl previous && $delayed_bar_refresh"
 bindsym $mod+period $exec "playerctl next && $delayed_bar_refresh"
 bindsym $mod+slash $exec "playerctl play-pause && $delayed_bar_refresh"
+bindsym $mod+apostrophe $exec $scripts_dir/raise-volume-below-threshold.sh
+bindsym $mod+semicolon $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $bar_refresh"
 
 # bluetooth
 bindsym KP_Divide $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $bar_refresh"
@@ -107,17 +111,19 @@ $exec redshift -l 50.094732:19.973673 -t 5500:3100
 # $exec $scripts_dir/focus-last.py
 
 # app to workspace assignment
-for_window [class="Spotify"] move to workspace "12:spotify"
-assign [title="DEV - Google Chrome"] "8:selenium-chrome-driver"
-for_window [title="DEV - Google Chrome"] move to workspace "8:selenium-chrome-driver"
-for_window [title="127.0.0.1:8081/.* - Google Chrome"] move to workspace "8:selenium-chrome-driver"
-assign [title="127.0.0.1:8081/.* - Google Chrome"] "8:selenium-chrome-driver"
+for_window [class="Spotify"] move to workspace "13:spotify"
+# assign [title="DEV - Google Chrome"] "8:selenium-chrome-driver"
+# for_window [title="DEV - Google Chrome"] move to workspace "8:selenium-chrome-driver"
+# assign [title="127.0.0.1:8081/.* - Google Chrome"] "8:selenium-chrome-driver"
+# for_window [title="127.0.0.1:8081/.* - Google Chrome"] move to workspace "8:selenium-chrome-driver"
+# assign [title="پورتال پیکربندی خودکار - Google Chrome‬‎"] "8:selenium-chrome-driver"
+# for_window [title="پورتال پیکربندی خودکار - Google Chrome‬‎"] move to workspace "8:selenium-chrome-driver"
 
 # startup apps
 $exec spotify
 
 # double prssing workspace num goes back to previous one
-workspace_auto_back_and_forth no
+workspace_auto_back_and_forth yes
 Bindsym $mod+Tab workspace back_and_forth
 
 Popup_during_fullscreen leave_fullscreen
@@ -203,7 +209,7 @@ bindsym Mod1+$mod+l move right
 bindsym $mod+a focus parent
 bindsym $mod+z focus child
 bindsym $mod+o $exec okular
-bindsym $mod+i $exec /home/tlegutko/.local/share/JetBrains/Toolbox/apps/IDEA-C/ch-0/173.3727.127/bin/idea.sh
+bindsym $mod+i $exec /home/tlegutko/.local/share/JetBrains/Toolbox/apps/IDEA-C/ch-0/181.4203.550/bin/idea.sh
 # screenshot of selection
 bindsym --release $mod+p $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/screenshots/'
 # presentation mirroring mode

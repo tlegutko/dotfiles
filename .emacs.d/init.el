@@ -103,6 +103,7 @@
 (load custom-file)
 
 (global-set-key (kbd "C-x K") 'kill-this-buffer)
+(delete-selection-mode 1)
 
 (defun switch-to-previous-buffer ()
   "Switch to previously open buffer.
@@ -133,6 +134,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq save-interprogram-paste-before-kill t)
   :bind
   (("C-a" . back-to-indentation)
+   ("M-m" . beginning-of-line)
    ("C-k" . kill-line)
    ("M-k" . kill-whole-line)
    ("C-c v" . visual-line-mode)))
@@ -264,8 +266,13 @@ Repeated invocations toggle between the two most recently open buffers."
    ("C-m" . org-return-indent)
    ([M-tab] . org-global-cycle)
    ([M-S-tab] . org-global-cycle)
+   ("M-p" . org-metaup)
+   ("M-n" . org-metadown)
+   ("C-M-p" . org-metaright)
+   ("C-M-n" . org-metaleft)
    ("\M-q" . toggle-truncate-lines))
   :config
+  (require 'ox-confluence)
   (unbind-key "C-'" org-mode-map) ;; for avy to use
   (unbind-key "C-]" org-mode-map) ;; for avy to use
   (setq org-return-follows-link t)
@@ -559,7 +566,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq-default dired-omit-files-p t)
   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
   (setq dired-omit-mode t)
-  (setq dired-listing-switches "-alh"))
+  (setq dired-listing-switches "-lh"))
 
 (use-package dired-narrow
   :bind
@@ -718,4 +725,27 @@ Repeated invocations toggle between the two most recently open buffers."
        ("O" imagex-sticky-restore-original "restore original")
        ("S" imagex-sticky-save-image "save file")
        ("r" imagex-sticky-rotate-right "rotate right")
-       ("l" imagex-sticky-rotate-left "rotate left")))))
+       ("l" imagex-sticky-rotate-left "rotate left"))))))
+
+(use-package atomic-chrome
+    :config
+    (atomic-chrome-start-server))
+
+(fset 'three-term-multiplexing
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([67108896 1 134217847 return 24 111 25 return 24 111 25 return 24 111] 0 "%d")) arg)))
+(global-set-key (kbd "C-c RET") 'three-term-multiplexing)
+
+(use-package comint
+  :ensure nil
+  :bind
+  (:map shell-mode-map
+	("C-c RET" . three-term-multiplexing))
+  :config
+  (fset 'three-term-multiplexing
+	(lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([67108896 1 134217847 return 24 111 25 return 24 111 25 return 24 111] 0 "%d")) arg))))
+
+(defun sort-lines-nocase-deduplicate ()
+  (interactive)
+  (let ((sort-fold-case t))
+    (call-interactively 'sort-lines)
+    (call-interactively 'delete-duplicate-lines)))
