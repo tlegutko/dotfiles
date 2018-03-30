@@ -114,15 +114,12 @@ bindsym XF86AudioRaiseVolume $exec \
 bindsym XF86AudioLowerVolume $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $bar_refresh"
 bindsym XF86AudioMute $exec "pactl set-sink-mute @DEFAULT_SINK@ toggle && $bar_refresh"
 bindsym XF86AudioMicMute $exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
-bindsym KP_Insert $exec "playerctl previous && $delayed_bar_refresh"
-bindsym KP_Delete $exec "playerctl next && $delayed_bar_refresh"
-bindsym KP_Enter $exec "playerctl play-pause && $delayed_bar_refresh"
-bindsym $mod+comma  $exec "playerctl previous && $delayed_bar_refresh"
-bindsym $mod+period $exec "playerctl next && $delayed_bar_refresh"
-bindsym $mod+slash $exec "playerctl play-pause && $delayed_bar_refresh"
-bindsym Mod1+$mod+comma $exec "echo '{ \\"command\\": [\\"seek\\", \\"-5\\", \\"relative\\", \\"exact\\"] }' | socat - ~/.mpvsocket"
-bindsym Mod1+$mod+period $exec "echo '{ \\"command\\": [\\"seek\\", \\"+5\\", \\"relative\\", \\"exact\\"] }' | socat - ~/.mpvsocket"
-bindsym Mod1+$mod+slash $exec "echo \\"cycle pause\\" | socat - ~/.mpvsocket"
+bindsym KP_Insert $exec $scripts_dir/mpv-or-spotify-previous.sh && $delayed_bar_refresh
+bindsym KP_Delete $exec $scripts_dir/mpv-or-spotify-next.sh && $delayed_bar_refresh
+bindsym KP_Enter $exec $scripts_dir/mpv-or-spotify-play-pause.sh && $delayed_bar_refresh
+bindsym $mod+comma $exec $scripts_dir/mpv-or-spotify-previous.sh && $delayed_bar_refresh
+bindsym $mod+period $exec $scripts_dir/mpv-or-spotify-next.sh && $delayed_bar_refresh
+bindsym $mod+slash $exec $scripts_dir/mpv-or-spotify-play-pause.sh && $delayed_bar_refresh
 bindsym $mod+bracketleft $exec "echo '{ \\"command\\": [\\"multiply\\", \\"speed\\", \\"1/1.1\\"] }' | socat - ~/.mpvsocket"
 bindsym $mod+bracketright $exec "echo '{ \\"command\\": [\\"multiply\\", \\"speed\\", \\"1.1\\"] }' | socat - ~/.mpvsocket"
 bindsym $mod+apostrophe $exec \

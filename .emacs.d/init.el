@@ -184,9 +184,9 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package openwith
   :init
   (setq openwith-associations '(("\\.pdf\\'" "okular" (file))
-				("\\.mp4\\'" "mpv" (file))
-				("\\.mp3\\'" "mpv" (file))
-				("\\.mov\\'" "mpv" (file))))
+				("\\.mp4\\'" "mpv --input-ipc-server=~/.mpvsocket " (file))
+				("\\.mp3\\'" "mpv --input-ipc-server=~/.mpvsocket  --force-window" (file))
+				("\\.mov\\'" "mpv --input-ipc-server=~/.mpvsocket" (file))))
   :config
   (openwith-mode t))
 
@@ -475,9 +475,9 @@ Repeated invocations toggle between the two most recently open buffers."
   :config
   (projectile-global-mode))
 
-(use-package counsel-projectile
-  :config
-  (counsel-projectile-on))
+;; (use-package counsel-projectile
+  ;; :config
+  ;; (counsel-projectile-on))
 
 (use-package avy
   :init
