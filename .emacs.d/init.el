@@ -481,12 +481,21 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (use-package avy
   :init
-  (setq avy-timeout-seconds 0.4)
+  (setq avy-timeout-seconds 0.2)
   (setq avy-keys (number-sequence ?a ?z))
   :bind
-  (([C-escape] . avy-goto-char-timer)
-   ([C-S-escape] . avy-goto-line)
-   ("C-\\" . avy-goto-line)))
+  (([C-escape] . avy-goto-char-2)
+   ("C-'" . avy-goto-char-in-line)
+   ([C-M-escape] . avy-goto-line-end-or-beginning)
+   ("C-\\" . avy-goto-line-end-or-beginning))
+  :config
+  (defun avy-goto-line-end-or-beginning (prefix)
+    "By default move to end of line, with C-u move to the beginning"
+    (interactive "P")
+    (avy-goto-line)
+    (if (equal prefix '(4))
+	(back-to-indentation)
+	(end-of-line))))
 
 (use-package yasnippet
   :diminish yas-minor-mode
