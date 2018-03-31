@@ -44,9 +44,12 @@ set $upper "DP-1"
 # set $upper_right "DP-6"
 
 # nvidia same as xrandr, but ForceFullCompositionPipeline fixes screen tearing
-# $exec xrandr --output $lower_center --primary
-# $exec_always nvidia-settings --assign CurrentMetaMode="DP-4: 1920x1080 +0+1080 { ForceFullCompositionPipeline = On }, DP-1: 1680x1050 +240+30 { ForceFullCompositionPipeline = On }"
-$exec_always xrandr --output $lower --auto --primary --output $upper --auto --above $lower
+$exec_always nvidia-settings --assign CurrentMetaMode="DP-4: 1920x1080 +0+1080 { ForceFullCompositionPipeline = On }, DP-1: 1680x1050 +0+0 { ForceFullCompositionPipeline = On }"
+$exec xrandr --output $lower --primary
+# $exec_always  xrandr --output $lower --auto --primary --output $upper --auto --above $lower
+
+# same as default, but for Full-HD additional output
+bindsym Mod1+$mod+o $exec nvidia-settings --assign CurrentMetaMode="DP-4: 1920x1080 +0+1080 { ForceFullCompositionPipeline = On }, DP-1: 1920x1080 +0+0 { ForceFullCompositionPipeline = On }"
 
 #compton compositor to eliminate stutters when scrolling
 $exec compton -cCzGb -t-3 -l-5 -r4 \
@@ -170,6 +173,7 @@ focus_follows_mouse no
 
 # dropdown terminals
 $exec termite -t "0-dropdown"
+$exec emacsclient -c -n -F "((title . \"0-dropdown\"))"
 $exec emacsclient -c -n -F "((title . \"1-dropdown\"))"
 $exec emacsclient -c -n -F "((title . \"2-dropdown\"))"
 $exec emacsclient -c -n -F "((title . \"3-dropdown\"))"
@@ -273,8 +277,10 @@ bindsym Mod1+$mod+BackSpace move container to workspace number 13
 bindsym $mod+m $exec $scripts_dir/toggle_trackpoint.sh
 bindsym Mod1+$mod+m $exec $scripts_dir/toggle_touchpad.sh
 # bindsym $mod+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
+bindsym $mod+Escape $exec $scripts_dir/toggle_dropdown_terminal.sh -1
+bindsym Mod1+$mod+Escape $exec termite -t "-1-dropdown"
 bindsym $mod+grave $exec $scripts_dir/toggle_dropdown_terminal.sh 0
-bindsym Mod1+$mod+grave $exec termite -t "0-dropdown"
+bindsym Mod1+$mod+grave $exec emacsclient -c -n -F '((title . \"0-dropdown\"))'
 bindsym $mod+F1 $exec $scripts_dir/toggle_dropdown_terminal.sh 1
 bindsym Mod1+$mod+F1 $exec emacsclient -c -n -F '((title . \"1-dropdown\"))'
 bindsym $mod+F2 $exec $scripts_dir/toggle_dropdown_terminal.sh 2

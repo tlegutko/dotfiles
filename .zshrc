@@ -21,3 +21,8 @@ alias sd='~/.dotfiles/.sync.sh'
 
 eval $(keychain --eval --quiet --nogui id_rsa)
 [ $TERM = "dumb" ] && unsetopt zle && PS1='$ '
+
+export HISTSIZE=1500
+export SAVEHIST=$HISTSIZE
+setopt hist_ignore_all_dups
+setopt hist_ignore_space

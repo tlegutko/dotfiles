@@ -18,6 +18,9 @@
 (require 'diminish)
 (require 'bind-key)
 
+;; stuff that isn't in elpa
+(add-to-list 'load-path "~/.emacs.d/elisp/")
+
 ;; use-package always auto install packages
 (setq use-package-always-ensure t)
 
@@ -275,6 +278,7 @@ Repeated invocations toggle between the two most recently open buffers."
   :config
   ;; Enable Confluence export
   (require 'ox-confluence)
+  
   (unbind-key "C-'" org-mode-map) ;; for avy to use
   (unbind-key "C-]" org-mode-map) ;; for avy to use
   (setq org-return-follows-link t)
@@ -452,7 +456,8 @@ Repeated invocations toggle between the two most recently open buffers."
     "Insert element from the zsh history"
     (interactive)
     (let (hist-cmd collection val)
-      (shell-command "history -r") ; reload history
+      ;; (shell-command "history -r")	; reload history
+      ;; (message "test")
       (setq collection
 	    (nreverse
 	     (split-string (with-temp-buffer (insert-file-contents (file-truename "~/.zsh_history"))
@@ -532,6 +537,9 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (use-package undo-tree
   :diminish undo-tree-mode
+  :bind
+  (:map undo-tree-map
+	("C-M-/" . undo-tree-redo))
   :config (global-undo-tree-mode))
 
 (global-set-key (kbd "C-;") 'comment-line)
@@ -567,11 +575,13 @@ Repeated invocations toggle between the two most recently open buffers."
 	  (apply 'insert-shell-output-at-position command-position)
 	(shell-command (car command-position))))))
 
-;; (use-package comint
-;;   :ensure nil
-;;   :bind
-;;   (:map shell-mode-map
-;; 	("M-r" . counsel-zsh-history)))
+(use-package shell
+  :ensure nil
+  :bind
+  (("C-x `" . shell)
+   ("C-c `" . shell))
+  (:map shell-mode-map
+	("M-r" . counsel-zsh-history)))
 
 (use-package dired-x
   :ensure nil
@@ -637,22 +647,19 @@ Repeated invocations toggle between the two most recently open buffers."
   :map mc/keymap
   ([return] . nil)))
 
-(use-package eshell
-  :commands eshell
-  :bind
-  (("C-x `" . eshell)
-   ("C-c `" . eshell))
-  :config
-  (add-hook 'eshell-mode-hook
-            (lambda ()
-              (define-key eshell-mode-map
-                (kbd "<tab>") 'eshell-pcomplete)
-              (define-key eshell-mode-map
-                (kbd "C-r")
-                'counsel-esh-history)
-              (define-key eshell-mode-map
-                (kbd "M-r")
-                'counsel-esh-history))))
+;; (use-package eshell
+  ;; :commands eshell
+  ;; :config
+  ;; (add-hook 'eshell-mode-hook
+            ;; (lambda ()
+              ;; (define-key eshell-mode-map
+                ;; (kbd "<tab>") 'eshell-pcomplete)
+              ;; (define-key eshell-mode-map
+                ;; (kbd "C-r")
+                ;; 'counsel-esh-history)
+              ;; (define-key eshell-mode-map
+                ;; (kbd "M-r")
+                ;; 'counsel-esh-history))))
 
 ;; tramp
 (require 'tramp)
