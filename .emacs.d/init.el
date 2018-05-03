@@ -242,17 +242,14 @@ Repeated invocations toggle between the two most recently open buffers."
 	   "* TODO %?" :prepend t)
 	  ("d" "Dance notes" plain (file "~/org/dance-notes.org")
 	   "* %?" :unnarrowed t :clock-in t :clock-resume t)
+	  ("w" "Weight" plain (file "~/org/diet-scores.org")
+	   "* %t waga %?" :unnarrowed t)
 	  ("a" "Appointment" plain (file  "~/org/calendar.org" )
 	   "* %?\n%^T")
 	  ("p" "personal journal" plain (file "~/org/personal-journal.org")
 	   "* personal journal %U\n  %?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("P" "PMO journal" plain (file "~/org/pmo-journal.org")
-	   "* %u\n  %?" :unnarrowed t :clock-in t :clock-resume t)
-	  ("D" "Diet")
-	  ("Dw" "Weight" plain (file "~/org/diet-scores.org")
-	   "* %t waga %?" :unnarrowed t)
-	  ("Ds" "Score" plain (file "~/org/diet-scores.org")
-	   "* %^t ocena %?" :unnarrowed t)))
+	   "* %u\n  %?" :unnarrowed t :clock-in t :clock-resume t)))
   :bind
   (("C-c C-x C-j" . org-clock-goto)
    ("C-c C-x C-i" . org-clock-in)
@@ -264,25 +261,26 @@ Repeated invocations toggle between the two most recently open buffers."
    ("\C-cc" . org-capture)
    :map org-mode-map
    ("M-h" . nil)
-   ("M-p" . org-metaup)
-   ("M-n" . org-metadown)
-   ("C-M-p" . org-metaright)
-   ("C-M-n" . org-metaleft)
+   ("C-M-p" . org-metaup)
+   ("C-M-n" . org-metadown)
+   ("M-p" . org-metaright)
+   ("M-n" . org-metaleft)
    ([C-tab] . nil)
    ("C-a" . nil)
    ([return] . org-return-indent)
    ("C-m" . org-return-indent)
    ([M-tab] . org-global-cycle)
    ([M-S-tab] . org-global-cycle)
+   ("C-c o" . org-latex-export-to-pdf)
    ("\M-q" . toggle-truncate-lines))
   :config
   ;; Enable Confluence export
   (require 'ox-confluence)
-  
   (unbind-key "C-'" org-mode-map) ;; for avy to use
   (unbind-key "C-]" org-mode-map) ;; for avy to use
   (setq org-return-follows-link t)
   (setq org-cycle-emulate-tab 'white)
+  (setq org-odt-preferred-output-format "docx")
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-log-states)   ; turn off logging
@@ -489,7 +487,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq avy-timeout-seconds 0.2)
   (setq avy-keys (number-sequence ?a ?z))
   :bind
-  (([C-escape] . avy-goto-char-2)
+  (([C-escape] . avy-goto-char-timer)
    ("C-'" . avy-goto-char-in-line)
    ([C-M-escape] . avy-goto-line-end-or-beginning)
    ("C-\\" . avy-goto-line-end-or-beginning))
@@ -743,3 +741,5 @@ Repeated invocations toggle between the two most recently open buffers."
   (atomic-chrome-start-server))
 
 (delete-selection-mode 1)
+
+(use-package gnuplot)

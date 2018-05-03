@@ -43,13 +43,12 @@ set $upper "DP-1"
 # USB-C
 # set $upper_right "DP-6"
 
-# nvidia same as xrandr, but ForceFullCompositionPipeline fixes screen tearing
-$exec_always nvidia-settings --assign CurrentMetaMode="DP-4: 1920x1080 +0+1080 { ForceFullCompositionPipeline = On }, DP-1: 1680x1050 +0+0 { ForceFullCompositionPipeline = On }"
-$exec xrandr --output $lower --primary
 # $exec_always  xrandr --output $lower --auto --primary --output $upper --auto --above $lower
+# nvidia same as xrandr, but ForceFullCompositionPipeline fixes screen tearing
+$exec xrandr --output $lower --primary
 
-# same as default, but for Full-HD additional output
-bindsym Mod1+$mod+o $exec nvidia-settings --assign CurrentMetaMode="DP-4: 1920x1080 +0+1080 { ForceFullCompositionPipeline = On }, DP-1: 1920x1080 +0+0 { ForceFullCompositionPipeline = On }"
+$exec_always $scripts_dir/nvidia-settings-2-displays.sh 1920x1080 # resolution of 2nd display
+bindsym Mod1+$mod+o $exec $scripts_dir/nvidia-settings-2-displays.sh 1920x1080 # on demand
 
 #compton compositor to eliminate stutters when scrolling
 $exec compton -cCzGb -t-3 -l-5 -r4 \
@@ -134,8 +133,8 @@ bindsym $mod+semicolon $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $bar_
 
 
 # bluetooth
-bindsym KP_Divide $exec "$scripts_dir/bluetooth_off.sh && $delayed_bar_refresh"
-bindsym KP_Multiply $exec "$scripts_dir/bluetooth_on.sh && $delayed_bar_refresh"
+bindsym $mod+KP_Divide $exec "$scripts_dir/bluetooth_off.sh && $delayed_bar_refresh"
+bindsym $mod+KP_Multiply $exec "$scripts_dir/bluetooth_on.sh && $delayed_bar_refresh"
 
 # daemons
 $exec nm-applet
@@ -152,7 +151,7 @@ $exec spotify
 
 # double prssing workspace num goes back to previous one
 workspace_auto_back_and_forth yes
-bindsym $mod+Tab workspace back_and_forth
+bindsym $mod+backslash workspace back_and_forth
 
 popup_during_fullscreen leave_fullscreen
 
@@ -172,7 +171,7 @@ mouse_warping output
 focus_follows_mouse no
 
 # dropdown terminals
-$exec termite -t "0-dropdown"
+$exec termite -t "-1-dropdown"
 $exec emacsclient -c -n -F "((title . \"0-dropdown\"))"
 $exec emacsclient -c -n -F "((title . \"1-dropdown\"))"
 $exec emacsclient -c -n -F "((title . \"2-dropdown\"))"
@@ -226,7 +225,7 @@ bindsym $mod+n $exec ~/.emacs_anywhere/bin/run
 bindsym $mod+c $exec ~/.sync.sh && i3-msg reload
 bindsym Mod1+$mod+r $exec ~/.sync.sh && i3-msg restart
 bindsym Mod1+$mod+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
-bindsym $mod+s $exec systemctl suspend
+bindsym Mod1+$mod+s $exec systemctl suspend
 bindsym Mod1+$mod+q $exec systemctl suspend
 bindsym $mod+h focus left
 bindsym $mod+j focus down
@@ -277,10 +276,12 @@ bindsym Mod1+$mod+BackSpace move container to workspace number 13
 bindsym $mod+m $exec $scripts_dir/toggle_trackpoint.sh
 bindsym Mod1+$mod+m $exec $scripts_dir/toggle_touchpad.sh
 # bindsym $mod+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
+bindsym $mod+grave $exec $scripts_dir/toggle_dropdown_terminal.sh -1
+bindsym Mod1+$mod+grave $exec termite -t "-1-dropdown"
 bindsym $mod+Escape $exec $scripts_dir/toggle_dropdown_terminal.sh -1
 bindsym Mod1+$mod+Escape $exec termite -t "-1-dropdown"
-bindsym $mod+grave $exec $scripts_dir/toggle_dropdown_terminal.sh 0
-bindsym Mod1+$mod+grave $exec emacsclient -c -n -F '((title . \"0-dropdown\"))'
+bindsym $mod+Tab $exec $scripts_dir/toggle_dropdown_terminal.sh 0
+bindsym Mod1+$mod+i $exec emacsclient -c -n -F '((title . \"0-dropdown\"))'
 bindsym $mod+F1 $exec $scripts_dir/toggle_dropdown_terminal.sh 1
 bindsym Mod1+$mod+F1 $exec emacsclient -c -n -F '((title . \"1-dropdown\"))'
 bindsym $mod+F2 $exec $scripts_dir/toggle_dropdown_terminal.sh 2
