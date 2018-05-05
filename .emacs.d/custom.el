@@ -6,7 +6,7 @@
  '(org-agenda-files (quote ("~/org/job-workplace.org")))
  '(package-selected-packages
    (quote
-    (atomic-chrome hydra image+ wgrep solaire-mode doom-themes ediff-wind markdown-mode ox-gfm restclient multiple-cursors evil-goggles popup-imenu comint peep-dired scala-mode ace-window buffer-move dired-narrow org-bullets dired-x dired sublimity-scroll ag company-mode org-gcal which-key counsel-projectile flx expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package evil)))
+    (htmlize atomic-chrome hydra image+ wgrep solaire-mode doom-themes ediff-wind markdown-mode ox-gfm restclient multiple-cursors evil-goggles popup-imenu comint peep-dired scala-mode ace-window buffer-move dired-narrow org-bullets dired-x dired sublimity-scroll ag company-mode org-gcal which-key counsel-projectile flx expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package evil)))
  '(vc-annotate-background "#181e26")
  '(vc-annotate-color-map
    (quote

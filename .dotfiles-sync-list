@@ -24,7 +24,8 @@
 .config/scripts
 .config/systemd
 .config/termite
-.emacs.d/init.el
+.emacs.d/elisp/
 .emacs.d/custom.el
+.emacs.d/init.el
 .emacs.d/org-gcal-credentials.el
 .sbt/0.13/plugins/plugins.sbt

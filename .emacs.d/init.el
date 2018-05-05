@@ -18,6 +18,9 @@
 (require 'diminish)
 (require 'bind-key)
 
+;; stuff that isn't in elpa
+(add-to-list 'load-path "~/.emacs.d/elisp/")
+
 ;; use-package always auto install packages
 (setq use-package-always-ensure t)
 
@@ -184,6 +187,7 @@ Repeated invocations toggle between the two most recently open buffers."
   :init
   (setq openwith-associations '(("\\.pdf\\'" "okular" (file))
 				("\\.png\\'" "feh" (file))
+				("\\.xls\\'" "libreoffice" (file))
 				("\\.mp4\\'" "mpv" (file))
 				("\\.mp3\\'" "mpv" (file))
 				("\\.mov\\'" "mpv" (file))))
@@ -266,10 +270,10 @@ Repeated invocations toggle between the two most recently open buffers."
    ("C-m" . org-return-indent)
    ([M-tab] . org-global-cycle)
    ([M-S-tab] . org-global-cycle)
-   ("M-p" . org-metaup)
-   ("M-n" . org-metadown)
-   ("C-M-p" . org-metaright)
-   ("C-M-n" . org-metaleft)
+   ("C-M-p" . org-metaup)
+   ("C-M-n" . org-metadown)
+   ("M-p" . org-metaright)
+   ("M-n" . org-metaleft)
    ("\M-q" . toggle-truncate-lines))
   :config
   (require 'ox-confluence)
@@ -277,6 +281,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (unbind-key "C-]" org-mode-map) ;; for avy to use
   (setq org-return-follows-link t)
   (setq org-cycle-emulate-tab 'whitestart)
+  (setq org-return-follows-link t)
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-log-states)   ; turn off logging
@@ -749,3 +754,5 @@ Repeated invocations toggle between the two most recently open buffers."
   (let ((sort-fold-case t))
     (call-interactively 'sort-lines)
     (call-interactively 'delete-duplicate-lines)))
+
+(use-package htmlize)

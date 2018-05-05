@@ -209,7 +209,7 @@ bindsym Mod1+$mod+l move right
 bindsym $mod+a focus parent
 bindsym $mod+z focus child
 bindsym $mod+o $exec okular
-bindsym $mod+i $exec /home/tlegutko/.local/share/JetBrains/Toolbox/apps/IDEA-C/ch-0/181.4203.550/bin/idea.sh
+bindsym $mod+i $exec /home/tlegutko/.local/share/JetBrains/Toolbox/apps/IDEA-C/ch-0/173.4301.25/bin/idea.sh
 # screenshot of selection
 bindsym --release $mod+p $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/screenshots/'
 # presentation mirroring mode
