@@ -5,6 +5,6 @@ quit
 EOF
 sleep 0.1
 bluetoothctl << EOF
-connect E5:27:BE:86:03:55
+connect E4:22:A5:9C:23:28
 quit
 EOF

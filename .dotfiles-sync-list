@@ -21,6 +21,7 @@
 .config/idea64.vmoptions
 .config/intellij_settings.jar
 .config/notes
+.config/mpv/mpv.conf
 .config/scripts
 .config/systemd
 .config/termite

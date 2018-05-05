@@ -32,11 +32,15 @@ set $exec exec --no-startup-id
 set $exec_always exec_always --no-startup-id
 set $scripts_dir /home/tlegutko/.config/scripts
 
+# floating toggle
+bindsym Mod1+$mod+space floating toggle
+
 # monitor names
 set $left "DP-1"
 set $center "HDMI-2"
 set $right "DP-2"
 
+# $exec_always  xrandr --output $lower --auto --primary --output $upper --auto --above $lower
 # nvidia same as xrandr, but ForceFullCompositionPipeline fixes screen tearing
 $exec_always xrandr \
 --output $left --auto --pos 0x0 \
@@ -65,7 +69,7 @@ workspace 11 output $center
 workspace 12 output $right
 workspace 13 output $right
 
-# Start i3bar to display a workspace bar (plus the system information i3status
+# i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
         position top
@@ -90,14 +94,21 @@ bindsym XF86AudioRaiseVolume $exec $scripts_dir/raise-volume-below-threshold.sh
 bindsym XF86AudioLowerVolume $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $bar_refresh"
 bindsym XF86AudioMute $exec "pactl set-sink-mute @DEFAULT_SINK@ toggle && $bar_refresh"
 bindsym XF86AudioMicMute $exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
-bindsym KP_Insert $exec "playerctl previous && $delayed_bar_refresh"
-bindsym KP_Delete $exec "playerctl next && $delayed_bar_refresh"
-bindsym KP_Enter $exec "playerctl play-pause && $delayed_bar_refresh"
-bindsym $mod+comma  $exec "playerctl previous && $delayed_bar_refresh"
-bindsym $mod+period $exec "playerctl next && $delayed_bar_refresh"
-bindsym $mod+slash $exec "playerctl play-pause && $delayed_bar_refresh"
-bindsym $mod+apostrophe $exec $scripts_dir/raise-volume-below-threshold.sh
+bindsym KP_Insert $exec $scripts_dir/mpv-or-spotify-previous.sh && $delayed_bar_refresh
+bindsym KP_Delete $exec $scripts_dir/mpv-or-spotify-next.sh && $delayed_bar_refresh
+bindsym KP_Enter $exec $scripts_dir/mpv-or-spotify-play-pause.sh && $delayed_bar_refresh
+bindsym $mod+comma $exec $scripts_dir/mpv-or-spotify-previous.sh && $delayed_bar_refresh
+bindsym $mod+period $exec $scripts_dir/mpv-or-spotify-next.sh && $delayed_bar_refresh
+bindsym $mod+slash $exec $scripts_dir/mpv-or-spotify-play-pause.sh && $delayed_bar_refresh
+bindsym $mod+bracketleft $exec "echo '{ \\"command\\": [\\"multiply\\", \\"speed\\", \\"1/1.1\\"] }' | socat - ~/.mpvsocket"
+bindsym $mod+bracketright $exec "echo '{ \\"command\\": [\\"multiply\\", \\"speed\\", \\"1.1\\"] }' | socat - ~/.mpvsocket"
+bindsym $mod+apostrophe $exec \
+  "pactl set-sink-mute @DEFAULT_SINK@ false \
+  && (($($scripts_dir/sound_status.sh) <= 90)) \
+  && pactl set-sink-volume @DEFAULT_SINK@ +10% \
+  && $bar_refresh"
 bindsym $mod+semicolon $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $bar_refresh"
+
 
 # bluetooth
 bindsym KP_Divide $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $bar_refresh"
@@ -124,7 +135,7 @@ $exec spotify
 
 # double prssing workspace num goes back to previous one
 workspace_auto_back_and_forth yes
-Bindsym $mod+Tab workspace back_and_forth
+bindsym $mod+backslash workspace back_and_forth
 
 Popup_during_fullscreen leave_fullscreen
 
@@ -132,7 +143,7 @@ Popup_during_fullscreen leave_fullscreen
 $exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
 
 # trackpoint
-$exec xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" -1
+$exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" -0.2
 
 # remapping keyboard.. a lot!
 $exec_always $scripts_dir/remap-keyboard.sh 300
@@ -144,7 +155,8 @@ mouse_warping output
 focus_follows_mouse no
 
 # dropdown terminals
-$exec termite -t "0-dropdown"
+$exec termite -t "-1-dropdown"
+$exec emacsclient -c -n -F "((title . \"0-dropdown\"))"
 $exec emacsclient -c -n -F "((title . \"1-dropdown\"))"
 $exec emacsclient -c -n -F "((title . \"2-dropdown\"))"
 $exec emacsclient -c -n -F "((title . \"3-dropdown\"))"
@@ -175,6 +187,7 @@ mode "resize" {
   bindsym k resize grow height 10 px or 10 ppt
   bindsym l resize grow width 10 px or 10 ppt
   # exit resize mode
+  bindsym $mod+r mode "default"
   bindsym r mode "default"
   bindsym $mod+r mode "default"
   bindsym Escape mode "default"
@@ -193,10 +206,12 @@ bindsym $mod+f fullscreen toggle
 bindsym $mod+g $exec google-chrome-stable
 bindsym $mod+v split h
 bindsym $mod+b split v
+bindsym $mod+n $exec ~/.emacs_anywhere/bin/run
 bindsym $mod+c $exec ~/.sync.sh && i3-msg reload
 bindsym $mod+s $exec i3lock -c 000000
 bindsym Mod1+$mod+r $exec ~/.sync.sh && i3-msg restart
 bindsym Mod1+$mod+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym Mod1+$mod+s $exec systemctl suspend
 bindsym Mod1+$mod+q $exec systemctl suspend
 bindsym $mod+h focus left
 bindsym $mod+j focus down
@@ -246,9 +261,13 @@ bindsym Mod1+$mod+equal move container to workspace number 12
 bindsym Mod1+$mod+BackSpace move container to workspace number 13
 bindsym $mod+m $exec $scripts_dir/toggle_trackpoint.sh
 bindsym Mod1+$mod+m $exec $scripts_dir/toggle_touchpad.sh
-bindsym $mod+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
-bindsym $mod+grave $exec $scripts_dir/toggle_dropdown_terminal.sh 0
-bindsym Mod1+$mod+grave $exec termite -t "0-dropdown"
+# bindsym $mod+bracketleft $exec $scripts_dir/add-citation-to-masters-thesis.sh
+bindsym $mod+grave $exec $scripts_dir/toggle_dropdown_terminal.sh -1
+bindsym Mod1+$mod+grave $exec termite -t "-1-dropdown"
+bindsym $mod+Escape $exec $scripts_dir/toggle_dropdown_terminal.sh -1
+bindsym Mod1+$mod+Escape $exec termite -t "-1-dropdown"
+bindsym $mod+Tab $exec $scripts_dir/toggle_dropdown_terminal.sh 0
+bindsym Mod1+$mod+i $exec emacsclient -c -n -F '((title . \"0-dropdown\"))'
 bindsym $mod+F1 $exec $scripts_dir/toggle_dropdown_terminal.sh 1
 bindsym Mod1+$mod+F1 $exec emacsclient -c -n -F '((title . \"1-dropdown\"))'
 bindsym $mod+F2 $exec $scripts_dir/toggle_dropdown_terminal.sh 2

@@ -107,6 +107,8 @@
 
 (global-set-key (kbd "C-x K") 'kill-this-buffer)
 (delete-selection-mode 1)
+(global-unset-key (kbd "C-z"))
+(setq sentence-end-double-space nil)
 
 (defun switch-to-previous-buffer ()
   "Switch to previously open buffer.
@@ -144,7 +146,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (use-package evil
   :bind
-  ("C-c o" . evil-execute-in-normal-state)
+  ("M-o" . evil-execute-in-normal-state)
   :config
   (add-hook 'scala-mode-hook
 	    (function (lambda ()
@@ -188,9 +190,10 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq openwith-associations '(("\\.pdf\\'" "okular" (file))
 				("\\.png\\'" "feh" (file))
 				("\\.xls\\'" "libreoffice" (file))
-				("\\.mp4\\'" "mpv" (file))
-				("\\.mp3\\'" "mpv" (file))
-				("\\.mov\\'" "mpv" (file))))
+				("\\.xlsx\\'" "libreoffice" (file))
+				("\\.mp4\\'" "mpv --input-ipc-server=~/.mpvsocket " (file))
+				("\\.mp3\\'" "mpv --input-ipc-server=~/.mpvsocket  --force-window" (file))
+				("\\.mov\\'" "mpv --input-ipc-server=~/.mpvsocket" (file))))
   :config
   (openwith-mode t))
 
@@ -221,9 +224,11 @@ Repeated invocations toggle between the two most recently open buffers."
 	   "* miracle morning %U\nmm%?" :clock-in t :clock-resume t)
 	  ("e" "Miracle evening" plain (file "~/org/miracle-evening.org")
 	   "* miracle evening %U\nme%?" :unnarrowed t :clock-in t :clock-resume t)
-	  ("s" "Periodsummary")
+	  ("a" "Ask question" plain (file "~/org/questions.org")
+	   "* %?" :unnarrowed t)
+	  ("s" "Periodic summary")
 	  ("sw" "Weekly summary" plain (file "~/org/weekly-summary.org")
-	   "* weekly summary %U\nws%?" :unnarrowed t :clock-in t :clock-resume t)
+	   "* weekly summary %u--%u\nws%?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("sm" "Monthly summary" plain (file "~/org/monthly-summary.org")
 	   "* monthly summary %U\nms%?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("st" "Trimonthly summary" plain (file "~/org/trimonthly-summary.org")
@@ -241,18 +246,14 @@ Repeated invocations toggle between the two most recently open buffers."
 	   "* TODO %?" :prepend t)
 	  ("d" "Dance notes" plain (file "~/org/dance-notes.org")
 	   "* %?" :unnarrowed t :clock-in t :clock-resume t)
+	  ("w" "Weight" plain (file "~/org/diet-scores.org")
+	   "* %t waga %?" :unnarrowed t)
 	  ("a" "Appointment" plain (file  "~/org/calendar.org" )
 	   "* %?\n%^T")
 	  ("p" "personal journal" plain (file "~/org/personal-journal.org")
 	   "* personal journal %U\n  %?" :unnarrowed t :clock-in t :clock-resume t)
 	  ("P" "PMO journal" plain (file "~/org/pmo-journal.org")
-	   "* %u\n  %?" :unnarrowed t :clock-in t :clock-resume t)
-	  ("D" "Diet")
-	  ("Dw" "Weight" plain (file "~/org/diet-scores.org")
-	   "* %t waga %?" :unnarrowed t)
-	  ("Ds" "Score" plain (file "~/org/diet-scores.org")
-	   "* %^t ocena %?" :unnarrowed t)
-	  ))
+	   "* %u\n  %?" :unnarrowed t :clock-in t :clock-resume t)))
   :bind
   (("C-c C-x C-j" . org-clock-goto)
    ("C-c C-x C-i" . org-clock-in)
@@ -264,24 +265,26 @@ Repeated invocations toggle between the two most recently open buffers."
    ("\C-cc" . org-capture)
    :map org-mode-map
    ("M-h" . nil)
+   ("C-M-p" . org-metaup)
+   ("C-M-n" . org-metadown)
+   ("M-p" . org-metaright)
+   ("M-n" . org-metaleft)
    ([C-tab] . nil)
    ("C-a" . nil)
    ([return] . org-return-indent)
    ("C-m" . org-return-indent)
    ([M-tab] . org-global-cycle)
    ([M-S-tab] . org-global-cycle)
-   ("C-M-p" . org-metaup)
-   ("C-M-n" . org-metadown)
-   ("M-p" . org-metaright)
-   ("M-n" . org-metaleft)
+   ("C-c o" . org-latex-export-to-pdf)
    ("\M-q" . toggle-truncate-lines))
   :config
+  ;; Enable Confluence export
   (require 'ox-confluence)
   (unbind-key "C-'" org-mode-map) ;; for avy to use
   (unbind-key "C-]" org-mode-map) ;; for avy to use
   (setq org-return-follows-link t)
-  (setq org-cycle-emulate-tab 'whitestart)
-  (setq org-return-follows-link t)
+  (setq org-cycle-emulate-tab 'white)
+  (setq org-odt-preferred-output-format "docx")
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-log-states)   ; turn off logging
@@ -455,7 +458,8 @@ Repeated invocations toggle between the two most recently open buffers."
     "Insert element from the zsh history"
     (interactive)
     (let (hist-cmd collection val)
-      (shell-command "history -r") ; reload history
+      ;; (shell-command "history -r")	; reload history
+      ;; (message "test")
       (setq collection
 	    (nreverse
 	     (split-string (with-temp-buffer (insert-file-contents (file-truename "~/.zsh_history"))
@@ -478,18 +482,27 @@ Repeated invocations toggle between the two most recently open buffers."
   :config
   (projectile-global-mode))
 
-(use-package counsel-projectile
-  :config
-  (counsel-projectile-on))
+;; (use-package counsel-projectile
+  ;; :config
+  ;; (counsel-projectile-on))
 
 (use-package avy
   :init
-  (setq avy-timeout-seconds 0.4)
+  (setq avy-timeout-seconds 0.2)
   (setq avy-keys (number-sequence ?a ?z))
   :bind
   (([C-escape] . avy-goto-char-timer)
-   ([C-S-escape] . avy-goto-line)
-   ("C-\\" . avy-goto-line)))
+   ("C-'" . avy-goto-char-in-line)
+   ([C-M-escape] . avy-goto-line-end-or-beginning)
+   ("C-\\" . avy-goto-line-end-or-beginning))
+  :config
+  (defun avy-goto-line-end-or-beginning (prefix)
+    "By default move to end of line, with C-u move to the beginning"
+    (interactive "P")
+    (avy-goto-line)
+    (if (equal prefix '(4))
+	(back-to-indentation)
+	(end-of-line))))
 
 (use-package yasnippet
   :diminish yas-minor-mode
@@ -526,6 +539,9 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (use-package undo-tree
   :diminish undo-tree-mode
+  :bind
+  (:map undo-tree-map
+	("C-M-/" . undo-tree-redo))
   :config (global-undo-tree-mode))
 
 (global-set-key (kbd "C-;") 'comment-line)
@@ -561,6 +577,14 @@ Repeated invocations toggle between the two most recently open buffers."
 	  (apply 'insert-shell-output-at-position command-position)
 	(shell-command (car command-position))))))
 
+(use-package shell
+  :ensure nil
+  :bind
+  (("C-x `" . shell)
+   ("C-c `" . shell))
+  (:map shell-mode-map
+	("M-r" . counsel-zsh-history)))
+
 (use-package dired-x
   :ensure nil
   :init
@@ -582,9 +606,18 @@ Repeated invocations toggle between the two most recently open buffers."
   :init
   (setq peep-dired-cleanup-on-disable t)
   (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))
+  (setq peep-dired-cleanup-eagerly nil)
   :bind
-  (:map dired-mode-map
-	("P" . peep-dired)))
+  (:map peep-dired-mode-map
+	("p" . peep-dired-prev-file)
+	("n" . peep-dired-next-file)
+	("r" . dired-rotate)
+   :map dired-mode-map
+   ("P" . peep-dired))
+   :config
+   (defun dired-rotate ()
+     (interactive)
+     (shell-command "sh /home/tlegutko/rotate.sh" (dired-file-name-at-point))))
 
 (global-set-key (kbd "M-V") 'scroll-other-window-down)
 
@@ -626,22 +659,19 @@ Repeated invocations toggle between the two most recently open buffers."
   :map mc/keymap
   ([return] . nil)))
 
-(use-package eshell
-  :commands eshell
-  :bind
-  (("C-x `" . eshell)
-   ("C-c `" . eshell))
-  :config
-  (add-hook 'eshell-mode-hook
-            (lambda ()
-              (define-key eshell-mode-map
-                (kbd "<tab>") 'eshell-pcomplete)
-              (define-key eshell-mode-map
-                (kbd "C-r")
-                'counsel-esh-history)
-              (define-key eshell-mode-map
-                (kbd "M-r")
-                'counsel-esh-history))))
+;; (use-package eshell
+  ;; :commands eshell
+  ;; :config
+  ;; (add-hook 'eshell-mode-hook
+            ;; (lambda ()
+              ;; (define-key eshell-mode-map
+                ;; (kbd "<tab>") 'eshell-pcomplete)
+              ;; (define-key eshell-mode-map
+                ;; (kbd "C-r")
+                ;; 'counsel-esh-history)
+              ;; (define-key eshell-mode-map
+                ;; (kbd "M-r")
+                ;; 'counsel-esh-history))))
 
 ;; tramp
 (require 'tramp)
@@ -705,8 +735,8 @@ Repeated invocations toggle between the two most recently open buffers."
   (or (looking-at "[0-9]+")
       (error "No number at point"))
   (replace-match (number-to-string (1- (string-to-number (match-string 0))))))
+(global-set-key (kbd "C-c +") 'increment-number-at-point)
 (global-set-key (kbd "C-c -") 'decrement-number-at-point)
-
 (global-set-key (kbd "C-c h") help-map)
 (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
 (global-set-key (kbd "M-h") 'backward-kill-word)
@@ -714,40 +744,15 @@ Repeated invocations toggle between the two most recently open buffers."
 (global-set-key (kbd "C-M-.") 'end-of-buffer)
 
 (use-package wgrep)
-(setq browse-url-browser-function 'browse-url-chrome)
-
-(use-package hydra)
-(use-package image+
+(use-package async
   :config
-  (eval-after-load 'image '(require 'image+))
-  (eval-after-load 'image+
-  `(when (require 'hydra nil 
-     (defhydra imagex-sticky-binding (global-map "C-x C-l")
-       "Manipulating Image"
-       ("+" imagex-sticky-zoom-in "zoom in")
-       ("-" imagex-sticky-zoom-out "zoom out")
-       ("M" imagex-sticky-maximize "maximize")
-       ("O" imagex-sticky-restore-original "restore original")
-       ("S" imagex-sticky-save-image "save file")
-       ("r" imagex-sticky-rotate-right "rotate right")
-       ("l" imagex-sticky-rotate-left "rotate left"))))))
+  (dired-async-mode 1))
 
 (use-package atomic-chrome
-    :config
-    (atomic-chrome-start-server))
-
-(fset 'three-term-multiplexing
-   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([67108896 1 134217847 return 24 111 25 return 24 111 25 return 24 111] 0 "%d")) arg)))
-(global-set-key (kbd "C-c RET") 'three-term-multiplexing)
-
-(use-package comint
-  :ensure nil
-  :bind
-  (:map shell-mode-map
-	("C-c RET" . three-term-multiplexing))
+  :init
+  (setq atomic-chrome-buffer-open-style 'split)
   :config
-  (fset 'three-term-multiplexing
-	(lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([67108896 1 134217847 return 24 111 25 return 24 111 25 return 24 111] 0 "%d")) arg))))
+  (atomic-chrome-start-server))
 
 (defun sort-lines-nocase-deduplicate ()
   (interactive)
@@ -755,4 +760,7 @@ Repeated invocations toggle between the two most recently open buffers."
     (call-interactively 'sort-lines)
     (call-interactively 'delete-duplicate-lines)))
 
-(use-package htmlize)
+(use-package gnuplot)
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")

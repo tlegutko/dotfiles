@@ -3,7 +3,7 @@ export VISUAL="vim"
 export ZSH=/home/tlegutko/.oh-my-zsh
 ZSH_THEME="robbyrussell"
 CASE_SENSITIVE="true"
-ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="false"
 COMPLETION_WAITING_DOTS="true"
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -21,3 +21,8 @@ alias sd='~/.dotfiles/.sync.sh'
 
 eval $(keychain --eval --quiet --nogui id_rsa)
 [ $TERM = "dumb" ] && unsetopt zle && PS1='$ '
+
+export HISTSIZE=1500
+export SAVEHIST=$HISTSIZE
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
