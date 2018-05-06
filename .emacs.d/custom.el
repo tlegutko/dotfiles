@@ -36,10 +36,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-goggles-delete-face ((t (:inherit diff-removed))))
- '(evil-goggles-paste-face ((t (:inherit diff-added))))
- '(evil-goggles-undo-redo-add-face ((t (:inherit diff-added))))
- '(evil-goggles-undo-redo-change-face ((t (:inherit diff-changed))))
- '(evil-goggles-undo-redo-remove-face ((t (:inherit diff-removed))))
- '(evil-goggles-yank-face ((t (:inherit diff-changed))))
- '(ivy-current-match ((t (:background "#f57c00" :foreground "#222222" :box (:line-width 2 :color "#cc0000" :style released-button)))) nil "Modified to look like my workspace indicator in i3"))
+ '(ivy-current-match ((t (:background "#f57c00" :foreground "#222222" :box (:line-width 3 :color "#cc0000" :style released-button)))))
+ '(ivy-minibuffer-match-face-1 ((t (:background "nil" :foreground "#999999"))))
+ '(ivy-minibuffer-match-face-2 ((t (:inherit ivy-minibuffer-match-face-1 :background "nil" :foreground "#fb2874" :weight semi-bold))))
+ '(ivy-modified-buffer ((t (:inherit bold :foreground "#4e4e4e" :underline t))))
+ '(ivy-subdir ((t (:box (:line-width 2 :color "#f57c00" :style released-button)))))
+ '(ivy-virtual ((t (:inherit italic :foreground "#3f3f3f" :strike-through t)))))
