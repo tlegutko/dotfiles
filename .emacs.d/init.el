@@ -445,6 +445,7 @@ Repeated invocations toggle between the two most recently open buffers."
    ("C-c k" . counsel-ag)
    ("C-x l" . counsel-locate))
   :config
+  (setq ivy-switch-buffer-faces-alist nil)
   (defun ivy-yank-action (x)
     (kill-new x))
   (defun ivy-copy-to-buffer-action (x)
