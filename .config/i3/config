@@ -173,10 +173,10 @@ for_window [title="4-dropdown"] move scratchpad
 for_window [title="4-dropdown"] move scratchpad
 
 # screen locking and suspending
-$exec_always pkill xautolock; xautolock -detectsleep \
--notify 30 \
--notifier "notify-send 'Sleeping time' 'Turning screen off in 30s.'" \
--time 10 -locker "xset dpms force off"
+# $exec_always pkill xautolock; xautolock -detectsleep \
+# -notify 30 \
+# -notifier "notify-send 'Sleeping time' 'Turning screen off in 30s.'" \
+# -time 10 -locker "xset dpms force off"
 # -killtime 10 -killer "systemctl suspend"
 # -corners "----" -cornersize 150
 

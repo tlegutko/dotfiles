@@ -218,6 +218,9 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq org-startup-truncated 'nil)
   (setq org-agenda-start-with-log-mode t)
   (setq org-duration-format (quote h:mm))
+  (setq org-checkbox-hierarchical-statistics nil)
+  (setq org-hierarchical-todo-statistics nil)
+  (setq org-use-speed-commands t)
   (setq org-capture-templates
 	'(
 	  ("m" "Miracle morning" plain (file "~/org/miracle-morning.org")
@@ -479,9 +482,10 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package projectile
   :init
   (setq projectile-completion-system 'ivy)
-  (setq projectile-mode-line '(:eval (format " Proj[%s]" (projectile-project-name))))
+  ;; (setq projectile-mode-line '(:eval (format " Proj[%s]" (projectile-project-name))))
+  (setq projectile-mode-line "Proj")
   :config
-  (projectile-global-mode))
+  (projectile-global-mode -1))
 
 ;; (use-package counsel-projectile
   ;; :config
@@ -541,8 +545,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package undo-tree
   :diminish undo-tree-mode
   :bind
-  (:map undo-tree-map
-	("C-M-/" . undo-tree-redo))
+  (("C-M-/" . undo-tree-redo))
   :config (global-undo-tree-mode))
 
 (global-set-key (kbd "C-;") 'comment-line)
@@ -765,3 +768,22 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "google-chrome")
+
+(defun sudo-edit (&optional arg)
+  "Edit currently visited file as root.
+   With a prefix ARG prompt for a file to visit.
+   Will also prompt for a file to visit if current
+   buffer is not visiting a file."
+  (interactive "P")
+  (let ((current-char (point))
+	(sudo-p (string-prefix-p "/sudo:root" buffer-file-name)))
+    (if sudo-p
+      (message "You're already editing file as root!")
+      (if (or arg (not buffer-file-name))
+          (find-file (concat "/sudo:root@localhost:"
+                             (ido-read-file-name "Find file(as root): ")))
+        (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name)))
+      (goto-char current-char))))
+
+;; edit as root
+(global-set-key (kbd "C-x !") 'sudo-edit)
