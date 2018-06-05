@@ -575,13 +575,17 @@ Repeated invocations toggle between the two most recently open buffers."
 	  (apply 'insert-shell-output-at-position command-position)
 	(shell-command (car command-position))))))
 
-(use-package shell
-  :ensure nil
-  :bind
-  (("C-x `" . shell)
-   ("C-c `" . shell))
-  (:map shell-mode-map
-	("M-r" . counsel-zsh-history)))
+;; (use-package shell
+  ;; :ensure nil
+  ;; :bind
+  ;; (("C-x `" . shell)
+   ;; ("C-c `" . shell))
+  ;; (:map shell-mode-map
+	;; ("M-r" . counsel-zsh-history)))
+(defun zsh-ansi-term ()
+  (interactive)
+  (ansi-term "/bin/zsh"))
+(global-set-key (kbd "C-x `") 'zsh-ansi-term)
 
 (use-package dired-x
   :ensure nil
@@ -743,17 +747,53 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (use-package gnuplot)
 
+(defun sudo-edit (&optional arg)
+  "Edit currently visited file as root.
+   With a prefix ARG prompt for a file to visit.
+   Will also prompt for a file to visit if current
+   buffer is not visiting a file."
+  (interactive "P")
+  (let ((current-char (point))
+	(sudo-p (string-prefix-p "/sudo:root" buffer-file-name)))
+    (if sudo-p
+      (message "You're already editing file as root!")
+      (if (or arg (not buffer-file-name))
+          (find-file (concat "/sudo:root@localhost:"
+                             (ido-read-file-name "Find file(as root): ")))
+        (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name)))
+      (goto-char current-char))))
+
+;; edit as root
+(global-set-key (kbd "C-x !") 'sudo-edit)
+
+(setq display-time-day-and-date t)
+(setq display-time-24hr-format t)
+(setq display-time-format "%d-%m-%y %R ")
+(setq display-time-default-load-average nil)
+(display-time-mode 1)
+(display-battery-mode 1)
+
 (use-package exwm
   :config
   (require 'exwm-config)
   (require 'exwm-randr)
   ;; Set the initial number of workspaces (they can also be created later).
   (setq exwm-workspace-number 5)
-  (setq exwm-randr-workspace-output-plist '(1 "DP-4" 2 "DP-1" 3 "DP-4" 4 "DP-1"))
+  (setq exwm-randr-workspace-output-plist
+	'(0 "DP-4"
+	  1 "DP-4"
+	  2 "DP-1"
+	  3 "DP-4"
+	  4 "DP-1"
+	  5 "DP-4"
+	  6 "DP-1"
+	  7 "DP-4"
+	  8 "DP-1"
+	  9 "DP-4"))
   (add-hook 'exwm-randr-screen-change-hook
           (lambda ()
             (start-process-shell-command
-             "xrandr" nil "xrandr --output DP-4 --auto --primary --output DP-1 --auto --right-of DP-1")))
+             "xrandr" nil "xrandr --output DP-4 --auto --primary --output DP-1 --auto --right-of DP-4")))
   (exwm-randr-enable)
   
   ;; All buffers created in EXWM mode are named "*EXWM*". You may want to
@@ -777,11 +817,27 @@ Repeated invocations toggle between the two most recently open buffers."
                         (string-prefix-p "sun-awt-X11-" exwm-instance-name)
                         (string= "gimp" exwm-instance-name))
                 (exwm-workspace-rename-buffer exwm-title))))
-  
+
+  (defun start-chrome ()
+    (interactive)
+    (start-process "google-chrome-stable" nil "google-chrome-stable"))
+  (defun nvidia-settings-2-displays ()
+    (interactive)
+    (shell-command "~/.config/scripts/nvidia-settings-2-displays.sh 1920x1080"))
+  (defun scrot ()
+    (interactive)
+    (shell-command "scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/screenshots/'")
+    (message "Screenshot taken"))
   ;; Global keybindings can be defined with `exwm-input-global-keys'.
   ;; Here are a few examples:
+  (setq scripts-dir '/home/tlegutko/.config/scripts)
   (setq exwm-input-global-keys
         `(
+	  ([?\s-d] . counsel-linux-app)
+	  ([?\s-q] . kill-this-buffer)
+	  ([?\s-g] . start-chrome)
+	  ([?\s-p] . scrot)
+	  ([?\s-\M-i] . nvidia-settings-2-displays) ; this kinda works, but resets the display so many times that it's better left unused
           ;; Bind "s-r" to exit char-mode and fullscreen mode.
           ([?\s-r] . exwm-reset)
           ;; Bind "s-w" to switch workspace interactively.
@@ -844,4 +900,3 @@ Repeated invocations toggle between the two most recently open buffers."
   ;; Do not forget to enable EXWM. It will start by itself when things are
   ;; ready.  You can put it _anywhere_ in your configuration.
   (exwm-enable))
-  

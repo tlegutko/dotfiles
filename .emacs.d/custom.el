@@ -3,6 +3,73 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(exwm-input-global-keys
+   (quote
+    (([8388708]
+      . counsel-linux-app)
+     ([8388721]
+      . kill-this-buffer)
+     ([8388711]
+      . start-chrome)
+     ([8388720]
+      . scrot)
+     ([142606441]
+      . nvidia-settings-2-displays)
+     ([8388722]
+      . exwm-reset)
+     ([8388727]
+      . exwm-workspace-switch)
+     ([8388656]
+      lambda nil
+      (interactive)
+      (exwm-workspace-switch-create 0))
+     ([8388657]
+      lambda nil
+      (interactive)
+      (exwm-workspace-switch-create 1))
+     ([8388658]
+      lambda nil
+      (interactive)
+      (exwm-workspace-switch-create 2))
+     ([8388659]
+      lambda nil
+      (interactive)
+      (exwm-workspace-switch-create 3))
+     ([8388660]
+      lambda nil
+      (interactive)
+      (exwm-workspace-switch-create 4))
+     ([8388661]
+      lambda nil
+      (interactive)
+      (exwm-workspace-switch-create 5))
+     ([8388662]
+      lambda nil
+      (interactive)
+      (exwm-workspace-switch-create 6))
+     ([8388663]
+      lambda nil
+      (interactive)
+      (exwm-workspace-switch-create 7))
+     ([8388664]
+      lambda nil
+      (interactive)
+      (exwm-workspace-switch-create 8))
+     ([8388665]
+      lambda nil
+      (interactive)
+      (exwm-workspace-switch-create 9))
+     ([8388646]
+      lambda
+      (command)
+      (interactive
+       (list
+	(read-shell-command "$ ")))
+      (start-process-shell-command command nil command))
+     ([s-f2]
+      lambda nil
+      (interactive)
+      (start-process "" nil "/usr/bin/slock")))))
  '(org-agenda-files
    (quote
     ("~/org/shopping-wishlist.org" "~/org/svietlana-praca.org" "~/org/books-notes.org" "~/org/new-job.org" "~/org/daily-activities.org" "~/org/it-feedback.org" "~/org/miracle-evening.org" "~/org/laptop-config.org" "~/org/weekly-summary.org" "~/org/pmo-journal.org" "~/org/todo.org" "~/org/calendar.org" "~/org/miracle-morning.org" "~/org/personal-journal.org" "~/org/scala.org" "~/org/dance-notes.org")))

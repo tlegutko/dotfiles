@@ -18,5 +18,11 @@ export EDITOR="$VISUAL"
 # remap bindings
 sh ~/.config/scripts/remap-keyboard.sh
 
+# daemons
+sh /usr/lib/kdeconnectd &
+sh redshift -l 50.094732:19.973673 -t 5500:3100 &
+dunst -config ~/.config/dunst/dunstrc &
+spotify &
+
 # Finally launch emacs.
 exec dbus-launch --exit-with-session emacs
