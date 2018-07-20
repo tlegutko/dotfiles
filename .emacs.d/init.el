@@ -298,7 +298,6 @@ Repeated invocations toggle between the two most recently open buffers."
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . nil)
-     (sh . t)
      (shell . t))))
 
 
@@ -900,3 +899,7 @@ Repeated invocations toggle between the two most recently open buffers."
   ;; Do not forget to enable EXWM. It will start by itself when things are
   ;; ready.  You can put it _anywhere_ in your configuration.
   (exwm-enable))
+(put 'narrow-to-region 'disabled nil)
+
+(fset 'magit-commit-tag
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([3 115 111 110 32 98 114 97 110 99 104 return 6 67108896 5 134217847 201326636 91 25 93 32] 0 "%d")) arg)))

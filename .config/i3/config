@@ -124,13 +124,8 @@ bindsym $mod+period $exec $scripts_dir/mpv-or-spotify-next.sh && $delayed_bar_re
 bindsym $mod+slash $exec $scripts_dir/mpv-or-spotify-play-pause.sh && $delayed_bar_refresh
 bindsym $mod+bracketleft $exec "echo '{ \\"command\\": [\\"multiply\\", \\"speed\\", \\"1/1.1\\"] }' | socat - ~/.mpvsocket"
 bindsym $mod+bracketright $exec "echo '{ \\"command\\": [\\"multiply\\", \\"speed\\", \\"1.1\\"] }' | socat - ~/.mpvsocket"
-bindsym $mod+apostrophe $exec \
-  "pactl set-sink-mute @DEFAULT_SINK@ false \
-  && (($($scripts_dir/sound_status.sh) <= 90)) \
-  && pactl set-sink-volume @DEFAULT_SINK@ +10% \
-  && $bar_refresh"
-bindsym $mod+semicolon $exec "pactl set-sink-volume @DEFAULT_SINK@ -10% && $bar_refresh"
-
+bindsym $mod+apostrophe $exec $scripts_dir/increase-volume.sh && $bar_refresh
+bindsym $mod+semicolon $exec $scripts_dir/decrease-volume.sh && $bar_refresh
 
 # bluetooth
 bindsym $mod+KP_Divide $exec "$scripts_dir/bluetooth_off.sh && $delayed_bar_refresh"
