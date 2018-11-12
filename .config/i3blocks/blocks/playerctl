@@ -7,8 +7,8 @@ if [[ "${INSTANCE}" != "" ]]; then
   ARGUMENTS="--player ${INSTANCE}"
 fi
 
-ICON_PLAY="➤"
-ICON_PAUSE="Ⅱ"
+ICON_PLAY=""
+ICON_PAUSE=""
 ICON_STOP="≠"
 CUR_ICON=""
 

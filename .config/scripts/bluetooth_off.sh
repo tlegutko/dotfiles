@@ -3,6 +3,6 @@ bluetoothctl << EOF
 power off
 quit
 EOF
-pulseaudio -k
-pulseaudio --start
+# pulseaudio -k
+# pulseaudio --start
 

@@ -72,10 +72,10 @@
       (start-process "" nil "/usr/bin/slock")))))
  '(org-agenda-files
    (quote
-    ("~/org/shopping-wishlist.org" "~/org/svietlana-praca.org" "~/org/books-notes.org" "~/org/new-job.org" "~/org/daily-activities.org" "~/org/it-feedback.org" "~/org/miracle-evening.org" "~/org/laptop-config.org" "~/org/weekly-summary.org" "~/org/pmo-journal.org" "~/org/todo.org" "~/org/calendar.org" "~/org/miracle-morning.org" "~/org/personal-journal.org" "~/org/scala.org" "~/org/dance-notes.org")))
+    ("~/org/shopping-wishlist.org" "~/org/svietlana-praca.org" "~/org/books-notes.org" "~/org/new-job.org" "~/org/daily-activities.org" "~/org/it-feedback.org" "~/org/miracle-evening.org" "~/org/laptop-config.org" "~/org/weekly-summary.org" "~/org/pmo-journal.org" "~/org/todo.org" "~/org/miracle-morning.org" "~/org/personal-journal.org" "~/org/scala.org" "~/org/dance-notes.org")))
  '(package-selected-packages
    (quote
-    (exwm gnuplot emacs-async wgrep solaire-mode doom-themes ediff-wind markdown-mode ox-gfm restclient multiple-cursors evil-goggles popup-imenu comint peep-dired scala-mode ace-window buffer-move dired-narrow org-bullets dired-x dired sublimity-scroll ag company-mode org-gcal which-key counsel-projectile flx expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package evil)))
+    (ivy company sbt-mode exwm gnuplot emacs-async wgrep solaire-mode doom-themes ediff-wind markdown-mode ox-gfm restclient multiple-cursors evil-goggles popup-imenu comint peep-dired scala-mode ace-window buffer-move dired-narrow org-bullets dired-x dired sublimity-scroll ag company-mode org-gcal which-key counsel-projectile flx expand-region zenburn free-keys openwith auctex smex avy counsel keychain-environment magit evil-surround smartparens ensime use-package evil)))
  '(vc-annotate-background "#000000")
  '(vc-annotate-color-map
    (list
@@ -103,6 +103,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "#1c1e1f" :foreground "#d6d6d4" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 105 :width condensed :foundry "Bits" :family "DejaVu Sans Mono"))))
  '(ivy-current-match ((t (:background "#f57c00" :foreground "#222222" :box (:line-width 3 :color "#cc0000" :style released-button)))))
  '(ivy-minibuffer-match-face-1 ((t (:background "nil" :foreground "#999999"))))
  '(ivy-minibuffer-match-face-2 ((t (:inherit ivy-minibuffer-match-face-1 :background "nil" :foreground "#fb2874" :weight semi-bold))))

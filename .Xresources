@@ -1,1 +1,6 @@
-Xcursor.size: 10
+Xcursor.size: 5
+URxvt*scrollBar: false
+URxvt*background: Black
+URxvt*foreground: White
+URxvt*font: xft:DejaVu Sans Mono:pixelsize=14
+URxvt.perl-ext-common: selection-to-clipboard

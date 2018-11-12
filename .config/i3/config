@@ -2,7 +2,7 @@
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 8
+font pango:monospace 10
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -16,10 +16,11 @@ font pango:monospace 8
 # font, it doesn’t scale on retina/hidpi displays.
 
 # Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier Mod4
+floating_modifier $mod
 
 # no window borders
-new_window pixel
+default_border pixel
+# new_window pixel
 hide_edge_borders smart
 
 # colors
@@ -37,7 +38,7 @@ bindsym Mod1+$mod+space floating toggle
 
 # monitor names
 # primary
-set $lower "DP-4"
+set $lower "eDP1"
 # HDMI
 set $upper "DP-1"
 # USB-C
@@ -45,10 +46,10 @@ set $upper "DP-1"
 
 # $exec_always  xrandr --output $lower --auto --primary --output $upper --auto --above $lower
 # nvidia same as xrandr, but ForceFullCompositionPipeline fixes screen tearing
-$exec xrandr --output $lower --primary
+$exec_always xrandr --output $lower --primary
 
-$exec_always $scripts_dir/nvidia-settings-2-displays.sh 1920x1080 # resolution of 2nd display
-bindsym Mod1+$mod+o $exec $scripts_dir/nvidia-settings-2-displays.sh 1920x1080 # on demand
+# $exec_always $scripts_dir/nvidia-settings-2-displays.sh 1920x1080 # resolution of 2nd display
+# bindsym Mod1+$mod+o $exec $scripts_dir/nvidia-settings-2-displays.sh 1920x1080 # on demand
 
 #compton compositor to eliminate stutters when scrolling
 $exec compton -cCzGb -t-3 -l-5 -r4 \
@@ -91,7 +92,7 @@ workspace 13 output $lower
 # finds out, if available)
 bar {
         position top
-	font pango:DejaVu Sans Mono, FontAwesome 8
+	font pango:DejaVu Sans Mono, FontAwesome 10
 	tray_output primary
 	status_command i3blocks
   colors {
@@ -103,9 +104,8 @@ set $bar_refresh pkill -RTMIN+10 i3blocks
 set $delayed_bar_refresh sleep 0.05 && pkill -RTMIN+10 i3blocks
 
 # brightness
-bindsym KP_Subtract $exec "xbacklight -10 && $bar_refresh"
-bindsym KP_Add $exec "xbacklight +10 && $bar_refresh"
-$exec xbacklight -set 30
+bindsym $mod+bracketleft $exec "xbacklight -10 && $bar_refresh"
+bindsym $mod+bracketright $exec "xbacklight +10 && $bar_refresh"
 
 # volume & playback cotrol
 bindsym XF86AudioRaiseVolume $exec \
@@ -122,14 +122,15 @@ bindsym KP_Enter $exec $scripts_dir/mpv-or-spotify-play-pause.sh && $delayed_bar
 bindsym $mod+comma $exec $scripts_dir/mpv-or-spotify-previous.sh && $delayed_bar_refresh
 bindsym $mod+period $exec $scripts_dir/mpv-or-spotify-next.sh && $delayed_bar_refresh
 bindsym $mod+slash $exec $scripts_dir/mpv-or-spotify-play-pause.sh && $delayed_bar_refresh
-bindsym $mod+bracketleft $exec "echo '{ \\"command\\": [\\"multiply\\", \\"speed\\", \\"1/1.1\\"] }' | socat - ~/.mpvsocket"
-bindsym $mod+bracketright $exec "echo '{ \\"command\\": [\\"multiply\\", \\"speed\\", \\"1.1\\"] }' | socat - ~/.mpvsocket"
+bindsym $mod+backslash exec "pactl set-sink-mute @DEFAULT_SINK@ toggle && $bar_refresh"
 bindsym $mod+apostrophe $exec $scripts_dir/increase-volume.sh && $bar_refresh
 bindsym $mod+semicolon $exec $scripts_dir/decrease-volume.sh && $bar_refresh
+# bindsym $mod+bracketleft $exec "echo '{ \\"command\\": [\\"multiply\\", \\"speed\\", \\"1/1.1\\"] }' | socat - ~/.mpvsocket"
+# bindsym $mod+bracketright $exec "echo '{ \\"command\\": [\\"multiply\\", \\"speed\\", \\"1.1\\"] }' | socat - ~/.mpvsocket"
 
 # bluetooth
-bindsym $mod+KP_Divide $exec "$scripts_dir/bluetooth_off.sh && $delayed_bar_refresh"
-bindsym $mod+KP_Multiply $exec "$scripts_dir/bluetooth_on.sh && $delayed_bar_refresh"
+bindsym $mod+Home $exec "$scripts_dir/bluetooth_on.sh && $delayed_bar_refresh"
+bindsym $mod+End $exec "$scripts_dir/bluetooth_off.sh && $delayed_bar_refresh"
 
 # daemons
 $exec nm-applet
@@ -142,26 +143,29 @@ $exec dunst -config ~/.config/dunst/dunstrc
 for_window [class="Spotify"] move to workspace "13:spotify"
 
 # startup apps
-$exec spotify
+$exec urxvrd -o
+$exec xbacklight -set 30
+$exec "xset r rate 200 60"
+$exec "spotify --force-device-scale-factor=0.8"
 
 # double prssing workspace num goes back to previous one
 workspace_auto_back_and_forth yes
-bindsym $mod+backslash workspace back_and_forth
+# bindsym $mod+backslash workspace back_and_forth
 
 popup_during_fullscreen leave_fullscreen
 
 # touchpad
-$exec xinput set-prop "SynPS/2 Synaptics TouchPad" "Device Enabled" 0
+$exec xinput set-prop "Synaptics TM3075-002" "Device Enabled" 0
 
 # trackpoint
-$exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" -0.2
+$exec_always xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" 0.5
 
 # remapping keyboard.. a lot!
 $exec $scripts_dir/remap-keyboard.sh
 
 # cursor size & hiding
 $exec xrdb ~/.Xresources
-$exec unclutter --timeout 1
+# $exec unclutter --timeout 1
 mouse_warping output
 focus_follows_mouse no
 
@@ -187,8 +191,8 @@ for_window [title="4-dropdown"] move scratchpad
 $exec_always pkill xautolock; xautolock -detectsleep \
 -notify 30 \
 -notifier "notify-send 'Sleeping time' 'Turning screen off in 30s.'" \
--time 10 -locker "xset dpms force off"
-# -killtime 10 -killer "systemctl suspend"
+-time 10 -locker "xset dpms force off" \
+-killtime 10 -killer "systemctl suspend"
 # -corners "----" -cornersize 150
 
 # resize wirdow (you can also use the mouse for that)
@@ -210,10 +214,10 @@ bindsym $mod+q kill
 bindsym $mod+w $exec $scripts_dir/rename-workspace.sh
 bindsym $mod+e $exec emacsclient -c -n
 bindsym $mod+r mode "resize"
-bindsym $mod+t $exec termite -d `xcwd`
+bindsym $mod+t $exec urxvtc
 bindsym $mod+d $exec i3-dmenu-desktop --dmenu="dmenu -b -i"
 bindsym $mod+f fullscreen toggle
-bindsym $mod+g $exec google-chrome-stable
+bindsym $mod+g $exec google-chrome-stable --force-device-scale-factor=0.9
 bindsym $mod+v split h
 bindsym $mod+b split v
 bindsym $mod+n $exec ~/.emacs_anywhere/bin/run
@@ -235,7 +239,7 @@ bindsym $mod+z focus child
 bindsym $mod+o $exec okular
 bindsym $mod+i $exec intellij-idea-ultimate-edition
 # screenshot of selection
-bindsym --release $mod+p $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/screenshots/'
+bindsym --release $mod+p $exec scrot -s -e 'xclip -selection clipboard -t image/png $f && mv $f ~/Pictures/'
 # presentation mirroring mode
 bindsym Mod1+$mod+p $exec xrandr \
      --output $lower_right --auto --primary \

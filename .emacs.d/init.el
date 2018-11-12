@@ -70,7 +70,7 @@
   (line-number-mode -1)
   (size-indication-mode -1)
   ;; font is 1/10 of height
-  (set-face-attribute 'default nil :height 80)
+  (set-face-attribute 'default nil :height 105)
   ;;; i3-like mouse hover effect
   (setq mouse-autoselect-window nil)
   ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
@@ -78,7 +78,7 @@
   (load-theme 'doom-molokai t)
 
   ;; Enable flashing mode-line on errors
-  ;; (doom-themes-visual-bell-config)
+  (doom-themes-visual-bell-config)
 
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
@@ -473,12 +473,12 @@ Repeated invocations toggle between the two most recently open buffers."
         (insert val))))
   (ivy-mode 1))
 
-(use-package projectile
-  :init
-  (setq projectile-completion-system 'ivy)
-  (setq projectile-mode-line '(:eval (format " Proj[%s]" (projectile-project-name))))
-  :config
-  (projectile-global-mode))
+;; (use-package projectile
+  ;; :init
+  ;; (setq projectile-completion-system 'ivy)
+  ;; (setq projectile-mode-line '(:eval (format " Proj[%s]" (projectile-project-name))))
+  ;; :config
+  ;; (projectile-global-mode))
 
 ;; (use-package counsel-projectile
   ;; :config
@@ -511,6 +511,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (:map yas-minor-mode-map
    ("C-c y" . yas-expand))
   :config
+  (setq yas-snippet-dirs `("~/org/yasnippet"))
   (yas-reload-all))
 
 (use-package notifications
@@ -903,3 +904,20 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (fset 'magit-commit-tag
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([3 115 111 110 32 98 114 97 110 99 104 return 6 67108896 5 134217847 201326636 91 25 93 32] 0 "%d")) arg)))
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome-stable")
+
+(defun my/eww-toggle-images ()
+  "Toggle whether images are loaded and reload the current page fro cache."
+  (interactive)
+  (setq-local shr-inhibit-images (not shr-inhibit-images))
+  (eww-reload t)
+  (message "Images are now %s"
+           (if shr-inhibit-images "off" "on")))
+
+(define-key eww-mode-map (kbd "I") #'my/eww-toggle-images)
+(define-key eww-link-keymap (kbd "I") #'my/eww-toggle-images)
+
+;; minimal rendering by default
+(setq-default shr-inhibit-images t)   ; toggle with `I`

@@ -30,7 +30,7 @@ separator_block_width=15
 markup=pango   
 
 [playerctl]
-label=
+label=
 instance=spotify
 interval=5
 signal=10
@@ -46,7 +46,7 @@ interval=10
 signal=10
 
 [brightness]
-label=
+label=
 interval=once
 signal=10
 
@@ -56,8 +56,7 @@ interval=60
 signal=10
 
 [battery]
-label=
-instance=0
+markup=pango
 interval=30
 
 [datetime]
